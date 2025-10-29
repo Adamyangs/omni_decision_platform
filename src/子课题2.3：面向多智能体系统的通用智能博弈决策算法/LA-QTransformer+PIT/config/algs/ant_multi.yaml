@@ -1,0 +1,58 @@
+# --- QMIX specific parameters ---
+
+# use epsilon greedy action selector
+action_selector: "epsilon_greedy"
+epsilon_start: 1.0
+epsilon_finish: 0.05
+epsilon_anneal_time: 50000
+
+runner: "parallel"
+batch_size_run: 7
+
+buffer_size: 5000
+
+# update the target network every {} episodes
+target_update_interval: 200
+
+# use the Q_Learner to train
+agent_output_type: "q"
+learner: "q_learner"
+double_q: True
+mixer: "transformer_mix_v2"
+mixing_embed_dim: 32
+hypernet_layers: 2
+hypernet_embed: 64
+agent: "ant_multi" #"ant_demo"
+
+name: "ant_multi_tfmix"
+
+# hyperparameter
+model_dim: 16
+num_heads: 2
+ffn_dim: 64
+dropout: 0.0
+
+# transformer mix
+transformer_mix_model_dim: 32
+transformer_mix_num_heads: 4
+transformer_mix_ffn_dim: 128
+transformer_mix_dropout: 0.0
+
+#v1.1
+fc_c_dim: 64
+
+# v2
+fc_mul_dim: 32
+fc_add_dim: 32
+last_action_extend_dim: 11
+agent_id_dim: 12
+
+
+# log
+use_tensorboard: True # Log results to tensorboard
+save_model: True # Save the models to disk
+t_max: 8050000
+
+#checkpoint_path: "/home/q/桌面/test/PIT_TF/results/models/ant_demo_qmix_1s2z__2021-01-25_00-42-10/"
+#checkpoint_path: "/home/q/桌面/test/PIT_TF/results/models/ant_demo_qmix_1s2z__2021-01-25_00-42-08/"
+#checkpoint_path: "/home/q/桌面/test/PIT_TF/results/models/ant_demo_qmix_1s2z__2021-01-25_00-41-51/"

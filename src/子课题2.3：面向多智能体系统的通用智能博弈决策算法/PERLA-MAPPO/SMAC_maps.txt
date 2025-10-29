@@ -1,0 +1,30 @@
+INDENTATION IMPLIES NOT STANDARD MAP
+
+EASY
+3m
+    8m
+25m
+2s3z
+1c3s5z
+10m_vs_11m
+2m_vs_1z
+2s_vs_1sc
+    3s_vs_3z 
+    3s_vs_4z
+
+HARD
+so_many_baneling
+MMM
+3s5z
+5m_vs_6m
+    8m_vs_9m
+3s_vs_5z
+2c_vs_64zg
+bane_vs_bane
+
+SUPER HARD
+corridor
+MMM2
+6h_vs_8z
+27m_vs_30m
+3s5z_vs_3s6z

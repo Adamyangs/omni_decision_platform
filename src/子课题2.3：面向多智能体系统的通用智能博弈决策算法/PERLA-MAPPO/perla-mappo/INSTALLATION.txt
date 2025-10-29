@@ -1,0 +1,19 @@
+# Create virutal environment
+conda create --name mapsa python=3.6
+conda activate mapsa
+
+# Install Starcraft >>> 4.10 <<< (NOT 4.6)
+# This must be installed in your home directory
+# PART 1 - Install binaries
+cd ~
+wget http://blzdistsc2-a.akamaihd.net/Linux/SC2.4.10.zip
+unzip -P iagreetotheeula SC2.4.10.zip
+echo "export SC2PATH=~/StarCraftII/" > ~/.bashrc
+
+# PART 2 - Install maps
+wget https://github.com/oxwhirl/smac/releases/download/v0.1-beta1/SMAC_Maps.zip
+mv SMAC_Maps.zip  ~/StarCraftII/Maps/
+unzip ~/StarCraftII/Maps/SMAC_Maps.zip
+
+# Install other packages
+pip install -r requirements.txt
