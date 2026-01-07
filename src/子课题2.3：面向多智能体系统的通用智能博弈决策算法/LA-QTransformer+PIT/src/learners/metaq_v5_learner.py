@@ -94,7 +94,7 @@ class MetaQV5Learner:
             target_max_qvals = target_mac_out.max(dim=3)[0]
 
         # Mix 
-        one_hot_action = th.zeros_like(actions).cuda().repeat(1, 1, 1, self.args.n_actions).scatter_(-1, actions, 1).view(batch.batch_size, -1, self.args.n_agents*self.args.n_actions)
+        one_hot_action = th.zeros_like(actions).repeat(1, 1, 1, self.args.n_actions).scatter_(-1, actions, 1).view(batch.batch_size, -1, self.args.n_agents*self.args.n_actions)
         one_hot_action = th.cat((one_hot_action, one_hot_action[:, -1, :].unsqueeze(1)), 1)
 
         # chosen_action_qvals, chosen_dynamic_x = self.mixer(chosen_action_qvals, batch["state"][:, :-1], one_hot_action[:, :-1])

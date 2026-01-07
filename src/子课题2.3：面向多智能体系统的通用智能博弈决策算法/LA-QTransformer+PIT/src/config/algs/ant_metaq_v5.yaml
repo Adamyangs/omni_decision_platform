@@ -6,8 +6,8 @@ epsilon_start: 1.0
 epsilon_finish: 0.05
 epsilon_anneal_time: 50000
 
-runner: "parallel"
-batch_size_run: 7
+runner: "episode"
+batch_size_run: 1
 
 buffer_size: 5000
 
@@ -18,13 +18,13 @@ target_update_interval: 200
 agent_output_type: "q"
 learner: "metaq_v5_learner"
 double_q: True
-mixer: "metaq_v5_heter" 
+mixer: "metaq_v5_heter"
 mixing_embed_dim: 32
 hypernet_layers: 2
 hypernet_embed: 64
 agent: "ant_demo"
 
-name: "ant_metaq_2s3z"
+name: "ant_metaq"
 
 # hyperparameter
 model_dim: 16
@@ -48,8 +48,7 @@ fc_add_dim: 32
 last_action_extend_dim: 14
 agent_id_dim: 13
 
-
 # log
 use_tensorboard: True # Log results to tensorboard
 save_model: True # Save the models to disk
-t_max: 8050000
+t_max: 120000

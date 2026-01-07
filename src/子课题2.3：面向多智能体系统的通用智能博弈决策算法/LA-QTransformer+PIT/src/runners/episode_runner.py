@@ -3,7 +3,6 @@ from functools import partial
 from components.episode_buffer import EpisodeBatch
 import numpy as np
 
-from utils.env_utils import EnvUtils
 
 
 class EpisodeRunner:
@@ -28,7 +27,6 @@ class EpisodeRunner:
         # Log the first run
         self.log_train_stats_t = -1000000
 
-        self.env_utils = EnvUtils()
 
     def setup(self, scheme, groups, preprocess, mac):
         self.new_batch = partial(EpisodeBatch, scheme, groups, self.batch_size, self.episode_limit + 1,
@@ -69,12 +67,6 @@ class EpisodeRunner:
             # Pass the entire batch of experiences up till now to the agents
             # Receive the actions for each agent at this timestep in a batch of size 1
             actions = self.mac.select_actions(self.batch, t_ep=self.t, t_env=self.t_env, test_mode=True)
-            self_feats, ally_feats, enemy_feats = self.mac.get_feats()
-            agent_outputs = self.mac.get_agent_outputs()
-            own_feats = self.mac.get_own_feats()
-            #self.env_utils.transform_tsne(self_feats, ally_feats, enemy_feats, plot=True)
-            #print(actions-6)
-            self.env_utils.action_attention_weight(pre_transition_data["state"], own_feats, enemy_feats, agent_outputs, plot=True)
 
             reward, terminated, env_info = self.env.step(actions[0])
             episode_return += reward
