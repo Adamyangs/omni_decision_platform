@@ -1,5 +1,3 @@
-### 指标5测试流程
-
 #### 测试流程
 
 1. 将 Maps 文件夹下的地图放到游戏 `3rdparty/StarCraftII/Maps/SMAC_Maps` 目录下
@@ -11,4 +9,3 @@
 #### 获取录像文件
 
 1. 运行`3_eval.py`生成对应的 replay 文件,录像文件在`3rdparty/StarCraftII/Replays`下面
-
