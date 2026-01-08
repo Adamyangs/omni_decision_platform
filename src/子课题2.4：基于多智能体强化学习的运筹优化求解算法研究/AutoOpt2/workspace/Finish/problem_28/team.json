@@ -1,0 +1,574 @@
+{
+    "env": {
+        "desc": "",
+        "roles": {
+            "model_llm": {
+                "name": "Alice",
+                "profile": "model_llm",
+                "goal": "",
+                "constraints": "",
+                "desc": "",
+                "is_human": false,
+                "role_id": "",
+                "states": [
+                    "0. Thinking",
+                    "1. Formulation",
+                    "2. Trans_2_latex"
+                ],
+                "actions": [
+                    {
+                        "name": "Thinking",
+                        "i_context": "",
+                        "prefix": "You are a model_llm, named Alice, your goal is . ",
+                        "desc": "",
+                        "llm_name_or_type": null,
+                        "PROMPT_TEMPLATE": "\n    At present, you are given an Operations Research problem, your role is to :\n    1. Identify and extract relevant parameters from the problem description. Parameters refer to fixed values that define certain aspects of the problem but are not subject to change during the optimization process.\n    2. Identify and extract the relevant variables from the problem statement. Variables represent the unknowns or decision variables in the optimization problem.\n    3. Identify and extract the constraints from the problem description. Constraints represent the limitations or conditions that need to be satisfied in the optimization problem. Translate the constraints into mathematical expressions.\n    4. Identify and extract the objective function from the problem statement. The objective function represents the goal of the optimization problem. Translate the objective funtion into mathematical expressions.\n\n    The problem description is as following, please review carefully and organize in response format. \n    Note: ONLY give steps, do not output formulation, response in following json schema:\n    {response_json_schema}\n\n    Note: ONLY output the mathematical expression of the model, return ```json your_output_here ``` with NO other texts\n\n\n    ## Given Problem\n    {information}\n\n    ## Thinking steps\n    ```json\n    ",
+                        "response_format": "{\n    \"title\": \"Steps\",\n    \"type\": \"object\",\n    \"properties\": {\n        \"Step_1\": {\n            \"description\": \"variables and sets mentioned in problem description\",\n            \"type\": \"string\"\n        },\n        \"Step_2\": {\n            \"description\": \"parameters in problem description\",\n            \"type\": \"string\"\n        },\n        \"Step_3\": {\n            \"description\": \"objective funtion consists of variables and numerical parameters\",\n            \"type\": \"string\"\n        },\n        \"Step_4\": {\n            \"description\": \"all the constraints consist of variables and numerical parameters\",\n            \"type\": \"string\"\n        }\n    },\n    \"required\": [\"Step_1\", \"Step_2\", \"Step_3\", \"Step_4\"]\n}\n",
+                        "__module_class_name": "actions.thinking.Thinking"
+                    },
+                    {
+                        "name": "Formulation",
+                        "i_context": "",
+                        "prefix": "You are a model_llm, named Alice, your goal is . ",
+                        "desc": "",
+                        "llm_name_or_type": null,
+                        "PROMPT_TEMPLATE": "\n    Now, according to what you write on your scratchpads, summary the mathematical expression of the model directly and explicitly in response in JSON.\n    Note: ONLY output the mathematical expression of the model, return ```json your_output_here ``` with NO other texts\n\n    ## Scratch pad\n    {scratch_pad}\n\n    ## Model\n    ```json\n    ",
+                        "response_format": "{\n    \"title\": \"Formulation\",\n    \"type\": \"object\",\n    \"properties\": {\n        \"objective_function\": {\n            \"title\": \"objective_function\",\n            \"type\": \"string\",\n            \"description\": \"The objective function consists of parameters and variables from an operations research problem, using numerical representations for parameters and standard mathematical symbols for variables.\"\n        },\n        \"constraints\": {\n            \"title\": \"constraints\",\n            \"type\": \"string\",\n            \"description\": \"Constraints consist of numerical parameters and variables from an operations research problem, using numerical representations for parameters and standard mathematical symbols for variables.\"\n        }\n    },\n    \"required\": [\"objective_function\", \"constraints\"]\n}\n\n",
+                        "__module_class_name": "actions.formulation.Formulation"
+                    },
+                    {
+                        "name": "Trans_2_latex",
+                        "i_context": "",
+                        "prefix": "You are a model_llm, named Alice, your goal is . ",
+                        "desc": "",
+                        "llm_name_or_type": null,
+                        "PROMPT_TEMPLATE": "\n    Now, according to what you write on your scratchpads, give the LATEX format of the model directly.\n    NOTE: MUST USE LATEX MATH SYMBOLS\n    ## Scratch pad\n    {scratch_pad}\n\n    ## Model\n    ```latex\n",
+                        "__module_class_name": "actions.trans_2_latex.Trans_2_latex"
+                    }
+                ],
+                "rc": {
+                    "memory": {
+                        "storage": [
+                            {
+                                "id": "5afe0daedbc84e09ab5e2b2be2235f1e",
+                                "content": "A cruise company can either have two types of trips, a large cruise ship or a small cruise ship. A large cruise ship trip can carry 2000 customers and produces 20 units of pollution. A small cruise ship trip can carry 800 customers and produces 15 units of pollution. There can be at most 7 large cruise ship trips and at least 40% of the total trips must be made by small cruise ships. If the cruise company aims to transport at least 20000 customers, how many of each size of cruise ships should the company use to minimize the total amount of pollution produced?",
+                                "instruct_content": null,
+                                "role": "Human",
+                                "cause_by": "metagpt.actions.add_requirement.UserRequirement",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "2b94b23ff95c40659be904933b95a6b5",
+                                "content": "Let L be the number of large cruise ship trips. Let S be the number of small cruise ship trips. Both are non-negative integers., Parameters: Large ship capacity = 2000 customers. Small ship capacity = 800 customers. Large ship pollution per trip = 20 units. Small ship pollution per trip = 15 units. Maximum large ship trips = 7. Minimum customer requirement = 20000. Minimum percentage of small ship trips = 40% of total trips., Objective: Minimize total pollution P = 20L + 15S., Constraints: 1. Customer requirement: 2000L + 800S >= 20000. 2. Large ship limit: L <= 7. 3. Small ship percentage: S >= 0.4*(L + S) -> Rearranged: 0.6S - 0.4L >= 0, or equivalently S >= (2/3)L. 4. Non-negativity and integer: L >= 0, S >= 0, L and S integers., ",
+                                "instruct_content": null,
+                                "role": "model_llm",
+                                "cause_by": "actions.thinking.Thinking",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "f3fc59f9d58f47b38f8f7b4f2d98b3a4",
+                                "content": "{'model': {'variables': [{'name': 'L', 'description': 'Number of large cruise ship trips', 'domain': 'non-negative integer'}, {'name': 'S', 'description': 'Number of small cruise ship trips', 'domain': 'non-negative integer'}], 'objective': {'type': 'minimize', 'function': 'P = 20L + 15S'}, 'constraints': [{'description': 'Customer requirement', 'expression': '2000L + 800S >= 20000'}, {'description': 'Large ship limit', 'expression': 'L <= 7'}, {'description': 'Minimum percentage of small ship trips', 'expression': 'S >= 0.4 * (L + S)', 'simplified': '0.6S - 0.4L >= 0', 'alternate_form': 'S >= (2/3)L'}, {'description': 'Non-negativity', 'expression': 'L >= 0, S >= 0'}, {'description': 'Integer requirement', 'expression': 'L and S are integers'}], 'parameters': {'large_ship_capacity': 2000, 'small_ship_capacity': 800, 'large_ship_pollution_per_trip': 20, 'small_ship_pollution_per_trip': 15, 'maximum_large_ship_trips': 7, 'minimum_customer_requirement': 20000, 'minimum_small_ship_percentage': 0.4}}}",
+                                "instruct_content": null,
+                                "role": "model_llm",
+                                "cause_by": "actions.formulation.Formulation",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "d545de2457074c879eba7342d47e748f",
+                                "content": "\\[\n\\begin{aligned}\n&\\text{Decision Variables:} \\\\\n&L: \\text{Number of large cruise ship trips} \\quad (\\text{integer, } L \\ge 0) \\\\\n&S: \\text{Number of small cruise ship trips} \\quad (\\text{integer, } S \\ge 0) \\\\\n\\\\\n&\\text{Objective:} \\\\\n&\\min \\quad P = 20L + 15S \\\\\n\\\\\n&\\text{Subject to:} \\\\\n&2000L + 800S \\ge 20000 \\quad &\\text{(Customer requirement)} \\\\\n&L \\le 7 \\quad &\\text{(Large ship limit)} \\\\\n&S \\ge 0.4(L + S) \\quad &\\text{(Minimum percentage of small ship trips)} \\\\\n&\\text{or equivalently: } 0.6S - 0.4L \\ge 0 \\quad &\\text{(Simplified form)} \\\\\n&\\text{or equivalently: } S \\ge \\frac{2}{3}L \\quad &\\text{(Alternate form)} \\\\\n&L \\ge 0, \\; S \\ge 0 \\quad &\\text{(Non-negativity)} \\\\\n&L, S \\in \\mathbb{Z} \\quad &\\text{(Integer requirement)}\n\\end{aligned}\n\\]",
+                                "instruct_content": null,
+                                "role": "model_llm",
+                                "cause_by": "actions.trans_2_latex.Trans_2_latex",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "fff32899aaee4840b8eccd5406dcf097",
+                                "content": "The test code overlooks the fact that rounding the continuous solution to the nearest integer may produce a suboptimal or infeasible integer solution. The subsequent integer search only triggers when the rounded solution is infeasible, but it doesn’t verify if the rounded solution is optimal when feasible. For instance, if the continuous optimum gives L=6.7, S=9.1 (cost ≈ $265), rounding to (7,9) may satisfy constraints, but there might be a better integer solution like (6,10) (cost $270) or another. The code assumes feasibility implies optimality after rounding, which isn’t guaranteed for integer linear programming.\n\nThus, a critical improvement would be to always perform the integer search over the feasible region after the continuous relaxation to ensure true integer optimality, not just when the rounded solution is infeasible.",
+                                "instruct_content": null,
+                                "role": "code_llm",
+                                "cause_by": "actions.write_review.Write_review",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            }
+                        ],
+                        "index": {
+                            "metagpt.actions.add_requirement.UserRequirement": [
+                                {
+                                    "id": "5afe0daedbc84e09ab5e2b2be2235f1e",
+                                    "content": "A cruise company can either have two types of trips, a large cruise ship or a small cruise ship. A large cruise ship trip can carry 2000 customers and produces 20 units of pollution. A small cruise ship trip can carry 800 customers and produces 15 units of pollution. There can be at most 7 large cruise ship trips and at least 40% of the total trips must be made by small cruise ships. If the cruise company aims to transport at least 20000 customers, how many of each size of cruise ships should the company use to minimize the total amount of pollution produced?",
+                                    "instruct_content": null,
+                                    "role": "Human",
+                                    "cause_by": "metagpt.actions.add_requirement.UserRequirement",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.thinking.Thinking": [
+                                {
+                                    "id": "2b94b23ff95c40659be904933b95a6b5",
+                                    "content": "Let L be the number of large cruise ship trips. Let S be the number of small cruise ship trips. Both are non-negative integers., Parameters: Large ship capacity = 2000 customers. Small ship capacity = 800 customers. Large ship pollution per trip = 20 units. Small ship pollution per trip = 15 units. Maximum large ship trips = 7. Minimum customer requirement = 20000. Minimum percentage of small ship trips = 40% of total trips., Objective: Minimize total pollution P = 20L + 15S., Constraints: 1. Customer requirement: 2000L + 800S >= 20000. 2. Large ship limit: L <= 7. 3. Small ship percentage: S >= 0.4*(L + S) -> Rearranged: 0.6S - 0.4L >= 0, or equivalently S >= (2/3)L. 4. Non-negativity and integer: L >= 0, S >= 0, L and S integers., ",
+                                    "instruct_content": null,
+                                    "role": "model_llm",
+                                    "cause_by": "actions.thinking.Thinking",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.formulation.Formulation": [
+                                {
+                                    "id": "f3fc59f9d58f47b38f8f7b4f2d98b3a4",
+                                    "content": "{'model': {'variables': [{'name': 'L', 'description': 'Number of large cruise ship trips', 'domain': 'non-negative integer'}, {'name': 'S', 'description': 'Number of small cruise ship trips', 'domain': 'non-negative integer'}], 'objective': {'type': 'minimize', 'function': 'P = 20L + 15S'}, 'constraints': [{'description': 'Customer requirement', 'expression': '2000L + 800S >= 20000'}, {'description': 'Large ship limit', 'expression': 'L <= 7'}, {'description': 'Minimum percentage of small ship trips', 'expression': 'S >= 0.4 * (L + S)', 'simplified': '0.6S - 0.4L >= 0', 'alternate_form': 'S >= (2/3)L'}, {'description': 'Non-negativity', 'expression': 'L >= 0, S >= 0'}, {'description': 'Integer requirement', 'expression': 'L and S are integers'}], 'parameters': {'large_ship_capacity': 2000, 'small_ship_capacity': 800, 'large_ship_pollution_per_trip': 20, 'small_ship_pollution_per_trip': 15, 'maximum_large_ship_trips': 7, 'minimum_customer_requirement': 20000, 'minimum_small_ship_percentage': 0.4}}}",
+                                    "instruct_content": null,
+                                    "role": "model_llm",
+                                    "cause_by": "actions.formulation.Formulation",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.trans_2_latex.Trans_2_latex": [
+                                {
+                                    "id": "d545de2457074c879eba7342d47e748f",
+                                    "content": "\\[\n\\begin{aligned}\n&\\text{Decision Variables:} \\\\\n&L: \\text{Number of large cruise ship trips} \\quad (\\text{integer, } L \\ge 0) \\\\\n&S: \\text{Number of small cruise ship trips} \\quad (\\text{integer, } S \\ge 0) \\\\\n\\\\\n&\\text{Objective:} \\\\\n&\\min \\quad P = 20L + 15S \\\\\n\\\\\n&\\text{Subject to:} \\\\\n&2000L + 800S \\ge 20000 \\quad &\\text{(Customer requirement)} \\\\\n&L \\le 7 \\quad &\\text{(Large ship limit)} \\\\\n&S \\ge 0.4(L + S) \\quad &\\text{(Minimum percentage of small ship trips)} \\\\\n&\\text{or equivalently: } 0.6S - 0.4L \\ge 0 \\quad &\\text{(Simplified form)} \\\\\n&\\text{or equivalently: } S \\ge \\frac{2}{3}L \\quad &\\text{(Alternate form)} \\\\\n&L \\ge 0, \\; S \\ge 0 \\quad &\\text{(Non-negativity)} \\\\\n&L, S \\in \\mathbb{Z} \\quad &\\text{(Integer requirement)}\n\\end{aligned}\n\\]",
+                                    "instruct_content": null,
+                                    "role": "model_llm",
+                                    "cause_by": "actions.trans_2_latex.Trans_2_latex",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.write_review.Write_review": [
+                                {
+                                    "id": "fff32899aaee4840b8eccd5406dcf097",
+                                    "content": "The test code overlooks the fact that rounding the continuous solution to the nearest integer may produce a suboptimal or infeasible integer solution. The subsequent integer search only triggers when the rounded solution is infeasible, but it doesn’t verify if the rounded solution is optimal when feasible. For instance, if the continuous optimum gives L=6.7, S=9.1 (cost ≈ $265), rounding to (7,9) may satisfy constraints, but there might be a better integer solution like (6,10) (cost $270) or another. The code assumes feasibility implies optimality after rounding, which isn’t guaranteed for integer linear programming.\n\nThus, a critical improvement would be to always perform the integer search over the feasible region after the continuous relaxation to ensure true integer optimality, not just when the rounded solution is infeasible.",
+                                    "instruct_content": null,
+                                    "role": "code_llm",
+                                    "cause_by": "actions.write_review.Write_review",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ]
+                        },
+                        "ignore_id": false
+                    },
+                    "working_memory": {
+                        "storage": [],
+                        "index": {},
+                        "ignore_id": false
+                    },
+                    "state": -1,
+                    "watch": [
+                        "metagpt.actions.add_requirement.UserRequirement"
+                    ],
+                    "react_mode": "by_order",
+                    "max_react_loop": 3
+                },
+                "addresses": [
+                    "__main__.Model_llm",
+                    "Alice"
+                ],
+                "planner": {
+                    "plan": {
+                        "goal": "",
+                        "context": "",
+                        "tasks": [],
+                        "task_map": {},
+                        "current_task_id": ""
+                    },
+                    "working_memory": {
+                        "storage": [],
+                        "index": {},
+                        "ignore_id": false
+                    },
+                    "auto_run": false
+                },
+                "recovered": false,
+                "latest_observed_msg": null,
+                "__module_class_name": "__main__.Model_llm"
+            },
+            "code_llm": {
+                "name": "Alice",
+                "profile": "code_llm",
+                "goal": "",
+                "constraints": "",
+                "desc": "",
+                "is_human": false,
+                "role_id": "",
+                "states": [
+                    "0. Write_code",
+                    "1. Run_code",
+                    "2. Write_review"
+                ],
+                "actions": [
+                    {
+                        "name": "Write_code",
+                        "i_context": "",
+                        "prefix": "You are a code_llm, named Alice, your goal is . ",
+                        "desc": "",
+                        "llm_name_or_type": null,
+                        "PROMPT_TEMPLATE": "\n    Imagine you are an expert in programming. Based on the correct mathematical model established above, please write a code to solve this math problem.\n    Remember, the code you generate should exactly correspond to the mathematical model, especially the objective function and constraints.\n    Ensure the code includes the necessary imports, defines the inputs, solves the problem, and prints the result.\"\n    NOTE: You are ONLY allowed to using << Numpy, SciPy, OR-Tools >> libraries to solve the problem.\n    Return ```python your_code_here ``` with NO other texts\n\n    ## Mathematical Model\n    {math_model}\n\n    ## Code\n    ```python \n    \n",
+                        "__module_class_name": "actions.write_code.Write_code"
+                    },
+                    {
+                        "name": "Run_code",
+                        "i_context": "",
+                        "prefix": "You are a code_llm, named Alice, your goal is . ",
+                        "desc": "",
+                        "llm_name_or_type": null,
+                        "__module_class_name": "actions.run_code.Run_code"
+                    },
+                    {
+                        "name": "Write_review",
+                        "i_context": "",
+                        "prefix": "You are a code_llm, named Alice, your goal is . ",
+                        "desc": "",
+                        "llm_name_or_type": null,
+                        "PROMPT_TEMPLATE": "\n    ## Code\n    {code_text}\n\n    ## Execution result\n    {result}\n\n    Review the test code and result of execution provide one critical comments:\n    ",
+                        "__module_class_name": "actions.write_review.Write_review"
+                    }
+                ],
+                "rc": {
+                    "memory": {
+                        "storage": [
+                            {
+                                "id": "5afe0daedbc84e09ab5e2b2be2235f1e",
+                                "content": "A cruise company can either have two types of trips, a large cruise ship or a small cruise ship. A large cruise ship trip can carry 2000 customers and produces 20 units of pollution. A small cruise ship trip can carry 800 customers and produces 15 units of pollution. There can be at most 7 large cruise ship trips and at least 40% of the total trips must be made by small cruise ships. If the cruise company aims to transport at least 20000 customers, how many of each size of cruise ships should the company use to minimize the total amount of pollution produced?",
+                                "instruct_content": null,
+                                "role": "Human",
+                                "cause_by": "metagpt.actions.add_requirement.UserRequirement",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "d545de2457074c879eba7342d47e748f",
+                                "content": "\\[\n\\begin{aligned}\n&\\text{Decision Variables:} \\\\\n&L: \\text{Number of large cruise ship trips} \\quad (\\text{integer, } L \\ge 0) \\\\\n&S: \\text{Number of small cruise ship trips} \\quad (\\text{integer, } S \\ge 0) \\\\\n\\\\\n&\\text{Objective:} \\\\\n&\\min \\quad P = 20L + 15S \\\\\n\\\\\n&\\text{Subject to:} \\\\\n&2000L + 800S \\ge 20000 \\quad &\\text{(Customer requirement)} \\\\\n&L \\le 7 \\quad &\\text{(Large ship limit)} \\\\\n&S \\ge 0.4(L + S) \\quad &\\text{(Minimum percentage of small ship trips)} \\\\\n&\\text{or equivalently: } 0.6S - 0.4L \\ge 0 \\quad &\\text{(Simplified form)} \\\\\n&\\text{or equivalently: } S \\ge \\frac{2}{3}L \\quad &\\text{(Alternate form)} \\\\\n&L \\ge 0, \\; S \\ge 0 \\quad &\\text{(Non-negativity)} \\\\\n&L, S \\in \\mathbb{Z} \\quad &\\text{(Integer requirement)}\n\\end{aligned}\n\\]",
+                                "instruct_content": null,
+                                "role": "model_llm",
+                                "cause_by": "actions.trans_2_latex.Trans_2_latex",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "eb6851443f3f44f196b4e3934d540967",
+                                "content": "import numpy as np\nfrom scipy.optimize import linprog\n\n# Objective function coefficients (minimize 20L + 15S)\nc = [20, 15]\n\n# Inequality constraints (Ax <= b)\n# Constraint 1: 2000L + 800S >= 20000 -> -2000L - 800S <= -20000\n# Constraint 2: L <= 7\n# Constraint 3: 0.6S - 0.4L >= 0 -> 0.4L - 0.6S <= 0\nA_ub = [\n    [-2000, -800],\n    [1, 0],\n    [0.4, -0.6]\n]\nb_ub = [-20000, 7, 0]\n\n# Bounds for variables\nbounds = [(0, None), (0, None)]\n\n# Solve the linear programming problem\nresult = linprog(c, A_ub=A_ub, b_ub=b_ub, bounds=bounds, method='highs')\n\nif result.success:\n    # Round to nearest integers (since we need integer solutions)\n    L = int(np.round(result.x[0]))\n    S = int(np.round(result.x[1]))\n    \n    # Check if the rounded solution satisfies all constraints\n    # Constraint 1: 2000L + 800S >= 20000\n    # Constraint 2: L <= 7\n    # Constraint 3: 0.6S - 0.4L >= 0\n    \n    constraint1_satisfied = (2000 * L + 800 * S) >= 20000\n    constraint2_satisfied = L <= 7\n    constraint3_satisfied = (0.6 * S - 0.4 * L) >= 0\n    \n    if constraint1_satisfied and constraint2_satisfied and constraint3_satisfied:\n        total_cost = 20 * L + 15 * S\n        print(f\"Optimal number of large ship trips: {L}\")\n        print(f\"Optimal number of small ship trips: {S}\")\n        print(f\"Minimum total cost: ${total_cost}\")\n    else:\n        # If rounded solution doesn't work, try integer programming manually\n        # Search over feasible integer space\n        min_cost = float('inf')\n        best_L = 0\n        best_S = 0\n        \n        for L_int in range(0, 8):  # L <= 7\n            for S_int in range(0, 100):  # Reasonable upper bound\n                # Check all constraints\n                if (2000 * L_int + 800 * S_int) >= 20000:\n                    if (0.6 * S_int - 0.4 * L_int) >= 0:\n                        cost = 20 * L_int + 15 * S_int\n                        if cost < min_cost:\n                            min_cost = cost\n                            best_L = L_int\n                            best_S = S_int\n        \n        print(f\"Optimal number of large ship trips: {best_L}\")\n        print(f\"Optimal number of small ship trips: {best_S}\")\n        print(f\"Minimum total cost: ${min_cost}\")\nelse:\n    print(\"No feasible solution found\")\n",
+                                "instruct_content": null,
+                                "role": "code_llm",
+                                "cause_by": "actions.write_code.Write_code",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "c60a4c3c5e22446184331a2af39b98de",
+                                "content": "Optimal number of large ship trips: 7\nOptimal number of small ship trips: 8\nMinimum total cost: $260\n",
+                                "instruct_content": null,
+                                "role": "code_llm",
+                                "cause_by": "actions.run_code.Run_code",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "fff32899aaee4840b8eccd5406dcf097",
+                                "content": "The test code overlooks the fact that rounding the continuous solution to the nearest integer may produce a suboptimal or infeasible integer solution. The subsequent integer search only triggers when the rounded solution is infeasible, but it doesn’t verify if the rounded solution is optimal when feasible. For instance, if the continuous optimum gives L=6.7, S=9.1 (cost ≈ $265), rounding to (7,9) may satisfy constraints, but there might be a better integer solution like (6,10) (cost $270) or another. The code assumes feasibility implies optimality after rounding, which isn’t guaranteed for integer linear programming.\n\nThus, a critical improvement would be to always perform the integer search over the feasible region after the continuous relaxation to ensure true integer optimality, not just when the rounded solution is infeasible.",
+                                "instruct_content": null,
+                                "role": "code_llm",
+                                "cause_by": "actions.write_review.Write_review",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            }
+                        ],
+                        "index": {
+                            "metagpt.actions.add_requirement.UserRequirement": [
+                                {
+                                    "id": "5afe0daedbc84e09ab5e2b2be2235f1e",
+                                    "content": "A cruise company can either have two types of trips, a large cruise ship or a small cruise ship. A large cruise ship trip can carry 2000 customers and produces 20 units of pollution. A small cruise ship trip can carry 800 customers and produces 15 units of pollution. There can be at most 7 large cruise ship trips and at least 40% of the total trips must be made by small cruise ships. If the cruise company aims to transport at least 20000 customers, how many of each size of cruise ships should the company use to minimize the total amount of pollution produced?",
+                                    "instruct_content": null,
+                                    "role": "Human",
+                                    "cause_by": "metagpt.actions.add_requirement.UserRequirement",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.trans_2_latex.Trans_2_latex": [
+                                {
+                                    "id": "d545de2457074c879eba7342d47e748f",
+                                    "content": "\\[\n\\begin{aligned}\n&\\text{Decision Variables:} \\\\\n&L: \\text{Number of large cruise ship trips} \\quad (\\text{integer, } L \\ge 0) \\\\\n&S: \\text{Number of small cruise ship trips} \\quad (\\text{integer, } S \\ge 0) \\\\\n\\\\\n&\\text{Objective:} \\\\\n&\\min \\quad P = 20L + 15S \\\\\n\\\\\n&\\text{Subject to:} \\\\\n&2000L + 800S \\ge 20000 \\quad &\\text{(Customer requirement)} \\\\\n&L \\le 7 \\quad &\\text{(Large ship limit)} \\\\\n&S \\ge 0.4(L + S) \\quad &\\text{(Minimum percentage of small ship trips)} \\\\\n&\\text{or equivalently: } 0.6S - 0.4L \\ge 0 \\quad &\\text{(Simplified form)} \\\\\n&\\text{or equivalently: } S \\ge \\frac{2}{3}L \\quad &\\text{(Alternate form)} \\\\\n&L \\ge 0, \\; S \\ge 0 \\quad &\\text{(Non-negativity)} \\\\\n&L, S \\in \\mathbb{Z} \\quad &\\text{(Integer requirement)}\n\\end{aligned}\n\\]",
+                                    "instruct_content": null,
+                                    "role": "model_llm",
+                                    "cause_by": "actions.trans_2_latex.Trans_2_latex",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.write_code.Write_code": [
+                                {
+                                    "id": "eb6851443f3f44f196b4e3934d540967",
+                                    "content": "import numpy as np\nfrom scipy.optimize import linprog\n\n# Objective function coefficients (minimize 20L + 15S)\nc = [20, 15]\n\n# Inequality constraints (Ax <= b)\n# Constraint 1: 2000L + 800S >= 20000 -> -2000L - 800S <= -20000\n# Constraint 2: L <= 7\n# Constraint 3: 0.6S - 0.4L >= 0 -> 0.4L - 0.6S <= 0\nA_ub = [\n    [-2000, -800],\n    [1, 0],\n    [0.4, -0.6]\n]\nb_ub = [-20000, 7, 0]\n\n# Bounds for variables\nbounds = [(0, None), (0, None)]\n\n# Solve the linear programming problem\nresult = linprog(c, A_ub=A_ub, b_ub=b_ub, bounds=bounds, method='highs')\n\nif result.success:\n    # Round to nearest integers (since we need integer solutions)\n    L = int(np.round(result.x[0]))\n    S = int(np.round(result.x[1]))\n    \n    # Check if the rounded solution satisfies all constraints\n    # Constraint 1: 2000L + 800S >= 20000\n    # Constraint 2: L <= 7\n    # Constraint 3: 0.6S - 0.4L >= 0\n    \n    constraint1_satisfied = (2000 * L + 800 * S) >= 20000\n    constraint2_satisfied = L <= 7\n    constraint3_satisfied = (0.6 * S - 0.4 * L) >= 0\n    \n    if constraint1_satisfied and constraint2_satisfied and constraint3_satisfied:\n        total_cost = 20 * L + 15 * S\n        print(f\"Optimal number of large ship trips: {L}\")\n        print(f\"Optimal number of small ship trips: {S}\")\n        print(f\"Minimum total cost: ${total_cost}\")\n    else:\n        # If rounded solution doesn't work, try integer programming manually\n        # Search over feasible integer space\n        min_cost = float('inf')\n        best_L = 0\n        best_S = 0\n        \n        for L_int in range(0, 8):  # L <= 7\n            for S_int in range(0, 100):  # Reasonable upper bound\n                # Check all constraints\n                if (2000 * L_int + 800 * S_int) >= 20000:\n                    if (0.6 * S_int - 0.4 * L_int) >= 0:\n                        cost = 20 * L_int + 15 * S_int\n                        if cost < min_cost:\n                            min_cost = cost\n                            best_L = L_int\n                            best_S = S_int\n        \n        print(f\"Optimal number of large ship trips: {best_L}\")\n        print(f\"Optimal number of small ship trips: {best_S}\")\n        print(f\"Minimum total cost: ${min_cost}\")\nelse:\n    print(\"No feasible solution found\")\n",
+                                    "instruct_content": null,
+                                    "role": "code_llm",
+                                    "cause_by": "actions.write_code.Write_code",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.run_code.Run_code": [
+                                {
+                                    "id": "c60a4c3c5e22446184331a2af39b98de",
+                                    "content": "Optimal number of large ship trips: 7\nOptimal number of small ship trips: 8\nMinimum total cost: $260\n",
+                                    "instruct_content": null,
+                                    "role": "code_llm",
+                                    "cause_by": "actions.run_code.Run_code",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.write_review.Write_review": [
+                                {
+                                    "id": "fff32899aaee4840b8eccd5406dcf097",
+                                    "content": "The test code overlooks the fact that rounding the continuous solution to the nearest integer may produce a suboptimal or infeasible integer solution. The subsequent integer search only triggers when the rounded solution is infeasible, but it doesn’t verify if the rounded solution is optimal when feasible. For instance, if the continuous optimum gives L=6.7, S=9.1 (cost ≈ $265), rounding to (7,9) may satisfy constraints, but there might be a better integer solution like (6,10) (cost $270) or another. The code assumes feasibility implies optimality after rounding, which isn’t guaranteed for integer linear programming.\n\nThus, a critical improvement would be to always perform the integer search over the feasible region after the continuous relaxation to ensure true integer optimality, not just when the rounded solution is infeasible.",
+                                    "instruct_content": null,
+                                    "role": "code_llm",
+                                    "cause_by": "actions.write_review.Write_review",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ]
+                        },
+                        "ignore_id": false
+                    },
+                    "working_memory": {
+                        "storage": [],
+                        "index": {},
+                        "ignore_id": false
+                    },
+                    "state": -1,
+                    "watch": [
+                        "actions.trans_2_latex.Trans_2_latex"
+                    ],
+                    "react_mode": "by_order",
+                    "max_react_loop": 3
+                },
+                "addresses": [
+                    "Alice",
+                    "__main__.Code_llm"
+                ],
+                "planner": {
+                    "plan": {
+                        "goal": "",
+                        "context": "",
+                        "tasks": [],
+                        "task_map": {},
+                        "current_task_id": ""
+                    },
+                    "working_memory": {
+                        "storage": [],
+                        "index": {},
+                        "ignore_id": false
+                    },
+                    "auto_run": false
+                },
+                "recovered": false,
+                "latest_observed_msg": null,
+                "__module_class_name": "__main__.Code_llm"
+            },
+            "test_llm": {
+                "name": "Bob",
+                "profile": "test_llm",
+                "goal": "",
+                "constraints": "",
+                "desc": "",
+                "is_human": false,
+                "role_id": "",
+                "states": [
+                    "0. Write_test"
+                ],
+                "actions": [
+                    {
+                        "name": "Write_test",
+                        "i_context": "",
+                        "prefix": "You are a test_llm, named Bob, your goal is . ",
+                        "desc": "",
+                        "llm_name_or_type": null,
+                        "PROMPT_TEMPLATE": "\n    Context: {context}\n    Wrap above code to a function for solving math problem and Write {k} unit tests using pytest for the solving function.\n    Return ```python your_code_here ``` with NO other texts, \n    You must start with ```python.\n    your code:\n    ",
+                        "__module_class_name": "actions.write_test.Write_test"
+                    }
+                ],
+                "rc": {
+                    "memory": {
+                        "storage": [
+                            {
+                                "id": "5afe0daedbc84e09ab5e2b2be2235f1e",
+                                "content": "A cruise company can either have two types of trips, a large cruise ship or a small cruise ship. A large cruise ship trip can carry 2000 customers and produces 20 units of pollution. A small cruise ship trip can carry 800 customers and produces 15 units of pollution. There can be at most 7 large cruise ship trips and at least 40% of the total trips must be made by small cruise ships. If the cruise company aims to transport at least 20000 customers, how many of each size of cruise ships should the company use to minimize the total amount of pollution produced?",
+                                "instruct_content": null,
+                                "role": "Human",
+                                "cause_by": "metagpt.actions.add_requirement.UserRequirement",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "d545de2457074c879eba7342d47e748f",
+                                "content": "\\[\n\\begin{aligned}\n&\\text{Decision Variables:} \\\\\n&L: \\text{Number of large cruise ship trips} \\quad (\\text{integer, } L \\ge 0) \\\\\n&S: \\text{Number of small cruise ship trips} \\quad (\\text{integer, } S \\ge 0) \\\\\n\\\\\n&\\text{Objective:} \\\\\n&\\min \\quad P = 20L + 15S \\\\\n\\\\\n&\\text{Subject to:} \\\\\n&2000L + 800S \\ge 20000 \\quad &\\text{(Customer requirement)} \\\\\n&L \\le 7 \\quad &\\text{(Large ship limit)} \\\\\n&S \\ge 0.4(L + S) \\quad &\\text{(Minimum percentage of small ship trips)} \\\\\n&\\text{or equivalently: } 0.6S - 0.4L \\ge 0 \\quad &\\text{(Simplified form)} \\\\\n&\\text{or equivalently: } S \\ge \\frac{2}{3}L \\quad &\\text{(Alternate form)} \\\\\n&L \\ge 0, \\; S \\ge 0 \\quad &\\text{(Non-negativity)} \\\\\n&L, S \\in \\mathbb{Z} \\quad &\\text{(Integer requirement)}\n\\end{aligned}\n\\]",
+                                "instruct_content": null,
+                                "role": "model_llm",
+                                "cause_by": "actions.trans_2_latex.Trans_2_latex",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "fff32899aaee4840b8eccd5406dcf097",
+                                "content": "The test code overlooks the fact that rounding the continuous solution to the nearest integer may produce a suboptimal or infeasible integer solution. The subsequent integer search only triggers when the rounded solution is infeasible, but it doesn’t verify if the rounded solution is optimal when feasible. For instance, if the continuous optimum gives L=6.7, S=9.1 (cost ≈ $265), rounding to (7,9) may satisfy constraints, but there might be a better integer solution like (6,10) (cost $270) or another. The code assumes feasibility implies optimality after rounding, which isn’t guaranteed for integer linear programming.\n\nThus, a critical improvement would be to always perform the integer search over the feasible region after the continuous relaxation to ensure true integer optimality, not just when the rounded solution is infeasible.",
+                                "instruct_content": null,
+                                "role": "code_llm",
+                                "cause_by": "actions.write_review.Write_review",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            }
+                        ],
+                        "index": {
+                            "metagpt.actions.add_requirement.UserRequirement": [
+                                {
+                                    "id": "5afe0daedbc84e09ab5e2b2be2235f1e",
+                                    "content": "A cruise company can either have two types of trips, a large cruise ship or a small cruise ship. A large cruise ship trip can carry 2000 customers and produces 20 units of pollution. A small cruise ship trip can carry 800 customers and produces 15 units of pollution. There can be at most 7 large cruise ship trips and at least 40% of the total trips must be made by small cruise ships. If the cruise company aims to transport at least 20000 customers, how many of each size of cruise ships should the company use to minimize the total amount of pollution produced?",
+                                    "instruct_content": null,
+                                    "role": "Human",
+                                    "cause_by": "metagpt.actions.add_requirement.UserRequirement",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.trans_2_latex.Trans_2_latex": [
+                                {
+                                    "id": "d545de2457074c879eba7342d47e748f",
+                                    "content": "\\[\n\\begin{aligned}\n&\\text{Decision Variables:} \\\\\n&L: \\text{Number of large cruise ship trips} \\quad (\\text{integer, } L \\ge 0) \\\\\n&S: \\text{Number of small cruise ship trips} \\quad (\\text{integer, } S \\ge 0) \\\\\n\\\\\n&\\text{Objective:} \\\\\n&\\min \\quad P = 20L + 15S \\\\\n\\\\\n&\\text{Subject to:} \\\\\n&2000L + 800S \\ge 20000 \\quad &\\text{(Customer requirement)} \\\\\n&L \\le 7 \\quad &\\text{(Large ship limit)} \\\\\n&S \\ge 0.4(L + S) \\quad &\\text{(Minimum percentage of small ship trips)} \\\\\n&\\text{or equivalently: } 0.6S - 0.4L \\ge 0 \\quad &\\text{(Simplified form)} \\\\\n&\\text{or equivalently: } S \\ge \\frac{2}{3}L \\quad &\\text{(Alternate form)} \\\\\n&L \\ge 0, \\; S \\ge 0 \\quad &\\text{(Non-negativity)} \\\\\n&L, S \\in \\mathbb{Z} \\quad &\\text{(Integer requirement)}\n\\end{aligned}\n\\]",
+                                    "instruct_content": null,
+                                    "role": "model_llm",
+                                    "cause_by": "actions.trans_2_latex.Trans_2_latex",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.write_review.Write_review": [
+                                {
+                                    "id": "fff32899aaee4840b8eccd5406dcf097",
+                                    "content": "The test code overlooks the fact that rounding the continuous solution to the nearest integer may produce a suboptimal or infeasible integer solution. The subsequent integer search only triggers when the rounded solution is infeasible, but it doesn’t verify if the rounded solution is optimal when feasible. For instance, if the continuous optimum gives L=6.7, S=9.1 (cost ≈ $265), rounding to (7,9) may satisfy constraints, but there might be a better integer solution like (6,10) (cost $270) or another. The code assumes feasibility implies optimality after rounding, which isn’t guaranteed for integer linear programming.\n\nThus, a critical improvement would be to always perform the integer search over the feasible region after the continuous relaxation to ensure true integer optimality, not just when the rounded solution is infeasible.",
+                                    "instruct_content": null,
+                                    "role": "code_llm",
+                                    "cause_by": "actions.write_review.Write_review",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ]
+                        },
+                        "ignore_id": false
+                    },
+                    "working_memory": {
+                        "storage": [],
+                        "index": {},
+                        "ignore_id": false
+                    },
+                    "state": -1,
+                    "watch": [
+                        "actions.write_review.Write_review",
+                        "actions.write_code.Write_code"
+                    ],
+                    "react_mode": "react",
+                    "max_react_loop": 1
+                },
+                "addresses": [
+                    "__main__.Test_llm",
+                    "Bob"
+                ],
+                "planner": {
+                    "plan": {
+                        "goal": "",
+                        "context": "",
+                        "tasks": [],
+                        "task_map": {},
+                        "current_task_id": ""
+                    },
+                    "working_memory": {
+                        "storage": [],
+                        "index": {},
+                        "ignore_id": false
+                    },
+                    "auto_run": false
+                },
+                "recovered": false,
+                "latest_observed_msg": {
+                    "id": "fff32899aaee4840b8eccd5406dcf097",
+                    "content": "The test code overlooks the fact that rounding the continuous solution to the nearest integer may produce a suboptimal or infeasible integer solution. The subsequent integer search only triggers when the rounded solution is infeasible, but it doesn’t verify if the rounded solution is optimal when feasible. For instance, if the continuous optimum gives L=6.7, S=9.1 (cost ≈ $265), rounding to (7,9) may satisfy constraints, but there might be a better integer solution like (6,10) (cost $270) or another. The code assumes feasibility implies optimality after rounding, which isn’t guaranteed for integer linear programming.\n\nThus, a critical improvement would be to always perform the integer search over the feasible region after the continuous relaxation to ensure true integer optimality, not just when the rounded solution is infeasible.",
+                    "instruct_content": null,
+                    "role": "code_llm",
+                    "cause_by": "actions.write_review.Write_review",
+                    "sent_from": "",
+                    "send_to": [
+                        "<all>"
+                    ]
+                },
+                "__module_class_name": "__main__.Test_llm"
+            }
+        },
+        "history": "\nHuman: A cruise company can either have two types of trips, a large cruise ship or a small cruise ship. A large cruise ship trip can carry 2000 customers and produces 20 units of pollution. A small cruise ship trip can carry 800 customers and produces 15 units of pollution. There can be at most 7 large cruise ship trips and at least 40% of the total trips must be made by small cruise ships. If the cruise company aims to transport at least 20000 customers, how many of each size of cruise ships should the company use to minimize the total amount of pollution produced?\nmodel_llm: \\[\n\\begin{aligned}\n&\\text{Decision Variables:} \\\\\n&L: \\text{Number of large cruise ship trips} \\quad (\\text{integer, } L \\ge 0) \\\\\n&S: \\text{Number of small cruise ship trips} \\quad (\\text{integer, } S \\ge 0) \\\\\n\\\\\n&\\text{Objective:} \\\\\n&\\min \\quad P = 20L + 15S \\\\\n\\\\\n&\\text{Subject to:} \\\\\n&2000L + 800S \\ge 20000 \\quad &\\text{(Customer requirement)} \\\\\n&L \\le 7 \\quad &\\text{(Large ship limit)} \\\\\n&S \\ge 0.4(L + S) \\quad &\\text{(Minimum percentage of small ship trips)} \\\\\n&\\text{or equivalently: } 0.6S - 0.4L \\ge 0 \\quad &\\text{(Simplified form)} \\\\\n&\\text{or equivalently: } S \\ge \\frac{2}{3}L \\quad &\\text{(Alternate form)} \\\\\n&L \\ge 0, \\; S \\ge 0 \\quad &\\text{(Non-negativity)} \\\\\n&L, S \\in \\mathbb{Z} \\quad &\\text{(Integer requirement)}\n\\end{aligned}\n\\]\ncode_llm: The test code overlooks the fact that rounding the continuous solution to the nearest integer may produce a suboptimal or infeasible integer solution. The subsequent integer search only triggers when the rounded solution is infeasible, but it doesn’t verify if the rounded solution is optimal when feasible. For instance, if the continuous optimum gives L=6.7, S=9.1 (cost ≈ $265), rounding to (7,9) may satisfy constraints, but there might be a better integer solution like (6,10) (cost $270) or another. The code assumes feasibility implies optimality after rounding, which isn’t guaranteed for integer linear programming.\n\nThus, a critical improvement would be to always perform the integer search over the feasible region after the continuous relaxation to ensure true integer optimality, not just when the rounded solution is infeasible.\ntest_llm: import pulp\nimport pytest\nimport numpy as np\n\ndef solve_cruise_ship_problem():\n    \"\"\"\n    Solve the cruise ship optimization problem using integer linear programming.\n    \n    Returns:\n        dict: Contains the optimal number of large ships (L), small ships (S),\n              total pollution (P), and status of the solution.\n    \"\"\"\n    # Create the problem\n    prob = pulp.LpProblem(\"CruiseShipPollutionMinimization\", pulp.LpMinimize)\n    \n    # Define decision variables (integer, non-negative)\n    L = pulp.LpVariable('L', lowBound=0, cat='Integer')\n    S = pulp.LpVariable('S', lowBound=0, cat='Integer')\n    \n    # Objective function: minimize pollution\n    prob += 20 * L + 15 * S, \"TotalPollution\"\n    \n    # Constraints\n    # Customer requirement: at least 20000 customers\n    prob += 2000 * L + 800 * S >= 20000, \"CustomerRequirement\"\n    \n    # Large ship limit: at most 7 large cruise ship trips\n    prob += L <= 7, \"LargeShipLimit\"\n    \n    # Minimum percentage of small ship trips: at least 40% of total trips\n    # S >= 0.4(L + S) => S >= 0.4L + 0.4S => 0.6S >= 0.4L => S >= (2/3)L\n    prob += S >= (2/3) * L, \"SmallShipPercentage\"\n    \n    # Solve the problem\n    prob.solve(pulp.PULP_CBC_MSG(msg=False))\n    \n    # Extract solution\n    solution = {\n        'L': int(L.varValue) if L.varValue is not None else None,\n        'S': int(S.varValue) if S.varValue is not None else None,\n        'P': pulp.value(prob.objective) if prob.objective is not None else None,\n        'status': pulp.LpStatus[prob.status]\n    }\n    \n    return solution\n\n# Unit tests for the solve_cruise_ship_problem function\ndef test_feasibility_and_optimality():\n    \"\"\"Test that the solution satisfies all constraints and is optimal.\"\"\"\n    solution = solve_cruise_ship_problem()\n    \n    # Check that solution was found\n    assert solution['status'] == 'Optimal'\n    assert solution['L'] is not None\n    assert solution['S'] is not None\n    assert solution['P'] is not None\n    \n    L, S, P = solution['L'], solution['S'], solution['P']\n    \n    # Verify constraints\n    assert 2000 * L + 800 * S >= 20000  # Customer requirement\n    assert L <= 7  # Large ship limit\n    assert S >= (2/3) * L  # Small ship percentage\n    assert L >= 0 and S >= 0  # Non-negativity\n    assert isinstance(L, int) and isinstance(S, int)  # Integer requirement\n    \n    # Verify objective value matches calculation\n    assert P == 20 * L + 15 * S\n\ndef test_small_ship_percentage_constraint():\n    \"\"\"Test that the small ship percentage constraint is strictly enforced.\"\"\"\n    solution = solve_cruise_ship_problem()\n    L, S = solution['L'], solution['S']\n    \n    # Calculate percentage of small ships\n    total_trips = L + S\n    small_percentage = S / total_trips if total_trips > 0 else 0\n    \n    # Should be at least 40%\n    assert small_percentage >= 0.4 - 1e-10\n\ndef test_customer_requirement_satisfaction():\n    \"\"\"Test that the customer requirement is met exactly or exceeded.\"\"\"\n    solution = solve_cruise_ship_problem()\n    L, S = solution['L'], solution['S']\n    \n    total_customers = 2000 * L + 800 * S\n    assert total_customers >= 20000\n\ndef test_large_ship_limit():\n    \"\"\"Test that the large ship limit is not exceeded.\"\"\"\n    solution = solve_cruise_ship_problem()\n    L = solution['L']\n    assert L <= 7\n\ndef test_integer_solution():\n    \"\"\"Test that the solution variables are integers.\"\"\"\n    solution = solve_cruise_ship_problem()\n    L, S = solution['L'], solution['S']\n    assert isinstance(L, int)\n    assert isinstance(S, int)\n    assert L == int(L)\n    assert S == int(S)\n\nif __name__ == \"__main__\":\n    # Run the solver and display results\n    solution = solve_cruise_ship_problem()\n    print(\"Optimal Solution:\")\n    print(f\"Large ships (L): {solution['L']}\")\n    print(f\"Small ships (S): {solution['S']}\")\n    print(f\"Total pollution (P): {solution['P']}\")\n    print(f\"Status: {solution['status']}\")\n    \n    # Run pytest tests\n    pytest.main([__file__, \"-v\"])\n"
+    },
+    "investment": 3.0,
+    "idea": "A cruise company can either have two types of trips, a large cruise ship or a small cruise ship. A large cruise ship trip can carry 2000 customers and produces 20 units of pollution. A small cruise ship trip can carry 800 customers and produces 15 units of pollution. There can be at most 7 large cruise ship trips and at least 40% of the total trips must be made by small cruise ships. If the cruise company aims to transport at least 20000 customers, how many of each size of cruise ships should the company use to minimize the total amount of pollution produced?",
+    "context": {
+        "workdir": "",
+        "kwargs": {},
+        "cost_manager": "{\"total_prompt_tokens\":0,\"total_completion_tokens\":0,\"total_budget\":0.0,\"max_budget\":3.0,\"total_cost\":0.0,\"token_costs\":{\"gpt-3.5-turbo\":{\"prompt\":0.0015,\"completion\":0.002},\"gpt-3.5-turbo-0301\":{\"prompt\":0.0015,\"completion\":0.002},\"gpt-3.5-turbo-0613\":{\"prompt\":0.0015,\"completion\":0.002},\"gpt-3.5-turbo-16k\":{\"prompt\":0.003,\"completion\":0.004},\"gpt-3.5-turbo-16k-0613\":{\"prompt\":0.003,\"completion\":0.004},\"gpt-35-turbo\":{\"prompt\":0.0015,\"completion\":0.002},\"gpt-35-turbo-16k\":{\"prompt\":0.003,\"completion\":0.004},\"gpt-3.5-turbo-1106\":{\"prompt\":0.001,\"completion\":0.002},\"gpt-3.5-turbo-0125\":{\"prompt\":0.001,\"completion\":0.002},\"gpt-4-0314\":{\"prompt\":0.03,\"completion\":0.06},\"gpt-4\":{\"prompt\":0.03,\"completion\":0.06},\"gpt-4-32k\":{\"prompt\":0.06,\"completion\":0.12},\"gpt-4-32k-0314\":{\"prompt\":0.06,\"completion\":0.12},\"gpt-4-0613\":{\"prompt\":0.06,\"completion\":0.12},\"gpt-4-turbo-preview\":{\"prompt\":0.01,\"completion\":0.03},\"gpt-4-1106-preview\":{\"prompt\":0.01,\"completion\":0.03},\"gpt-4-0125-preview\":{\"prompt\":0.01,\"completion\":0.03},\"gpt-4-turbo\":{\"prompt\":0.01,\"completion\":0.03},\"gpt-4-turbo-2024-04-09\":{\"prompt\":0.01,\"completion\":0.03},\"gpt-4-vision-preview\":{\"prompt\":0.01,\"completion\":0.03},\"gpt-4-1106-vision-preview\":{\"prompt\":0.01,\"completion\":0.03},\"gpt-4o\":{\"prompt\":0.005,\"completion\":0.015},\"gpt-4o-mini\":{\"prompt\":0.00015,\"completion\":0.0006},\"gpt-4o-mini-2024-07-18\":{\"prompt\":0.00015,\"completion\":0.0006},\"gpt-4o-2024-05-13\":{\"prompt\":0.005,\"completion\":0.015},\"gpt-4o-2024-08-06\":{\"prompt\":0.0025,\"completion\":0.01},\"o1-preview\":{\"prompt\":0.015,\"completion\":0.06},\"o1-preview-2024-09-12\":{\"prompt\":0.015,\"completion\":0.06},\"o1-mini\":{\"prompt\":0.003,\"completion\":0.012},\"o1-mini-2024-09-12\":{\"prompt\":0.003,\"completion\":0.012},\"text-embedding-ada-002\":{\"prompt\":0.0004,\"completion\":0.0},\"glm-3-turbo\":{\"prompt\":0.0007,\"completion\":0.0007},\"glm-4\":{\"prompt\":0.014,\"completion\":0.014},\"glm-4-flash\":{\"prompt\":0.0,\"completion\":0.0},\"glm-4-plus\":{\"prompt\":0.007,\"completion\":0.007},\"gemini-1.5-flash\":{\"prompt\":0.000075,\"completion\":0.0003},\"gemini-1.5-pro\":{\"prompt\":0.0035,\"completion\":0.0105},\"gemini-1.0-pro\":{\"prompt\":0.0005,\"completion\":0.0015},\"moonshot-v1-8k\":{\"prompt\":0.012,\"completion\":0.012},\"moonshot-v1-32k\":{\"prompt\":0.024,\"completion\":0.024},\"moonshot-v1-128k\":{\"prompt\":0.06,\"completion\":0.06},\"open-mistral-7b\":{\"prompt\":0.00025,\"completion\":0.00025},\"open-mixtral-8x7b\":{\"prompt\":0.0007,\"completion\":0.0007},\"mistral-small-latest\":{\"prompt\":0.002,\"completion\":0.006},\"mistral-medium-latest\":{\"prompt\":0.0027,\"completion\":0.0081},\"mistral-large-latest\":{\"prompt\":0.008,\"completion\":0.024},\"claude-instant-1.2\":{\"prompt\":0.0008,\"completion\":0.0024},\"claude-2.0\":{\"prompt\":0.008,\"completion\":0.024},\"claude-2.1\":{\"prompt\":0.008,\"completion\":0.024},\"claude-3-sonnet-20240229\":{\"prompt\":0.003,\"completion\":0.015},\"claude-3-5-sonnet\":{\"prompt\":0.003,\"completion\":0.015},\"claude-3-5-sonnet-v2\":{\"prompt\":0.003,\"completion\":0.015},\"claude-3-5-sonnet-20240620\":{\"prompt\":0.003,\"completion\":0.015},\"claude-3-opus-20240229\":{\"prompt\":0.015,\"completion\":0.075},\"claude-3-haiku-20240307\":{\"prompt\":0.00025,\"completion\":0.00125},\"yi-34b-chat-0205\":{\"prompt\":0.0003,\"completion\":0.0003},\"yi-34b-chat-200k\":{\"prompt\":0.0017,\"completion\":0.0017},\"yi-large\":{\"prompt\":0.0028,\"completion\":0.0028},\"microsoft/wizardlm-2-8x22b\":{\"prompt\":0.00108,\"completion\":0.00108},\"meta-llama/llama-3-70b-instruct\":{\"prompt\":0.008,\"completion\":0.008},\"llama3-70b-8192\":{\"prompt\":0.0059,\"completion\":0.0079},\"openai/gpt-3.5-turbo-0125\":{\"prompt\":0.0005,\"completion\":0.0015},\"openai/gpt-4-turbo-preview\":{\"prompt\":0.01,\"completion\":0.03},\"openai/o1-preview\":{\"prompt\":0.015,\"completion\":0.06},\"openai/o1-mini\":{\"prompt\":0.003,\"completion\":0.012},\"anthropic/claude-3-opus\":{\"prompt\":0.015,\"completion\":0.075},\"anthropic/claude-3.5-sonnet\":{\"prompt\":0.003,\"completion\":0.015},\"google/gemini-pro-1.5\":{\"prompt\":0.0025,\"completion\":0.0075},\"deepseek-chat\":{\"prompt\":0.00014,\"completion\":0.00028},\"deepseek-coder\":{\"prompt\":0.00014,\"completion\":0.00028},\"doubao-lite-4k-240515\":{\"prompt\":0.000043,\"completion\":0.000086},\"doubao-lite-32k-240515\":{\"prompt\":0.000043,\"completion\":0.000086},\"doubao-lite-128k-240515\":{\"prompt\":0.00011,\"completion\":0.00014},\"doubao-pro-4k-240515\":{\"prompt\":0.00011,\"completion\":0.00029},\"doubao-pro-32k-240515\":{\"prompt\":0.00011,\"completion\":0.00029},\"doubao-pro-128k-240515\":{\"prompt\":0.0007,\"completion\":0.0013},\"llama3-70b-llama3-70b-instruct\":{\"prompt\":0.0,\"completion\":0.0},\"llama3-8b-llama3-8b-instruct\":{\"prompt\":0.0,\"completion\":0.0}}}"
+    }
+}

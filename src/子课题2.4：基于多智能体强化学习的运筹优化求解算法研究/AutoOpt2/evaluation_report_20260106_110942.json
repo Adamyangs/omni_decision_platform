@@ -1,0 +1,1412 @@
+{
+  "timestamp": "2026-01-06T11:09:42.505806",
+  "total_problems": 26,
+  "evaluations": [
+    {
+      "problem_id": "problem_1",
+      "scores": {
+        "variable_definition": {
+          "score": 15,
+          "reason": "Variables x and y cover the decision variables (cart and hand delivery servers) and are clearly named. However, the model fails to specify that server counts must be integer variables (as fractional servers are impractical), which is a critical omission for real-world implementation. Linear programming typically assumes continuous variables, but this problem inherently requires integer values."
+        },
+        "objective_function": {
+          "score": 20,
+          "reason": "The objective function 'minimize 5x + 20y' perfectly aligns with the goal of minimizing total refills per hour. Coefficients (5 refills for cart, 20 for hand) are correctly extracted from the problem description, and the minimization direction is accurate."
+        },
+        "constraint_completeness": {
+          "score": 16,
+          "reason": "All explicit constraints (customer interactions, cart proportion, minimum hand servers, non-negativity) are included. However, the implicit integer constraint for server counts is missing, which is essential for feasibility. Additionally, the non-negativity constraint 'y >= 0' is redundant due to 'y >= 3', though this is a minor issue. No contradictions exist."
+        },
+        "constraint_accuracy": {
+          "score": 20,
+          "reason": "Constraints are accurately translated: '70x + 85y >= 4000' correctly enforces minimum customer interactions, 'x >= 0.7(x + y)' properly handles the 70% cart shift proportion (simplifiable to 3x >= 7y but mathematically equivalent), and 'y >= 3' matches the hand server requirement. Inequality directions and complex proportion logic are flawless."
+        },
+        "expression_standardization": {
+          "score": 18,
+          "reason": "JSON structure is logical with clear 'description' and 'expression' fields. Mathematical notation (e.g., '5x + 20y') is standard. However, variable types are not specified in definitions, and the redundant 'y >= 0' constraint reduces elegance. Descriptions are sufficiently detailed for clarity."
+        }
+      },
+      "total_score": 89,
+      "issues": [
+        "Variables not specified as integers (servers must be whole numbers)",
+        "Redundant non-negativity constraint for y (y >= 3 implies y >= 0)",
+        "Ambiguity in customer interaction constraint: problem states 'wants to have 4000' but model uses >=; equality might be intended though >= is acceptable for minimization"
+      ],
+      "suggestions": [
+        "Explicitly declare x and y as integer variables (e.g., add 'type': 'integer' in variable definitions)",
+        "Remove the redundant constraint 'y >= 0' to streamline the model",
+        "Verify if customer interaction constraint should be equality (70x + 85y = 4000); if not, justify >= in documentation as it aligns with minimization objective",
+        "Include a note about potential need for integer programming due to discrete server counts"
+      ],
+      "overall_evaluation": "The model is fundamentally sound and accurately captures the problem's core requirements, with precise constraint translation and a correct objective. However, the omission of integer constraints for server counts is a significant flaw that could yield impractical fractional solutions (e.g., 2.3 servers). Redundant constraints slightly reduce elegance but do not invalidate the model. Overall, it demonstrates strong understanding of linear programming principles but lacks attention to real-world implementability.",
+      "grade": "B"
+    },
+    {
+      "problem_id": "problem_3",
+      "scores": {
+        "variable_definition": {
+          "score": 20,
+          "reason": "变量x和y完整覆盖问题中的决策变量（电动自行车和滑板车数量），命名清晰易懂（在variables列表中提供了明确描述），变量类型正确标注为非负整数（符合问题中'both x and y are non-negative integers'的要求）。无遗漏或错误。"
+        },
+        "objective_function": {
+          "score": 20,
+          "reason": "目标函数'maximize 8x + 5y'准确反映最大化送餐数量的优化目标；系数8和5正确提取自问题描述（自行车每辆8餐、滑板车每辆5餐）；优化方向为最大化，与问题要求一致。无错误。"
+        },
+        "constraint_completeness": {
+          "score": 20,
+          "reason": "所有必要约束均被包含：充电约束（3x + 2y ≤ 200）、比例约束（0.7x - 0.3y ≤ 0）、滑板车最小数量（y ≥ 20）、非负性（x ≥ 0, y ≥ 0）和整数性（x, y integers）。隐含约束（如y ≥ 20确保x + y > 0，避免比例约束分母为零）已隐含处理，无遗漏；约束间无冗余或矛盾（例如，y ≥ 20与x ≥ 0兼容）。"
+        },
+        "constraint_accuracy": {
+          "score": 20,
+          "reason": "文字描述到数学表达式的转化准确：城市政策'at most 30% of vehicles can be bikes'正确转化为x/(x+y) ≤ 0.3，并等价处理为0.7x - 0.3y ≤ 0（数学推导无误）；不等式方向正确（≤符合'at most'要求）；复杂比例约束处理得当（考虑x + y > 0的可行性）。系数虽为小数，但数学等价，不影响准确性。"
+        },
+        "expression_standardization": {
+          "score": 15,
+          "reason": "JSON结构基本合理（包含objective_function、constraints、variables键），但存在规范性问题：约束列表中包含非数学文本'x, y are integers'，应仅保留数学不等式（整数约束应整合到变量定义中）；小数系数0.7和0.3应使用整数系数（如7x - 3y ≤ 0）以避免数值精度问题，符合线性规划建模规范；数学符号使用不够专业（小数系数不标准），但variables描述提供了必要注释。"
+        }
+      },
+      "total_score": 95,
+      "issues": [
+        "比例约束使用小数系数（0.7x - 0.3y ≤ 0），易引发数值计算问题，应使用整数系数（7x - 3y ≤ 0）",
+        "约束列表中包含文本项'x, y are integers'，作为非数学表达式，不符合线性规划约束的标准形式（应仅包含数学不等式）"
+      ],
+      "suggestions": [
+        "将约束'0.7x - 0.3y ≤ 0'替换为'7x - 3y ≤ 0'以消除小数，提升数值稳定性和规范性",
+        "从constraints列表中移除'x, y are integers'项，并在variables定义中强化整数类型说明（如'x: integer, y: integer'），确保约束仅包含数学表达式",
+        "在建模文档中添加简要注释解释比例约束的转化过程（如'from x/(x+y) ≤ 0.3'），增强可读性"
+      ],
+      "overall_evaluation": "该数学建模在变量定义、目标函数、约束完整性和转化准确性方面表现卓越，核心要素无错误，能正确求解问题。主要不足在于表达规范性：小数系数和非标准约束表达降低了专业性，可能影响实际求解器的兼容性。建议采用整数系数并严格区分变量属性与约束条件，以符合运筹学建模最佳实践。整体质量优秀，仅需微调即可达到行业标准。",
+      "grade": "A"
+    },
+    {
+      "problem_id": "problem_4",
+      "scores": {
+        "variable_definition": {
+          "score": 15,
+          "reason": "变量完整覆盖决策变量（x1为橙汁盒数，x2为苹果汁盒数），命名通过描述清晰易懂（'number_of_orange_juice_boxes'等）。但未指定变量类型：问题中果汁盒数必须为整数（离散单位），而模型未标注整数约束（如 'type': 'integer'），仅假设连续变量，这可能导致解不实用（如非整数解）。扣5分。"
+        },
+        "objective_function": {
+          "score": 20,
+          "reason": "目标函数准确反映最大化维生素D摄入的目标，系数正确提取自问题描述（橙汁10单位D，苹果汁12单位D），优化方向（最大化）正确。无错误。"
+        },
+        "constraint_completeness": {
+          "score": 15,
+          "reason": "包含所有必要约束：偏好约束（x2 >= 3*x1）、最小橙汁约束（x1 >= 3）、维生素C上限约束（8*x1 + 6*x2 <= 300）和非负性约束。但遗漏隐含整数约束（果汁盒数应为整数），且非负性约束（x1 >= 0, x2 >= 0）冗余（由x1 >= 3和x2 >= 3*x1隐含），虽非错误但降低简洁性。主要扣分点为整数约束缺失。扣5分。"
+        },
+        "constraint_accuracy": {
+          "score": 20,
+          "reason": "文字描述到数学表达式转化准确：偏好约束（'至少3倍苹果汁盒数比橙汁盒数' → x2 >= 3*x1）、最小橙汁约束（'至少3盒橙汁' → x1 >= 3）、维生素C约束（'最多300单位C' → 8*x1 + 6*x2 <= 300）均正确。不等式方向无误，复杂比例关系处理恰当。问题描述中'and'的歧义（应为'as'）在思考过程中已纠正，模型无转化错误。"
+        },
+        "expression_standardization": {
+          "score": 15,
+          "reason": "JSON结构合理（含model_name、variables等标准字段），数学符号规范（x1/x2命名简洁）。但目标函数和约束表达式硬编码系数（如'10*x1'而非引用参数名'vitamin_D_orange * x1'），降低模型灵活性和可维护性；参数虽定义但未在表达式中使用。此外，冗余非负性约束影响简洁性。扣5分。"
+        }
+      },
+      "total_score": 85,
+      "issues": [
+        "变量类型未指定为整数（果汁盒数应为离散整数，但模型隐含连续假设）",
+        "目标函数和约束中硬编码系数，未使用参数名（如vitamin_D_orange），导致模型不灵活",
+        "包含冗余非负性约束（x1 >= 0, x2 >= 0 已由x1 >= 3和x2 >= 3*x1隐含）"
+      ],
+      "suggestions": [
+        "在variables中添加类型标注（如 'x1': {'description': '...', 'type': 'integer'}）以强制整数解",
+        "修改表达式引用参数名（如 objective: 'vitamin_D_orange * x1 + vitamin_D_apple * x2'），提升可维护性",
+        "移除冗余非负性约束，仅保留必要约束以简化模型"
+      ],
+      "overall_evaluation": "该线性规划模型核心逻辑正确，目标函数和主要约束准确反映问题需求，但存在关键不足：未处理决策变量的整数性质（可能导致非实用解），且表达式硬编码参数值降低模型灵活性。冗余约束虽不影响可行性，但损害简洁性。总体建模质量良好，适用于初步分析，但需改进以符合实际应用场景。建议优先添加整数约束并参数化表达式。",
+      "grade": "B"
+    },
+    {
+      "problem_id": "problem_6",
+      "scores": {
+        "variable_definition": {
+          "score": 15,
+          "reason": "变量R和P完整覆盖了决策变量（普通和高级手袋数量），命名清晰易懂（R代表regular，P代表premium）。但变量类型未正确标注：问题中手袋数量必须为整数（'how many' implies discrete units），但建模中未指定整数约束，仅包含非负连续变量假设，这与实际业务场景不符。扣5分。"
+        },
+        "objective_function": {
+          "score": 20,
+          "reason": "目标函数准确反映最大化月利润的优化目标，系数$30和$180正确提取自问题描述的销售利润数据（'sell at a profit of $30 each' and '$180 each'），优化方向为'maximize'正确。无错误。"
+        },
+        "constraint_completeness": {
+          "score": 8,
+          "reason": "遗漏关键约束：问题描述'can sell at most 475 handbags of either type per month' 应解释为每种类型独立约束（R ≤ 475 and P ≤ 475），但建模错误地使用了总销售量约束（R + P ≤ 475），导致约束不完整。同时遗漏隐含整数约束（手袋数量必须为整数）。预算约束和非负约束完整，但销售量约束错误严重，且无冗余或矛盾。扣12分。"
+        },
+        "constraint_accuracy": {
+          "score": 10,
+          "reason": "预算约束（200R + 447P ≤ 250000）转化准确，不等式方向正确。但销售量约束转化严重错误：文字描述'of either type' 明确表示每种类型上限475，应转化为R ≤ 475 and P ≤ 475，而非R + P ≤ 475。非负约束正确。此错误导致模型无法反映实际业务限制。扣10分。"
+        },
+        "expression_standardization": {
+          "score": 16,
+          "reason": "JSON结构合理（variables/objective/constraints分层清晰），数学符号规范（使用≤、变量大写）。但约束列表以字符串形式呈现，未明确区分独立约束（如销售量应拆分为两个不等式）；变量定义缺少类型说明（如'integer'）。描述信息基本完整，但注释不足。扣4分。"
+        }
+      },
+      "total_score": 69,
+      "issues": [
+        "销售量约束错误：将'at most 475 handbags of either type'误解为总销售量约束（R + P ≤ 475），正确应为每种类型独立约束（R ≤ 475 and P ≤ 475）",
+        "遗漏整数约束：手袋数量必须为整数，但模型中仅包含非负连续变量假设",
+        "变量类型未标注：未在定义中指定R和P为整数变量",
+        "约束完整性不足：销售量约束错误导致模型无法捕捉实际业务限制"
+      ],
+      "suggestions": [
+        "修正销售量约束：替换为'R ≤ 475' and 'P ≤ 475'以准确反映'of either type'的含义",
+        "添加整数约束：在variables中指定'R: integer' and 'P: integer'，或在constraints中加入'R integer' and 'P integer'",
+        "在变量定义中明确类型：例如'Number of regular handbags (integer)'",
+        "验证约束逻辑：确保所有约束与问题描述严格一致，避免语义误解"
+      ],
+      "overall_evaluation": "建模存在严重缺陷，核心问题在于销售量约束的错误转化（将类型独立上限误解为总和上限），导致模型无法正确表示业务场景。目标函数正确，但约束不完整且关键错误使解决方案失效。变量定义和表达规范性较好，但整数约束遗漏进一步降低实用性。总分69分，属于较差水平，需重大修正才能用于实际优化。",
+      "grade": "D"
+    },
+    {
+      "problem_id": "problem_8",
+      "scores": {
+        "variable_definition": {
+          "score": 18,
+          "reason": "Variables 'a' and 'c' are well-defined and cover all decision variables (almond and cashew servings), with clear naming conventions ('a' for almonds, 'c' for cashews). However, the continuous nature of the variables is not explicitly stated, which is a critical omission in optimization modeling. Although linear programming typically assumes continuous variables by default, the problem context (servings) might imply potential integer requirements, and best practice requires explicit specification (e.g., 'continuous' or 'integer') to avoid ambiguity in solution interpretation."
+        },
+        "objective_function": {
+          "score": 20,
+          "reason": "The objective function perfectly captures the minimization of total weekly fat intake with accurate coefficients (15g per almond serving, 12g per cashew serving) directly extracted from the problem description. The optimization direction (minimization) is correctly specified, aligning with the goal of minimizing fat consumption."
+        },
+        "constraint_completeness": {
+          "score": 19,
+          "reason": "All necessary constraints are included: calorie requirement (≥10000), protein requirement (≥800g), almond-to-cashew ratio (a ≥ 2c), and non-negativity. However, the protein constraint (20a + 25c ≥ 800) is redundant under the ratio constraint (a ≥ 2c) and calorie constraint, as the minimum protein intake (≈928.5g) when satisfying calories and ratio exceeds 800g. While redundancy does not violate completeness (as the problem explicitly states the protein requirement), it indicates a lack of constraint analysis that could improve model efficiency."
+        },
+        "constraint_accuracy": {
+          "score": 20,
+          "reason": "Constraints are accurately translated from the problem description to mathematical expressions. Inequality directions (all ≥) correctly reflect minimum requirements, and the ratio constraint (a ≥ 2c) is precisely modeled for 'at least twice as many almond servings as cashew servings.' No errors in coefficient extraction or logical conversion are present."
+        },
+        "expression_standardization": {
+          "score": 19,
+          "reason": "The JSON structure is logical and well-organized, with clear descriptions for variables, objective, and constraints. Mathematical symbols (e.g., '>=') are commonly accepted in computational contexts, but standard optimization notation typically uses '≥' for inequalities. Additionally, while variable descriptions are informative, the absence of explicit variable type declarations (e.g., 'continuous') reduces professionalism in formal modeling."
+        }
+      },
+      "total_score": 96,
+      "issues": [
+        "Variables not explicitly declared as continuous, risking ambiguity in solution interpretation (e.g., whether servings must be integers)",
+        "Protein constraint is redundant due to the combined effect of calorie and ratio constraints, potentially reducing computational efficiency",
+        "Use of '>=' instead of standard mathematical symbol '≥' in constraints, though acceptable computationally, deviates from formal optimization notation"
+      ],
+      "suggestions": [
+        "Explicitly specify variable types (e.g., 'a, c ≥ 0 and continuous') in the model to enhance clarity and align with optimization best practices",
+        "Analyze constraint dependencies to identify and document redundancies (e.g., note that protein constraint is inactive under optimal solutions), while retaining it to satisfy problem requirements",
+        "Adopt standard mathematical symbols (e.g., '≥') in inequality expressions for improved readability and professionalism in academic/industrial contexts"
+      ],
+      "overall_evaluation": "The mathematical model is highly accurate and robust, with excellent alignment to the problem description. All core elements—variables, objective, and constraints—are correctly formulated, demonstrating strong understanding of linear programming principles. Minor issues in variable type specification, constraint redundancy, and notation standardization prevent perfection but do not compromise solution validity. This model would yield correct optimal solutions with standard solvers.",
+      "grade": "A"
+    },
+    {
+      "problem_id": "problem_9",
+      "scores": {
+        "variable_definition": {
+          "score": 18,
+          "reason": "变量完整覆盖决策变量（x为新炉子数量，y为旧炉子数量），命名清晰且有描述性说明。但变量类型（整数）未在variables部分直接标注，而是作为文本约束列入constraints列表，不符合标准建模规范（整数性应作为变量属性而非约束条件）。扣2分。"
+        },
+        "objective_function": {
+          "score": 20,
+          "reason": "目标函数准确反映'最小化总炉子数量'的优化目标，系数（x和y均为1）正确提取自问题描述，优化方向'minimize'正确无误。无任何错误。"
+        },
+        "constraint_completeness": {
+          "score": 19,
+          "reason": "包含所有必要约束：加热需求（10x+15y≥200）、电力限制（200x+250y≤3500）、旧模型比例（y≤0.35(x+y)）、最小新模型（x≥5）、非负性（x≥0,y≥0）和整数性。但x≥0约束冗余（因x≥5已隐含x≥0），虽非严重遗漏，但影响简洁性。扣1分。"
+        },
+        "constraint_accuracy": {
+          "score": 20,
+          "reason": "所有约束转化准确：加热和电力约束的系数与方向正确；比例约束'y≤0.35(x+y)'精确对应'at most 35% old models'（可简化为13y≤7x但非必须）；不等式方向（≥/≤）无误；整数性要求合理。无转化错误。"
+        },
+        "expression_standardization": {
+          "score": 17,
+          "reason": "JSON结构基本合理，但约束列表混用数学表达式（如'10x+15y≥200'）和非数学文本（'x,y are integers'），整数约束应作为变量属性而非约束条目；比例约束'0.35(x+y)'缺少乘号（应写为0.35*(x+y)）；未提供约束描述性注释（如约束来源）。扣3分因表达不规范。"
+        }
+      },
+      "total_score": 94,
+      "issues": [
+        "变量类型（整数）未在variables部分标注，错误地列为constraints中的文本描述",
+        "冗余约束：x≥0（因x≥5已隐含）",
+        "约束列表包含非数学表达式（'x,y are integers'），破坏规范性",
+        "比例约束未简化且数学符号不严谨（缺少乘号）"
+      ],
+      "suggestions": [
+        "在variables定义中直接指定类型：例如'x': {'description': '...', 'type': 'integer'}",
+        "移除冗余约束x≥0，保留y≥0（因y可能为0）",
+        "将整数约束从constraints中移除，整合到variables属性中",
+        "简化比例约束为线性形式（如7x - 13y ≥ 0）并规范数学符号（添加乘号）",
+        "为每个约束添加描述性注释（如'heating_requirement: 10x + 15y >= 200'）"
+      ],
+      "overall_evaluation": "建模整体优秀：变量定义完整、目标函数精确、约束转化无误，核心逻辑正确。主要不足在于表达规范性——整数约束处理不当和冗余约束影响专业性，但未导致模型错误。经简单修正即可达到工业级标准。",
+      "grade": "A"
+    },
+    {
+      "problem_id": "problem_10",
+      "scores": {
+        "variable_definition": {
+          "score": 16,
+          "reason": "Variables M and E fully cover the decision space (math and English workbooks), and naming is clear and conventional for LP contexts. However, the integer nature of workbook counts (discrete decisions) is not specified, which is critical for real-world applicability. LP models for production quantities should explicitly annotate variables as integers (e.g., M, E ∈ ℤ⁺), as fractional workbooks are infeasible. This omission reduces accuracy despite the problem's discrete nature."
+        },
+        "objective_function": {
+          "score": 20,
+          "reason": "The objective function perfectly captures the profit maximization goal with correct coefficients ($15 for M, $17 for E) extracted directly from the problem. The direction (maximization) is accurate, and the expression 15M + 17E is mathematically sound. No errors or ambiguities are present."
+        },
+        "constraint_completeness": {
+          "score": 16,
+          "reason": "All explicit constraints (min/max per workbook type, total contract) are included, and non-negativity is implicitly covered by M ≥ 40 and E ≥ 60. However, the model omits the critical implicit integer constraint (M, E must be integers), which is essential for discrete production decisions. While non-negativity is redundant here, best practice dictates explicit inclusion. No contradictions or redundancies exist in the listed constraints."
+        },
+        "constraint_accuracy": {
+          "score": 20,
+          "reason": "Constraints are accurately translated from text to mathematical form with correct inequality directions (e.g., 'at least 40' → M ≥ 40). The contract requirement ('at least 200 workbooks of either type') is reasonably interpreted as M + E ≥ 200 based on context (since per-type minima would render the problem infeasible, as max math=140 < 200 and max English=170 < 200 is false—170 < 200 is true, but 170 < 200 implies E ≤ 170 < 200, making E ≥ 200 impossible; thus, total sum is the only feasible interpretation). No complex constraints were mismanaged."
+        },
+        "expression_standardization": {
+          "score": 18,
+          "reason": "The JSON structure is logical, with variables as a descriptive dictionary and constraints as a clean list. Mathematical symbols (≥, ≤) are standard, and variable descriptions enhance clarity. However, the auxiliary variable P (total profit) in the objective is unnecessary in standard LP formulations—objectives should directly optimize the expression (e.g., 'Maximize 15M + 17E'). Additionally, variable types (integer) are not annotated in the JSON, reducing completeness."
+        }
+      },
+      "total_score": 90,
+      "issues": [
+        "Missing integer constraint specification for decision variables (M and E should be integers)",
+        "Non-negativity constraints not explicitly stated (though implied by min constraints, best practice requires explicit inclusion)",
+        "Ambiguity in original problem's contract description ('of either type') could lead to misinterpretation, though modeling correctly assumed total sum",
+        "Unnecessary auxiliary variable P in the objective function"
+      ],
+      "suggestions": [
+        "Explicitly define M and E as non-negative integers (e.g., add 'type': 'integer' in variables or state M, E ∈ ℤ⁺)",
+        "Include explicit non-negativity constraints (M ≥ 0, E ≥ 0) for modeling completeness, even if redundant",
+        "Clarify the contract requirement in problem statements to 'at least 200 total workbooks' to avoid ambiguity",
+        "Simplify the objective to 'Maximize 15M + 17E' without introducing P"
+      ],
+      "overall_evaluation": "The model is fundamentally sound with accurate constraint translation and a correct objective, but the omission of integer constraints is a significant flaw for this discrete production problem. Other issues are minor (e.g., implicit non-negativity, auxiliary variable P). With the suggested improvements, it would achieve full robustness. Total score reflects high quality with one critical oversight.",
+      "grade": "A"
+    },
+    {
+      "problem_id": "problem_11",
+      "scores": {
+        "variable_definition": {
+          "score": 15,
+          "reason": "Variables x and y fully cover the decision variables (premium and regular desktop quantities), and naming is clear with descriptive labels. However, the integer nature of the variables (desktops must be whole units) is not specified. In reality, x and y should be integer variables, but the model treats them as continuous without clarification, which is a critical omission for this discrete problem."
+        },
+        "objective_function": {
+          "score": 20,
+          "reason": "The objective function perfectly reflects the goal of maximizing profit. Coefficients (500 for premium, 300 for regular) are accurately extracted from the problem description, and the optimization direction (maximization) is correct. No errors detected."
+        },
+        "constraint_completeness": {
+          "score": 15,
+          "reason": "All explicit constraints (sales limit x+y<=200, budget limit 2000x+1000y<=300000, non-negativity) are included. However, the implicit integer constraint (x and y must be integers) is missing. This is a significant oversight, as fractional desktop quantities are infeasible in practice. No redundant or contradictory constraints exist."
+        },
+        "constraint_accuracy": {
+          "score": 20,
+          "reason": "Constraints are accurately translated from text to mathematical expressions. Inequality directions (<=) correctly match 'at most' conditions in the problem. Budget constraint (2000x + 1000y <= 300000) and sales constraint (x + y <= 200) are precise, with no errors in coefficients or logic. No complex constraints require special handling."
+        },
+        "expression_standardization": {
+          "score": 18,
+          "reason": "JSON structure is logical and adheres to standard formulation practices. Mathematical notation (e.g., '500x + 300y', '<=') is规范. However, variable descriptions lack type specification (e.g., 'integer'), and the objective function omits explicit variable type context, reducing clarity for implementation."
+        }
+      },
+      "total_score": 88,
+      "issues": [
+        "Integer constraints not specified for decision variables, risking infeasible non-integer solutions",
+        "Variable type (integer vs. continuous) not documented in descriptions, leading to ambiguity"
+      ],
+      "suggestions": [
+        "Explicitly declare x and y as integer variables in the model (e.g., add 'x, y \\in \\mathbb{Z}^+' to constraints or variable descriptions)",
+        "Include a note in variable definitions clarifying the discrete nature (e.g., 'x: integer number of premium desktops')",
+        "For production use, recommend integer programming instead of pure linear programming to guarantee feasible solutions"
+      ],
+      "overall_evaluation": "The model is fundamentally sound and correctly captures the problem's core elements, with accurate objective function and constraint translations. However, the failure to address variable integrality is a serious flaw for this discrete decision context, as it may produce unrealistic fractional solutions. While the linear programming relaxation might coincidentally yield integer results here, the omission undermines robustness. Minor improvements in documentation would enhance clarity.",
+      "grade": "B"
+    },
+    {
+      "problem_id": "problem_12",
+      "scores": {
+        "variable_definition": {
+          "score": 15,
+          "reason": "变量定义覆盖了所有决策变量（x为药物贴片批次，y为抗生素药膏批次）且命名清晰易懂，但未正确标注变量类型。问题中批次必须为整数（离散量），而建模仅指定非负性（x ≥ 0, y ≥ 0），暗示连续变量，这可能导致非整数解（如半批次），不符合实际生产场景。应明确标注x, y为整数变量。"
+        },
+        "objective_function": {
+          "score": 20,
+          "reason": "目标函数Z = 3x + 2y准确反映最大化治疗人数的目标，系数3（每批次药物贴片治疗人数）和2（每批次抗生素药膏治疗人数）正确提取自问题描述，优化方向（最大化）正确无误。"
+        },
+        "constraint_completeness": {
+          "score": 15,
+          "reason": "所有显式约束（时间、材料、比例、存储、非负性）均被包含，但遗漏了关键隐含约束：批次数量必须为整数。问题中'batches'隐含离散性，而建模未添加整数约束（如x, y ∈ ℤ），可能导致解不可行（如x=10.5）。此外，约束间无冗余或矛盾，但完整性因整数性缺失而受损。"
+        },
+        "constraint_accuracy": {
+          "score": 20,
+          "reason": "文字描述到数学表达式的转化完全准确：时间约束（3x + 5y ≤ 400）、材料约束（5x + 6y ≤ 530）、比例约束（y ≥ 2x表示'至少两倍'）、存储约束（x + y ≤ 100）均正确，不等式方向无误，复杂比例关系处理得当。"
+        },
+        "expression_standardization": {
+          "score": 18,
+          "reason": "JSON结构合理（含objective、variables、constraints、interpretation字段），数学符号规范（使用标准≤符号和变量命名），且interpretation提供必要注释。但变量定义中未注明整数类型，且constraints列表未区分显式/隐含约束，稍欠严谨。"
+        }
+      },
+      "total_score": 88,
+      "issues": [
+        "未指定决策变量为整数类型，批次数量必须为整数，但模型仅假设连续变量，可能导致非整数解（如x=15.3），不符合实际生产可行性",
+        "约束完整性不足，遗漏整数约束（隐含约束），影响模型实用性",
+        "变量定义中未明确标注类型，易引起歧义（如连续vs离散）"
+      ],
+      "suggestions": [
+        "在variables定义中添加类型说明，例如：'x': {'description': 'number of batches of medication patches', 'type': 'integer'}, 同样处理y",
+        "在constraints中显式添加整数约束：'x, y \\in \\mathbb{Z}' 或 'x and y are integers'",
+        "在interpretation中补充说明：'整数约束确保批次为离散量，符合实际生产要求'",
+        "验证约束一致性（如y ≥ 2x与x + y ≤ 100无冲突），但本模型无矛盾，无需修改"
+      ],
+      "overall_evaluation": "该线性规划建模整体质量良好，目标函数和约束转化高度准确，完整捕捉了问题核心要素（时间、材料、比例、存储）。主要缺陷在于忽略批次必须为整数的关键要求，导致模型完整性不足，可能产生不可行解。若添加整数约束，模型将更贴合实际。建议在变量定义和约束中明确整数性，以提升实用性和严谨性。",
+      "grade": "B"
+    },
+    {
+      "problem_id": "problem_13",
+      "scores": {
+        "variable_definition": {
+          "score": 18,
+          "reason": "Variables x and y are correctly defined and cover all decision variables (clothing and tech investments), with clear naming and descriptive annotations. However, the model does not specify variable types (e.g., continuous), which is a standard requirement in professional optimization modeling. Since investment amounts can be fractional (e.g., $100.50), variables should be explicitly labeled as continuous, but this omission is minor as linear programming typically assumes continuity by default."
+        },
+        "objective_function": {
+          "score": 20,
+          "reason": "The objective function '0.07*x + 0.10*y' accurately reflects the profit maximization goal, with correct coefficients derived from the 7% and 10% return rates. The optimization direction ('maximize') is properly specified, and the function correctly models the total profit without errors."
+        },
+        "constraint_completeness": {
+          "score": 20,
+          "reason": "All necessary constraints are included: budget (x + y ≤ 3000), ratio requirement (x ≥ 4y), tech investment limit (y ≤ 500), and non-negativity (x ≥ 0, y ≥ 0). No implicit constraints (e.g., integer requirements) are needed, as fractional investments are permissible. Although the problem states Jacob invests in both companies (implying y > 0 and x > 0), the optimal solution (x=2500, y=500) satisfies y > 0, and strict positivity is not enforceable in linear programming; thus, no critical omissions exist."
+        },
+        "constraint_accuracy": {
+          "score": 20,
+          "reason": "Constraints are accurately translated from text to mathematical expressions. The ratio constraint 'x ≥ 4*y' correctly handles the 'at least four times' requirement, and inequality directions (≤, ≥) are consistent with the problem description. Budget and tech limits are precisely converted, with no errors in complex relationships or redundant/contradictory constraints (e.g., y ≤ 500 and x ≥ 4y are feasible together)."
+        },
+        "expression_standardization": {
+          "score": 18,
+          "reason": "The JSON structure is logically organized with standard fields (objective, objective_function, constraints, variables). Mathematical symbols (e.g., ≤, ≥, *) are used correctly, and coefficients are properly formatted. However, the variables field uses a simplistic string list without structured metadata (e.g., missing type specifications), and constraints lack descriptive comments for clarity. Best practices recommend including variable types and constraint annotations in the JSON schema."
+        }
+      },
+      "total_score": 96,
+      "issues": [
+        "Variable types (e.g., continuous) are not specified in the variables definition, which is a professional oversight.",
+        "The JSON structure for variables is under-specified, using a basic string list instead of a more informative format (e.g., dictionaries with type/description).",
+        "No explicit handling of the implicit 'invest in both companies' requirement (y > 0), though it does not affect the optimal solution in this case."
+      ],
+      "suggestions": [
+        "Explicitly annotate variable types (e.g., 'x: continuous, amount invested in clothing company') to align with optimization standards.",
+        "Enhance the JSON structure by using dictionaries for variables and constraints (e.g., {'name': 'x', 'type': 'continuous', 'description': '...'}) to improve readability and metadata inclusion.",
+        "Add brief constraint descriptions (e.g., in comments or a separate field) to clarify the purpose of each constraint, especially for complex relationships like 'x >= 4*y'.",
+        "For future models, verify if implicit requirements (e.g., strictly positive investments) need approximation (e.g., y >= 0.01) when critical, though unnecessary here."
+      ],
+      "overall_evaluation": "The mathematical model is highly accurate and effectively captures the problem's core elements, with correct objective function, constraints, and variable definitions. Minor shortcomings include the lack of variable type specification and suboptimal JSON structuring, but these do not impact solution correctness. The optimal solution (x=2500, y=500) is feasible and maximizes profit, demonstrating robust modeling. Overall, this is a strong formulation suitable for implementation.",
+      "grade": "A"
+    },
+    {
+      "problem_id": "problem_14",
+      "scores": {
+        "variable_definition": {
+          "score": 15,
+          "reason": "Variables x and y cover all decision variables (regular and special sandwich counts), and naming (x, y) is conventional in LP modeling. However, the variable type should be specified as integer since sandwich counts must be whole numbers (cannot produce fractional sandwiches), but the formulation treats them as continuous without any integer constraint annotation. This is a significant oversight for real-world applicability, though the optimal solution happens to be integer in this specific case."
+        },
+        "objective_function": {
+          "score": 20,
+          "reason": "The objective function 'Maximize Z = 3x + 4y' accurately reflects the profit maximization goal. Coefficients ($3 for regular, $4 for special) are correctly extracted from the problem description, and the optimization direction (maximization) is appropriate. No errors in formulation."
+        },
+        "constraint_completeness": {
+          "score": 15,
+          "reason": "All explicit constraints (egg limit 2x + 3y ≤ 40, bacon limit 3x + 5y ≤ 70) and non-negativity (x ≥ 0, y ≥ 0) are included. However, the implicit integer constraint (x, y must be integers) is missing, which is critical for discrete decision variables like sandwich counts. No redundant or contradictory constraints exist, but the omission of integerity reduces model completeness for practical implementation."
+        },
+        "constraint_accuracy": {
+          "score": 20,
+          "reason": "Constraints are accurately translated from the problem description: egg usage (2x + 3y) and bacon usage (3x + 5y) correctly match resource requirements per sandwich type. Inequality directions (≤) are proper for resource limits, and no complex constraints (e.g., ratios) are present to misinterpret. The formulation aligns precisely with the textual constraints."
+        },
+        "expression_standardization": {
+          "score": 15,
+          "reason": "The JSON structure is logically organized with 'objective_function' and 'constraints' keys. Mathematical symbols (x, y, ≤) are standard and correctly used. However, it lacks essential descriptive elements: no definition of x and y (e.g., 'x = number of regular sandwiches'), and no comments explaining the model components, reducing clarity and professionalism for readers unfamiliar with the context."
+        }
+      },
+      "total_score": 85,
+      "issues": [
+        "Missing integer constraints for decision variables (x and y should be non-negative integers)",
+        "Lack of variable definitions or descriptive comments in the JSON formulation",
+        "Variable types not explicitly specified, leading to potential misinterpretation as continuous variables"
+      ],
+      "suggestions": [
+        "Add integer constraints (e.g., 'x, y integer') to reflect the discrete nature of sandwich production",
+        "Include a 'variables' section in the JSON to define x and y (e.g., {'x': 'number of regular sandwiches', 'y': 'number of special sandwiches'})",
+        "Provide brief comments in the formulation for clarity, such as noting resource units (e.g., 'eggs in count, bacon in slices')"
+      ],
+      "overall_evaluation": "The model is fundamentally sound and correctly captures the core optimization problem, yielding the optimal solution in this instance due to integer-feasible vertices. However, it neglects the discrete requirement for decision variables and lacks sufficient documentation, which could cause errors in broader applications. The formulation is adequate for introductory LP but falls short of professional standards where integer constraints and clear exposition are expected.",
+      "grade": "B"
+    },
+    {
+      "problem_id": "problem_15",
+      "scores": {
+        "variable_definition": {
+          "score": 12,
+          "reason": "变量覆盖完整（x1和x2正确表示两种催化剂数量），命名清晰（通过描述明确关联问题），但变量类型未正确标注；问题中'how many'明确要求整数解（催化剂数量必须为整数），但模型仅指定非负连续约束（x1 >= 0, x2 >= 0），未标注整数类型，导致模型可能产生非整数解（如x1≈5.172, x2≈18.621），不符合实际问题需求。"
+        },
+        "objective_function": {
+          "score": 20,
+          "reason": "目标函数准确反映最大化二氧化碳转化率的目标，系数5（palladium-heavy催化剂转化率）和4（platinum-heavy催化剂转化率）正确提取自问题描述，优化方向为最大化正确，无任何错误。"
+        },
+        "constraint_completeness": {
+          "score": 15,
+          "reason": "包含所有显式资源约束（铂金和钯的可用量）及非负性约束，但遗漏了关键隐含约束——整数性；催化剂数量必须为整数，但模型未包含此约束，可能导致解不可行（如连续松弛解非整数）。无冗余或矛盾约束，但完整性因遗漏整数约束而受损。"
+        },
+        "constraint_accuracy": {
+          "score": 20,
+          "reason": "资源约束从文字描述到数学表达式的转化完全准确：铂金约束（15x1 + 20x2 <= 450）和钯约束（25x1 + 14x2 <= 390）的系数和常数项正确，不等式方向（<=）符合资源上限逻辑，无复杂约束处理问题。"
+        },
+        "expression_standardization": {
+          "score": 20,
+          "reason": "JSON结构合理（清晰分隔目标、约束、变量和参数），数学符号使用规范（标准线性表达式），且包含必要描述信息（变量定义含完整文本说明，参数明确resource_limits），无冗余或歧义。"
+        }
+      },
+      "total_score": 87,
+      "issues": [
+        "变量类型未标注为整数，而问题中催化剂数量必须为整数（'how many'隐含离散决策）",
+        "约束中遗漏整数约束，导致模型解可能非整数，不符合实际可行性"
+      ],
+      "suggestions": [
+        "添加整数约束：在constraints中明确指定'x1 integer'和'x2 integer'，或在variables描述中注明类型（如'x1: integer, number of palladium-heavy catalysts'）",
+        "考虑使用混合整数线性规划（MILP）框架，以更准确反映离散决策问题"
+      ],
+      "overall_evaluation": "建模在目标函数和约束转化上高度准确，但严重忽略整数约束这一现实因素，导致模型实用性降低（解可能不可行）。总分87分，属于良好（B级）；若添加整数约束，可提升至优秀水平。",
+      "grade": "B"
+    },
+    {
+      "problem_id": "problem_16",
+      "scores": {
+        "variable_definition": {
+          "score": 18,
+          "reason": "Variables (x for gummies, y for pills) are complete and clearly named in context, covering all decision variables. However, variable types (integer) are not explicitly defined in the variables section; they are only specified in constraints (e.g., 'x ≥ 0, integer'). Best practice requires type specification (e.g., integer) directly in variable definitions for clarity and professionalism, which is missing here."
+        },
+        "objective_function": {
+          "score": 20,
+          "reason": "Objective function accurately maximizes zinc intake as required, with correct coefficients (4 for gummies, 5 for pills) extracted from the problem description. Optimization direction (maximize) is correctly specified, and the expression '4x + 5y' precisely reflects total zinc intake without errors."
+        },
+        "constraint_completeness": {
+          "score": 20,
+          "reason": "All necessary constraints are included: minimum pills (y ≥ 10), gummies-to-pills ratio (x ≥ 3y), magnesium limit (3x + 2y ≤ 200), non-negativity (x ≥ 0, y ≥ 0), and integer requirements. No implicit constraints (e.g., non-negativity for integers) are omitted, and there are no redundancies or contradictions among constraints."
+        },
+        "constraint_accuracy": {
+          "score": 20,
+          "reason": "Constraints are accurately transformed from problem description: 'at least 10 pills' → y ≥ 10, 'gummies at least 3 times pills' → x ≥ 3y, and 'max 200 units magnesium' → 3x + 2y ≤ 200. Inequality directions are correct, and the ratio constraint is properly handled as a linear inequality without errors."
+        },
+        "expression_standardization": {
+          "score": 14,
+          "reason": "JSON structure is generally reasonable, but major issues reduce standardization: (1) Parameters (e.g., min_pills=10, gummy_magnesium=3) are defined yet unused in constraints/objective; hard-coded values (e.g., 'y ≥ 10' instead of 'y ≥ min_pills') harm flexibility and maintainability. (2) Integer constraints are non-standardly combined with non-negativity (e.g., 'x ≥ 0, integer'); best practice separates them (e.g., 'x ≥ 0' and 'x integer'). (3) Constraints lack descriptive comments, reducing readability."
+        }
+      },
+      "total_score": 92,
+      "issues": [
+        "Parameters defined in 'parameters' but not utilized in constraints or objective function, resulting in hard-coded numerical values (e.g., 'y ≥ 10' instead of parameterized form).",
+        "Integer constraints incorrectly merged with non-negativity in a single string (e.g., 'x ≥ 0, integer'), violating standard modeling conventions.",
+        "Variable types (integer) not explicitly specified in the 'variables' section, relying solely on constraint annotations."
+      ],
+      "suggestions": [
+        "Replace hard-coded values with parameter references in constraints and objective (e.g., 'y ≥ min_pills', 'gummy_magnesium * x + pill_magnesium * y ≤ max_magnesium', 'gummy_zinc * x + pill_zinc * y').",
+        "Split combined constraints: list non-negativity ('x ≥ 0', 'y ≥ 0') and integer requirements ('x integer', 'y integer') as separate entries in 'constraints'.",
+        "Enhance variable definitions by including type and description (e.g., in 'variables', use a dictionary like {'x': {'type': 'integer', 'description': 'number of gummies'}}).",
+        "Add brief comments to constraints for clarity (e.g., 'y ≥ min_pills  # Minimum pill requirement')."
+      ],
+      "overall_evaluation": "The model is fundamentally correct and would produce the optimal solution (e.g., x=54 gummies, y=18 pills for 306 units zinc), demonstrating strong understanding of core LP principles. However, it lacks professional parameterization and expression rigor, making it less adaptable to scenario changes (e.g., if min_pills increases). Hard-coding values is a significant oversight for a real-world model, though all mathematical elements are accurate. With improved standardization, this would be exemplary.",
+      "grade": "A"
+    },
+    {
+      "problem_id": "problem_17",
+      "scores": {
+        "variable_definition": {
+          "score": 18,
+          "reason": "变量定义完整覆盖决策变量（x 和 y 分别代表手动和自动切片机数量），命名清晰易懂（通过描述说明含义），且正确标注为非负整数类型。但存在轻微冗余：非负性和整数性已在变量定义中指定（'non-negative integer'），却在约束列表中重复声明，降低了简洁性。"
+        },
+        "objective_function": {
+          "score": 20,
+          "reason": "目标函数准确反映最小化总切片机数量的优化目标（min z = x + y），系数正确提取自问题描述（每个切片机贡献1单位），优化方向（最小化）正确无误。z 作为目标变量的引入是标准做法，不影响正确性。"
+        },
+        "constraint_completeness": {
+          "score": 15,
+          "reason": "包含所有必要约束（切割能力、润滑脂使用、手动与自动数量关系、非负性、整数性），但存在关键缺陷：未正确处理整数变量下的严格不等式 'x < y'（应转化为 'x <= y - 1' 以避免可行性问题），且非负性和整数性在变量定义和约束中重复声明，造成冗余。隐含约束（如整数性）已覆盖，但严格不等式处理缺失影响完整性。"
+        },
+        "constraint_accuracy": {
+          "score": 14,
+          "reason": "切割能力（5x + 8y >= 50）和润滑脂约束（3x + 6y <= 35）的转化准确，不等式方向正确。但 'x < y' 的转化严重错误：问题指定 x 和 y 为整数，'x < y' 必须写为 'x <= y - 1' 以适应整数规划（否则可能导致求解器忽略边界或产生不可行解），而建模直接使用严格不等式，未考虑离散特性。"
+        },
+        "expression_standardization": {
+          "score": 16,
+          "reason": "数学符号（x, y）使用规范，决策变量有基本描述。但 JSON 结构使用单引号（非标准 JSON 应使用双引号），且约束列表包含冗余信息（'x >= 0, y >= 0, x and y are integers' 与变量定义重复）。'x < y' 的表达不规范（整数规划中应避免严格不等式），影响专业性。"
+        }
+      },
+      "total_score": 83,
+      "issues": [
+        "x < y 约束未调整为 x <= y - 1 以适应整数变量，可能导致优化求解失败",
+        "非负性和整数性在变量定义和约束中重复声明，造成冗余",
+        "JSON 结构使用单引号，不符合标准 JSON 格式规范"
+      ],
+      "suggestions": [
+        "将约束 'x < y' 替换为 'x <= y - 1'，确保整数变量下的可行性",
+        "移除约束列表中的冗余非负性和整数性声明，仅在变量定义中指定类型",
+        "使用双引号重写 JSON 结构以符合标准，并精简约束表述"
+      ],
+      "overall_evaluation": "该建模在目标函数和基础约束上表现良好，准确捕捉了问题核心，但关键错误在于未处理整数变量下的严格不等式（x < y），这可能导致实际求解时出现不可行解或错误结果。次要问题包括冗余约束和表达不规范，但整体逻辑清晰。经修正后可达到高质量建模标准。",
+      "grade": "B"
+    },
+    {
+      "problem_id": "problem_19",
+      "scores": {
+        "variable_definition": {
+          "score": 18,
+          "reason": "变量完整覆盖决策变量（C和D），命名清晰（C=椅子，D=柜子），但变量类型（整数）未在变量定义部分显式标注，仅在约束中提及。理想情况下，应在variables字段中直接指定类型（如添加'type': 'integer'），而非依赖约束描述。扣2分。"
+        },
+        "objective_function": {
+          "score": 20,
+          "reason": "目标函数准确反映最大化利润目标，系数（43和52）正确提取自问题描述，优化方向（最大化）正确。无任何错误。"
+        },
+        "constraint_completeness": {
+          "score": 20,
+          "reason": "包含所有必要约束：stain约束、oak wood约束、非负性及整数性。无遗漏隐含约束（如整数性对生产问题至关重要），且约束间无冗余或矛盾（经验证可行域非空，例如C=4,D=1满足所有约束）。"
+        },
+        "constraint_accuracy": {
+          "score": 20,
+          "reason": "文字描述到数学表达式转化准确：stain约束（1.4C + 1.1D ≤ 17）和oak wood约束（2C + 3D ≤ 11）系数及方向正确。无不等式方向错误或复杂约束处理问题。"
+        },
+        "expression_standardization": {
+          "score": 17,
+          "reason": "JSON结构合理，但存在规范性问题：(1) 整数约束表述为'C, D are integers'（非数学表达式），应作为变量属性而非约束条目；(2) 非负约束合并为'C >= 0, D >= 0'，应拆分为独立条目；(3) 目标函数和约束中使用'*'（如43*C）不标准，线性规划惯例省略乘号（如43C）。扣3分。"
+        }
+      },
+      "total_score": 95,
+      "issues": [
+        "整数约束被列为约束条件而非变量属性，不符合标准建模规范",
+        "非负约束合并为一个条目，应拆分为'C >= 0'和'D >= 0'两个独立约束",
+        "数学表达式中使用了不必要的乘号（*），降低专业性"
+      ],
+      "suggestions": [
+        "在variables字段中为C和D添加类型属性（例如：'C': {'description': '...', 'type': 'integer'}）",
+        "将非负约束拆分为两个独立条目：'C >= 0'和'D >= 0'",
+        "移除目标函数和约束中的乘号（*），采用标准线性规划表示法（如43C + 52D）",
+        "将整数约束说明整合到变量定义中，避免在constraints列表中使用描述性文本"
+      ],
+      "overall_evaluation": "该建模在数学正确性和完整性上表现优秀：变量、目标函数和约束均准确反映问题，无实质性错误。主要不足在于表达规范性，整数约束的处理方式不够专业，但未影响模型求解。总分95分，属于高质量建模，仅需微调表达细节即可达到行业标准。",
+      "grade": "A"
+    },
+    {
+      "problem_id": "problem_20",
+      "scores": {
+        "variable_definition": {
+          "score": 20,
+          "reason": "决策变量 V（vans 数量）和 M（minibuses 数量）完整覆盖问题需求，命名简洁直观（V 和 M 分别代表 van 和 minibus），且整数类型正确标注在约束中（'V >= 0, integer' 和 'M >= 0, integer'），符合车辆数量必须为整数的实际要求。"
+        },
+        "objective_function": {
+          "score": 20,
+          "reason": "目标函数 'Minimize Z = 7V + 10M' 准确反映最小化总污染的优化目标；系数 7 和 10 正确提取自问题描述（van 污染 7 单位，minibus 污染 10 单位）；优化方向为最小化，与问题要求一致。"
+        },
+        "constraint_completeness": {
+          "score": 20,
+          "reason": "所有必要约束均被包含：儿童容量约束（6V + 10M >= 150）、minibus 上限约束（M <= 10）、van-minibus 比较约束（V >= M + 1）、非负性约束（V >= 0, M >= 0）和整数约束。隐含约束（如非负性和整数性）已处理，无冗余或矛盾（例如，M <= 10 和 V >= M + 1 与儿童容量约束兼容）。"
+        },
+        "constraint_accuracy": {
+          "score": 20,
+          "reason": "文字描述到数学表达式的转化精确：'at least 150 kids' 正确转化为 6V + 10M >= 150（载客能力计算无误），'at most 10 minibuses' 转化为 M <= 10，'vans must exceed minibuses' 因整数性正确处理为 V >= M + 1（等价于 V > M）。不等式方向全部正确，无复杂约束需额外处理。"
+        },
+        "expression_standardization": {
+          "score": 18,
+          "reason": "JSON 结构合理（目标函数为字符串，约束为字符串列表），数学符号（V, M, >=, <=）使用规范。但存在小问题：整数约束（'integer'）被附加在非负性不等式后（如 'V >= 0, integer'），而非作为变量属性单独指定，这不符合标准建模惯例（通常整数性应在变量定义中说明）；此外，目标函数中的 'Z =' 冗余，可省略以提升简洁性。"
+        }
+      },
+      "total_score": 98,
+      "issues": [
+        "整数约束（integer）被错误地合并到非负性不等式中（如 'V >= 0, integer'），而非作为独立的变量类型规范，可能导致解析歧义。"
+      ],
+      "suggestions": [
+        "将整数约束移至变量定义部分（例如，添加 'variables': ['V: integer', 'M: integer']），或在约束列表中拆分为单独条目（如 'V integer', 'M integer'）。",
+        "简化目标函数表述，移除冗余的 'Z ='，直接写为 'Minimize 7V + 10M'。"
+      ],
+      "overall_evaluation": "该数学建模整体优秀，准确完整地捕捉了问题核心：变量定义清晰，目标函数和约束正确反映优化目标与业务规则，无实质性错误。仅在表达规范性上存在轻微瑕疵（整数约束的表述方式），不影响模型求解，但稍欠专业严谨性。模型可直接用于整数线性规划求解。",
+      "grade": "A"
+    },
+    {
+      "problem_id": "problem_21",
+      "scores": {
+        "variable_definition": {
+          "score": 18,
+          "reason": "Variables B and R are correctly defined to cover all decision variables (acres of blueberries and raspberries), with clear and conventional naming (B for blueberries, R for raspberries). However, the continuous nature of the variables (as acres can be fractional) is not explicitly annotated in the formulation, though it is correct for linear programming context. Explicitly stating 'continuous' would align with professional modeling standards."
+        },
+        "objective_function": {
+          "score": 20,
+          "reason": "The objective function '56B + 75R' accurately reflects the profit maximization goal, with coefficients correctly extracted from the problem description ($56 per acre for blueberries, $75 per acre for raspberries). The optimization direction 'maximize' is correctly specified, matching the problem's requirement to maximize profit."
+        },
+        "constraint_completeness": {
+          "score": 20,
+          "reason": "All necessary constraints are included: land (B + R <= 300), budget (22B + 25R <= 10000), labor (6B + 3R <= 575), and non-negativity (B >= 0, R >= 0). No implicit constraints (e.g., integer requirements) are missing, as fractional acres are permissible. Constraints are feasible and non-redundant; for example, labor and land constraints bind independently under different scenarios."
+        },
+        "constraint_accuracy": {
+          "score": 20,
+          "reason": "Constraints are accurately translated from the problem description with correct mathematical expressions. Inequality directions (all <= for resource limits) are appropriate, and coefficients match the problem data (e.g., labor: 6 days/acre for blueberries, 3 days/acre for raspberries). No errors in conversion, and simple linear constraints are handled correctly without complexity issues."
+        },
+        "expression_standardization": {
+          "score": 19,
+          "reason": "The JSON structure is logical and adheres to the required format, with clear descriptions for each component. Mathematical symbols (e.g., '56B + 75R') use standard LP notation. However, non-negativity constraints are unnecessarily split into two separate entries (B >= 0 and R >= 0); combining them into a single constraint (e.g., 'B, R >= 0') would improve conciseness and align with common LP presentation practices."
+        }
+      },
+      "total_score": 97,
+      "issues": [
+        "Variable type (continuous) not explicitly specified in the formulation",
+        "Non-negativity constraints listed as two separate entries instead of combined"
+      ],
+      "suggestions": [
+        "Explicitly annotate variables as continuous in the 'variables' section (e.g., add 'type': 'continuous' to each variable definition)",
+        "Combine non-negativity constraints into a single constraint with description 'Non-negativity' and expression 'B >= 0, R >= 0' for better readability"
+      ],
+      "overall_evaluation": "The linear programming model is highly accurate and comprehensive, correctly capturing all problem elements including decision variables, objective, and constraints. Minor presentation issues—such as the lack of explicit variable type annotation and redundant non-negativity constraints—do not affect solution correctness but reduce professionalism. With slight refinements, this model would exemplify best practices in LP formulation.",
+      "grade": "A"
+    },
+    {
+      "problem_id": "problem_22",
+      "scores": {
+        "variable_definition": {
+          "score": 15,
+          "reason": "变量完整覆盖决策变量（x 和 y 分别对应实验 alpha 和 beta），命名清晰易懂（x 和 y 有明确描述）。但未正确标注变量类型：问题中实验次数必须为整数（'how many' 暗示离散决策），但建模中仅指定非负性（x ≥ 0, y ≥ 0），未标注整数约束（如 x, y ∈ ℤ⁺）。线性规划默认连续变量，但实际问题要求整数解，遗漏此点可能导致解不可行（如 x=100.5）。扣5分。"
+        },
+        "objective_function": {
+          "score": 20,
+          "reason": "目标函数准确反映优化目标（最大化总电力），系数正确提取自问题描述（alpha 产 8 单位，beta 产 10 单位，故 8x + 10y），优化方向（最大化）正确。无错误。"
+        },
+        "constraint_completeness": {
+          "score": 15,
+          "reason": "包含所有必要资源约束（金属和酸）及非负性约束，无冗余或矛盾（金属约束 3x+5y≤800 和酸约束 5x+4y≤750 有效且独立）。但遗漏关键隐含约束：实验次数必须为非负整数（x, y ∈ ℤ⁺），而建模仅考虑连续松弛。在整数要求问题中，此遗漏可能导致 LP 解非整数（如 y=125.5），实际不可行。扣5分。"
+        },
+        "constraint_accuracy": {
+          "score": 20,
+          "reason": "文字描述到数学表达式转化准确：金属约束（alpha 用 3 单位，beta 用 5 单位 → 3x+5y≤800）和酸约束（alpha 用 5 单位，beta 用 4 单位 → 5x+4y≤750）系数正确；不等式方向（≤）符合资源上限逻辑；无复杂约束需处理。无错误。"
+        },
+        "expression_standardization": {
+          "score": 18,
+          "reason": "JSON 结构合理（分 objective_function、constraints、variables 三部分），数学符号规范（使用标准 ≤、x/y 变量）。但 objective_function 描述冗余（'Maximize total electricity produced = ' 可简化为 'max 8x + 10y'），且 variables 字段未包含类型信息（应补充 'type': 'integer'）。注释信息充分（如约束含 '(metal constraint)'），扣2分因表达稍欠简洁。"
+        }
+      },
+      "total_score": 88,
+      "issues": [
+        "未标注变量类型为整数，实验次数必须为整数但建模假设连续变量",
+        "约束中遗漏整数约束（x, y ∈ ℤ⁺），可能导致解不可行",
+        "目标函数描述冗余，未使用标准 LP 简化格式"
+      ],
+      "suggestions": [
+        "添加整数约束：在 variables 中指定 'x': {'description': '...', 'type': 'integer'}, 'y': 同理，并在 constraints 中添加 'x, y ∈ ℤ⁺'",
+        "简化目标函数表述：改为 'max 8x + 10y' 以符合 LP 规范",
+        "在建模文档中说明：若使用连续 LP，需验证解是否为整数；否则应采用整数规划（MILP）"
+      ],
+      "overall_evaluation": "建模核心正确：目标函数和资源约束精准转化，非负性处理得当。但严重忽略实验次数的整数要求，这在实际问题中会导致解无效（如小数实验次数）。虽 LP 连续松弛常用于教学，但问题明确询问 'how many'，完整性不足。建议升级为整数规划以提升实用性。整体质量良好，但关键缺陷影响可行性。",
+      "grade": "B"
+    },
+    {
+      "problem_id": "problem_23",
+      "scores": {
+        "variable_definition": {
+          "score": 18,
+          "reason": "变量x和y完整覆盖了决策变量（4轮车和3轮车数量），命名x和y在数学建模中常见且简洁，但缺乏描述性（如使用w4或num_4wheeler更清晰）；变量类型正确标注为整数，符合车辆数量必须为整数的要求。主要扣分点在于建模中缺少显式变量定义（如'Let x be the number of 4-wheelers'），仅在约束中隐含使用，这在正式建模中应优先声明。"
+        },
+        "objective_function": {
+          "score": 20,
+          "reason": "目标函数'minimize x + y'准确反映问题要求的最小化总车辆数；系数1正确（每个车辆对总数贡献为1）；优化方向'minimize'正确，与问题描述一致。无任何错误或遗漏。"
+        },
+        "constraint_completeness": {
+          "score": 20,
+          "reason": "包含所有必要约束：行李需求(60x + 40y ≥ 1000)、污染限制(30x + 15y ≤ 430)、非负性(x ≥ 0, y ≥ 0)和整数性(x,y integers)；隐含约束（如整数性由车辆计数隐含）已完整覆盖；无冗余或矛盾（例如，可行解存在：x=6,y=16满足所有约束）。"
+        },
+        "constraint_accuracy": {
+          "score": 20,
+          "reason": "文字描述到数学表达式转化准确：'at least 1000 luggage' → ≥1000，'at most 430 pollutant' → ≤430；不等式方向正确；系数正确提取（4-wheeler行李60/污染30，3-wheeler行李40/污染15）；无复杂约束需特殊处理。"
+        },
+        "expression_standardization": {
+          "score": 18,
+          "reason": "JSON结构合理（objective为字符串，constraints为列表）；但整数约束表述不规范：'x, y are integers'使用文字描述而非标准数学符号（如'x, y \\in \\mathbb{Z}^+'或单独指定变量类型），这在专业建模中应避免；非负性约束显式写出是好的，但整数约束应作为变量属性而非约束列表中的一项。数学符号基本规范，但缺少注释信息。"
+        }
+      },
+      "total_score": 96,
+      "issues": [
+        "变量定义未在建模中显式声明（如缺少'Let x be...'语句）",
+        "整数约束用文字描述（'x, y are integers'）而非标准数学符号，不符合专业建模规范"
+      ],
+      "suggestions": [
+        "在JSON前添加显式变量定义，例如：'Variables: x = number of 4-wheelers, y = number of 3-wheelers (integers)'",
+        "将整数约束移至单独字段（如'variable_types': {'x': 'integer', 'y': 'integer'}）或使用数学符号（如'x, y \\in \\mathbb{Z}^+'）",
+        "考虑简化约束（如行李约束除以20得3x + 2y ≥ 50），但非必需"
+      ],
+      "overall_evaluation": "该数学模型整体优秀，准确完整地捕捉了问题核心：目标函数和约束正确反映最小化车辆数、行李需求及污染限制，且考虑了整数性。主要不足在于变量定义和约束表述的规范性，缺少显式声明和标准符号，但这些是次要问题，不影响模型正确性。求解可得最优解（如x=6,y=16），验证模型有效。",
+      "grade": "A"
+    },
+    {
+      "problem_id": "problem_24",
+      "scores": {
+        "variable_definition": {
+          "score": 15,
+          "reason": "变量定义覆盖了决策变量（x 和 y 分别表示常规和混合动力货车数量），命名清晰易懂（x/y 为标准符号）。但变量类型未正确标注：问题中货车数量必须为整数（不能购买部分货车），而建模中仅指定非负约束（x ≥ 0, y ≥ 0），未标注整数类型（如 x, y ∈ ℤ⁺），这违反了问题隐含的离散性要求。"
+        },
+        "objective_function": {
+          "score": 20,
+          "reason": "目标函数 'minimize x + y' 准确反映最小化总货车数的优化目标。系数（均为 1）正确提取自问题描述（每辆货车贡献 1 个单位到总数），优化方向（最小化）与问题要求一致，无错误。"
+        },
+        "constraint_completeness": {
+          "score": 15,
+          "reason": "包含所有显式约束（污染上限、交付下限、非负性），但遗漏关键隐含约束：货车数量必须为非负整数（x, y ∈ ℤ⁺）。问题描述 'how many of each type' 明确要求整数解，而建模仅考虑连续变量，可能导致非整数解（如小数货车），在现实中不可行。无冗余或矛盾约束。"
+        },
+        "constraint_accuracy": {
+          "score": 20,
+          "reason": "约束转化高度准确：污染约束 '200x + 100y ≤ 7000' 和交付约束 '500x + 300y ≥ 20000' 正确提取自问题数据（单位污染物/包机量），不等式方向（≤ 对应 'at most'，≥ 对应 'at least'）无误。无复杂约束需处理，转化无偏差。"
+        },
+        "expression_standardization": {
+          "score": 18,
+          "reason": "JSON 结构合理（包含 objective, constraints, variables 字段），数学符号规范（使用 ≤, ≥ 和标准变量名）。但目标函数字符串 'minimize x + y' 包含冗余词 'minimize'（专业建模通常简写为 'min x + y'），且变量定义中未标注类型（如 integer），缺乏关键元信息。注释信息基本充分（variables 有描述），但可优化。"
+        }
+      },
+      "total_score": 88,
+      "issues": [
+        "变量未指定为整数类型，忽略货车数量的离散性要求",
+        "约束中遗漏整数约束，可能导致非整数解不可行",
+        "目标函数字符串包含冗余词 'minimize'，不符合专业建模惯例"
+      ],
+      "suggestions": [
+        "添加整数约束：在 variables 或 constraints 中明确指定 x, y 为整数变量（例如 'x, y ∈ ℤ⁺' 或 'x, y integer'）",
+        "修改目标函数表达式为 'min x + y' 以去除冗余词，符合标准 LP 建模规范",
+        "在 JSON 中补充变量类型说明（如 variables 字段添加 'type': 'integer'），增强模型完整性"
+      ],
+      "overall_evaluation": "建模准确捕捉了问题核心逻辑（污染和交付约束），目标函数和约束转化正确，但严重忽略整数约束这一关键现实要求，可能导致解不可行。若作为连续 LP 求解，可能输出非整数货车数量（如 x=10.5），违背问题本质。建议升级为整数线性规划（ILP）以确保实用性。整体质量良好，但存在重要疏漏。",
+      "grade": "B"
+    },
+    {
+      "problem_id": "problem_25",
+      "scores": {
+        "variable_definition": {
+          "score": 16,
+          "reason": "Variables x and y correctly cover the decision variables (small and large shops) and naming is standard in mathematical contexts. However, integer constraints are improperly listed as a constraint string ('x and y are integers') rather than being specified as a variable attribute (e.g., 'x, y ∈ ℤ⁺'). This violates best practices where variable types should be declared upfront, not embedded in constraints. Non-negativity is included but could be integrated into variable definitions."
+        },
+        "objective_function": {
+          "score": 20,
+          "reason": "Objective function 'Minimize x + y' perfectly reflects the goal of minimizing total butcher shops. Coefficients (1 for both x and y) are correctly extracted from the problem, as each shop contributes equally to the total count. Optimization direction (minimization) is accurate per the problem statement."
+        },
+        "constraint_completeness": {
+          "score": 18,
+          "reason": "All necessary constraints are included: production (30x + 70y >= 500), worker availability (2x + 4y <= 30), non-negativity (x >= 0, y >= 0), and integrality. No implicit constraints (e.g., upper bounds) are missing, and constraints are feasible (e.g., x=5, y=5 satisfies all). However, integrality should be a variable property, not a listed constraint, slightly reducing completeness."
+        },
+        "constraint_accuracy": {
+          "score": 20,
+          "reason": "Constraints are accurately translated: production uses >= for 'at least 500 hot dogs', worker constraint uses <= for '30 workers available', and coefficients (30, 70, 2, 4) match problem data. Inequality directions are correct, and no complex relationships (e.g., ratios) require special handling here."
+        },
+        "expression_standardization": {
+          "score": 15,
+          "reason": "JSON structure is logical, but 'x and y are integers' uses non-mathematical language in the constraint list, violating standard notation (should be specified via variable types). Mathematical symbols (x, y) are conventional, but the model lacks variable declarations and explanatory comments. Non-negativity constraints are redundant with integrality but acceptable; however, the integer constraint's phrasing reduces professionalism."
+        }
+      },
+      "total_score": 89,
+      "issues": [
+        "Integer constraint is incorrectly listed as a textual constraint ('x and y are integers') instead of being defined as a variable property",
+        "Variables lack explicit declaration (e.g., no statement like 'x: small shops, integer; y: large shops, integer')",
+        "Non-standard expression in constraints using natural language rather than pure mathematical notation",
+        "Non-negativity constraints are partially redundant since integrality implies non-negativity for counts, but inclusion is acceptable"
+      ],
+      "suggestions": [
+        "Define variables explicitly with types: e.g., 'x (integer ≥ 0) = number of small shops, y (integer ≥ 0) = number of large shops'",
+        "Remove 'x and y are integers' from constraints and specify integrality in variable definitions",
+        "Use strict mathematical notation throughout (e.g., avoid strings like 'are integers'; use 'x, y ∈ ℤ⁺' in variable section)",
+        "Add brief comments in JSON for clarity, e.g., 'constraints': ['production: 30x + 70y >= 500', ...]"
+      ],
+      "overall_evaluation": "The model is functionally correct and captures all problem elements, but suffers from unprofessional handling of integer constraints and variable definitions. Objective and constraints are accurately formulated, yet the expression deviates from optimization best practices by embedding variable properties in constraints. This could cause confusion in solver implementations. Total score 89 reflects a solid model with minor but notable flaws in rigor and standardization.",
+      "grade": "B"
+    },
+    {
+      "problem_id": "problem_26",
+      "scores": {
+        "variable_definition": {
+          "score": 18,
+          "reason": "变量完整覆盖决策变量（x为骆驼商队数量，y为沙漠卡车数量），命名清晰且有描述性注释。变量类型正确标注为整数（非负整数），符合问题要求。扣2分是因为整数约束在约束列表中重复指定（如'x >= 0, integer'），而专业建模中变量类型应在变量定义部分统一处理，而非混入约束条件，导致轻微冗余。"
+        },
+        "objective_function": {
+          "score": 20,
+          "reason": "目标函数'minimize 12x + 5y'准确反映最小化总小时数的优化目标。系数12（骆驼商队每 trip 小时）和5（沙漠卡车每 trip 小时）正确提取自问题描述，优化方向（minimize）与问题要求一致，无任何错误。"
+        },
+        "constraint_completeness": {
+          "score": 15,
+          "reason": "包含容量约束（50x + 150y >= 1500）、偏好约束（x >= y）、非负性及整数性约束，但存在关键遗漏：问题明确要求'prefers to have more camel caravans than desert trucks'（即严格多于），应转化为x > y（整数下等价于x >= y + 1），但建模仅用x >= y，允许x = y，未满足'更多'的隐含约束。交付约束使用>=1500合理（因目标函数会自然避免超额交付），但偏好约束不完整导致扣分。"
+        },
+        "constraint_accuracy": {
+          "score": 15,
+          "reason": "容量约束转化准确（50x + 150y >= 1500），不等式方向正确。但偏好约束从文字描述'to have more'到x >= y的转化错误：'more'要求严格不等式（x > y），而x >= y包含相等情况，与问题意图矛盾。整数约束处理正确，但非负性与整数性合并书写（如'x >= 0, integer'）不够精确，应分开表述。"
+        },
+        "expression_standardization": {
+          "score": 16,
+          "reason": "JSON结构基本合理，但约束列表中将变量类型与不等式混合（如'x >= 0, integer'），不符合标准建模范式（整数约束应单独列出）。数学符号使用规范，但缺少约束注释（如未说明'x >= y'对应偏好要求）。variables字段包含必要描述，提升了可读性，但整体表达可更专业。"
+        }
+      },
+      "total_score": 84,
+      "issues": [
+        "偏好约束错误：问题要求骆驼商队数量严格多于沙漠卡车（x > y），但建模使用x >= y，允许相等情况，违反问题描述。",
+        "约束表达不规范：非负性和整数性约束合并书写（如'x >= 0, integer'），应拆分为独立约束项。",
+        "隐含约束处理不足：未将'x > y'在整数规划中转化为x >= y + 1，导致模型可能输出无效解（如x = y）。"
+      ],
+      "suggestions": [
+        "将偏好约束修正为x >= y + 1（因变量为整数），确保x严格大于y。",
+        "在约束列表中分离类型约束：添加'x integer'和'y integer'作为独立项，而非与不等式合并。",
+        "为关键约束添加注释（如在constraints中注明'x >= y + 1: preference for more camel caravans'），提升可读性。",
+        "明确说明交付约束使用>=1500的合理性（目标函数会避免超额交付），避免歧义。"
+      ],
+      "overall_evaluation": "建模整体质量良好，目标函数和核心约束（容量、非负性）准确，但偏好约束的转化错误是主要缺陷，未严格反映问题要求。变量定义和表达规范性有提升空间，但未影响模型基本可行性。经修正后可成为优秀模型。",
+      "grade": "B"
+    },
+    {
+      "problem_id": "problem_27",
+      "scores": {
+        "variable_definition": {
+          "score": 2,
+          "reason": "变量定义严重错误：问题中仅需两个决策变量（第一混合和第二混合的kg数，如x1和x2），但建模定义了多维索引变量x_{ij}（i∈I, j∈J）和y_j，完全不匹配混合问题场景。命名不清晰（x和y无上下文），且未标注变量类型（虽问题中kg可连续，但定义错误导致类型无关）。变量未覆盖实际决策变量，仅2分因JSON结构存在变量字段。"
+        },
+        "objective_function": {
+          "score": 0,
+          "reason": "目标函数完全错误：指定为'minimize sum c_{ij} x_{ij}'，但问题要求最大化利润（$12/kg和$15/kg）。系数c_{ij}未提取自问题描述（应为12和15），且优化方向错误（最小化成本 vs 最大化利润）。无任何正确元素，得0分。"
+        },
+        "constraint_completeness": {
+          "score": 5,
+          "reason": "约束不完整：包含非负约束（x_{ij} ≥ 0）和运输问题特有的供应/需求约束，但遗漏关键资源约束（cat paw ≤ 20kg和gold shark ≤ 50kg）。需求约束（sum x_{ij} ≥ d_j）冗余且不适用（问题无需求要求），而混合比例约束（如20% cat paw）完全缺失。仅因非负约束存在得5分。"
+        },
+        "constraint_accuracy": {
+          "score": 0,
+          "reason": "约束转化严重失准：未处理混合比例（如cat paw使用量应为0.2x1 + 0.35x2 ≤ 20），而是错误套用运输问题约束。不等式方向在供应约束中虽≤正确，但整体约束与问题描述无关。复杂比例关系未转化，得0分。"
+        },
+        "expression_standardization": {
+          "score": 10,
+          "reason": "JSON结构合理且数学符号规范（如sum_{i in I} notation），但集合描述错误（'origins/destinations'不适用于混合问题），参数未实例化（c,d,s无值）。缺乏问题特定注释（如未说明cat paw/gold shark），内容错误但格式规范，故给10分。"
+        }
+      },
+      "total_score": 17,
+      "issues": [
+        "建模错误应用运输问题框架，而问题实际为混合问题（blending problem）",
+        "决策变量定义不相关：应有两个标量变量（x1, x2），但定义了多维索引变量x_{ij}和y_j",
+        "目标函数优化方向错误（最小化 vs 最大化），且利润系数未指定",
+        "关键资源约束（cat paw和gold shark库存）缺失，需求约束冗余不适用",
+        "混合比例约束（如20% cat paw）完全未处理"
+      ],
+      "suggestions": [
+        "重新定义决策变量：x1 = kg of first mix, x2 = kg of second mix（标量连续变量）",
+        "修正目标函数：maximize 12*x1 + 15*x2",
+        "添加正确约束：0.2*x1 + 0.35*x2 <= 20（cat paw）, 0.8*x1 + 0.65*x2 <= 50（gold shark）, x1 >= 0, x2 >= 0",
+        "移除所有运输问题元素（sets I/J, parameters c/d/s）",
+        "在JSON中补充问题特定描述（如参数值、约束物理意义）"
+      ],
+      "overall_evaluation": "该数学建模质量极差，完全误解问题类型（运输问题 vs 混合问题），导致变量、目标函数和约束全部错误。未反映原始问题描述的核心要素（混合比例、库存限制、利润最大化），建模无效且无法求解实际问题。需彻底重构模型。",
+      "grade": "F"
+    },
+    {
+      "problem_id": "problem_28",
+      "scores": {
+        "variable_definition": {
+          "score": 20,
+          "reason": "变量定义完整覆盖决策变量（L和S），命名清晰（'Number of large cruise ship trips'和'Number of small cruise ship trips'），类型正确标注为'non-negative integer'，符合问题中'both are non-negative integers'的要求。无任何遗漏或错误。"
+        },
+        "objective_function": {
+          "score": 20,
+          "reason": "目标函数准确反映最小化总污染的优化目标，系数（20和15）正确提取自问题描述（大型船20单位/次、小型船15单位/次），优化方向（minimize）正确。无偏差或错误。"
+        },
+        "constraint_completeness": {
+          "score": 16,
+          "reason": "包含所有必要约束（客户要求、大型船限制、比例约束），且隐含约束（非负性、整数性）被指定。但存在冗余：'Non-negativity'和'Integer requirement'作为单独约束是多余的，因为variables的domain已定义为'non-negative integer'。冗余不影响可行性，但降低了模型精炼度，扣4分。"
+        },
+        "constraint_accuracy": {
+          "score": 14,
+          "reason": "客户要求、大型船限制和比例约束的转化准确（如S >= 0.4*(L + S)简化为S >= (2/3)L正确）。但'Integer requirement'约束的表达式'L and S are integers'不是数学表达式，转化不准确；整数性应通过变量域处理，而非作为约束描述。此错误影响规范性，扣6分。"
+        },
+        "expression_standardization": {
+          "score": 16,
+          "reason": "JSON结构合理，数学符号使用规范（如'2000L + 800S >= 20000'），且包含详细描述/注释（如simplified和alternate_form）。但存在冗余约束（Non-negativity和Integer requirement）和整数约束的文本描述问题，导致表达不够精炼，扣4分。"
+        }
+      },
+      "total_score": 86,
+      "issues": [
+        "Non-negativity和Integer requirement作为单独约束冗余，因为variables的domain已指定非负整数类型",
+        "Integer requirement约束的表达式'L and S are integers'不是标准数学表达式，应通过变量域处理整数性",
+        "比例约束的simplified形式'0.6S - 0.4L >= 0'可优化为标准线性形式（如-0.4L + 0.6S >= 0），但非严重问题"
+      ],
+      "suggestions": [
+        "移除Non-negativity和Integer requirement约束；仅通过variables的domain指定非负性和整数性，避免冗余",
+        "确保所有约束均为数学不等式或等式（如整数性不列为约束），提升模型规范性",
+        "在比例约束中，使用更标准的线性形式（如-0.4L + 0.6S >= 0）以增强一致性",
+        "验证所有约束在可行域内无分母为零风险（如总trips=0），但本问题中客户要求隐含L+S>0，影响较小"
+      ],
+      "overall_evaluation": "建模准确捕捉问题核心（变量、目标、关键约束），必要元素完整且目标函数正确。但存在冗余约束和整数约束处理不规范的问题，导致模型不够精炼。比例约束转化正确，但表达可优化。总分86分，属于良好水平，有minor issues但不影响求解可行性。",
+      "grade": "B"
+    },
+    {
+      "problem_id": "problem_29",
+      "scores": {
+        "variable_definition": {
+          "score": 18,
+          "reason": "Variables T and C are correctly identified and cover all decision variables, with clear and intuitive naming (e.g., 'T' for taxi rides). However, variable types (integer) are not specified in the variables section; instead, they are included as a textual constraint ('T and C are integers') in the constraints list, which violates standard modeling practice where type should be part of variable definition (e.g., in a 'type' field). This reduces clarity and professionalism."
+        },
+        "objective_function": {
+          "score": 20,
+          "reason": "The objective function 'Minimize T' perfectly aligns with the problem's goal of minimizing taxi rides. Coefficients are correctly extracted (implied coefficient of 1 for T), and the optimization direction (minimization) is accurate with no errors in formulation."
+        },
+        "constraint_completeness": {
+          "score": 20,
+          "reason": "All necessary constraints are included: employee capacity (2T + 3C >= 500), maximum company car percentage (C <= 0.6(T + C)), minimum company car rides (C >= 30), non-negativity (T >= 0, C >= 0), and integer constraints. No implicit constraints (e.g., discreteness of rides) are missing, and there are no redundancies or contradictions (e.g., C >= 30 ensures T + C > 0, avoiding division issues in the percentage constraint)."
+        },
+        "constraint_accuracy": {
+          "score": 20,
+          "reason": "Constraints are accurately transformed from the problem description: the employee constraint uses correct capacities (2 and 3), the percentage constraint correctly handles 'at most 60%' as C <= 0.6(T + C) without division, and inequality directions (e.g., >= for minimum employees) are precise. Complex proportion constraints are properly linearized and equivalent to 2C <= 3T."
+        },
+        "expression_standardization": {
+          "score": 18,
+          "reason": "The JSON structure is logical, and mathematical symbols (e.g., '2T + 3C >= 500') are generally规范. However, the integer constraint is expressed textually as 'T and C are integers' in the constraints list, which is non-standard; it should be formalized as separate entries (e.g., 'T integer', 'C integer') or integrated into variable definitions. This reduces professionalism despite the overall clarity."
+        }
+      },
+      "total_score": 96,
+      "issues": [
+        "Variable types (integer) are not specified in the variables section, leading to inconsistent modeling structure.",
+        "Integer constraint is included as a textual description in the constraints list rather than in standard mathematical form.",
+        "The percentage constraint 'C <= 0.6(T + C)' could be simplified to '2C <= 3T' for computational efficiency, though it is mathematically correct as written."
+      ],
+      "suggestions": [
+        "Add a 'type' attribute to the variables dictionary (e.g., {'T': {'description': 'number of taxi rides', 'type': 'integer'}, ...}) to explicitly define variable types.",
+        "Replace the textual integer constraint with formal entries like 'T integer' and 'C integer' in the constraints list or handle them in variable definitions.",
+        "Simplify the percentage constraint to '2C <= 3T' to avoid decimals and improve numerical stability, though this is optional for correctness."
+      ],
+      "overall_evaluation": "The mathematical model is exceptionally strong, accurately capturing all problem requirements with precise constraints and a correct objective. Minor issues in variable type specification and constraint formatting prevent it from being flawless, but these are easily addressable. The model demonstrates a deep understanding of linear programming principles and is suitable for implementation with slight refinements.",
+      "grade": "A"
+    },
+    {
+      "problem_id": "problem_30",
+      "scores": {
+        "variable_definition": {
+          "score": 15,
+          "reason": "Variables A and T fully cover the decision variables and are clearly named with descriptive explanations. However, the model lacks explicit specification of variable types (e.g., continuous or integer). Although investment amounts are inherently continuous (as fractional dollars are permissible), professional linear programming modeling requires explicit type annotation for rigor and clarity, which is missing here."
+        },
+        "objective_function": {
+          "score": 20,
+          "reason": "The objective function accurately reflects the goal of maximizing profit, with correct coefficients (0.10 for apartments and 0.15 for townhouses) derived directly from the 10% and 15% return rates. The optimization direction (maximization) is correctly specified, and the expression 0.10*A + 0.15*T precisely quantifies total profit."
+        },
+        "constraint_completeness": {
+          "score": 20,
+          "reason": "All necessary constraints are included: the total investment equality (A + T = 600,000), apartment investment cap (A ≤ 200,000), ratio requirement (A ≥ 0.5*T), and non-negativity (A ≥ 0, T ≥ 0). No implicit constraints (e.g., integer requirements) are needed, as fractional investments are valid. Constraints are consistent and non-redundant, with a feasible region (though degenerate to a single point: A=200,000, T=400,000)."
+        },
+        "constraint_accuracy": {
+          "score": 20,
+          "reason": "Constraints are accurately translated from the problem description. The ratio 'apartments must be at least half of townhouses' is correctly expressed as A ≥ 0.5*T (not T ≥ 2A), with proper inequality direction. The equality constraint A + T = 600,000 correctly enforces full investment, and all bounds (e.g., A ≤ 200,000) match the textual requirements without errors."
+        },
+        "expression_standardization": {
+          "score": 18,
+          "reason": "The JSON structure is logically organized, and mathematical symbols (e.g., *, ≤, ≥) are used correctly. However, constraints are listed as plain strings without descriptive metadata (e.g., constraint names or sources), reducing documentation quality. The objective statement includes 'Maximize' within the expression, which is slightly redundant—standard practice separates optimization direction from the expression (e.g., 'sense': 'max' in dedicated fields)."
+        }
+      },
+      "total_score": 93,
+      "issues": [
+        "Variable types (continuous/integer) not explicitly specified in the model",
+        "Constraints lack descriptive annotations (e.g., no names or explanations for each constraint)",
+        "Objective function combines optimization direction with the expression, violating standard separation of concerns"
+      ],
+      "suggestions": [
+        "Add a 'type' field to each variable (e.g., {'type': 'continuous'}) to clarify variable properties",
+        "Enhance constraints with structured descriptions (e.g., [{'name': 'total_investment', 'expression': 'A + T = 600000', 'description': 'Total funds must be fully invested'}])",
+        "Refactor the objective into two components: a 'sense' field (e.g., 'maximize') and a pure expression field (e.g., '0.10*A + 0.15*T')"
+      ],
+      "overall_evaluation": "The model is fundamentally sound and correctly captures all problem requirements, resulting in an accurate representation of the optimization problem. The feasible region is valid (though constrained to a single point due to tight bounds), and core elements like the objective and constraints are error-free. Minor issues in specification detail and documentation reduce professionalism but do not compromise correctness. With slight refinements, this would be exemplary.",
+      "grade": "A"
+    }
+  ],
+  "statistics": {
+    "overall": {
+      "average_score": 87.07692307692308,
+      "max_score": 98,
+      "min_score": 17,
+      "median_score": 89
+    },
+    "grade_distribution": {
+      "A (90-100)": 12,
+      "B (80-89)": 12,
+      "C (70-79)": 0,
+      "D (60-69)": 1,
+      "F (0-59)": 1
+    },
+    "dimension_averages": {
+      "variable_definition": 16.192307692307693,
+      "objective_function": 19.23076923076923,
+      "constraint_completeness": 16.615384615384617,
+      "constraint_accuracy": 18.192307692307693,
+      "expression_standardization": 16.846153846153847
+    },
+    "top_problems": [
+      {
+        "problem_id": "problem_20",
+        "scores": {
+          "variable_definition": {
+            "score": 20,
+            "reason": "决策变量 V（vans 数量）和 M（minibuses 数量）完整覆盖问题需求，命名简洁直观（V 和 M 分别代表 van 和 minibus），且整数类型正确标注在约束中（'V >= 0, integer' 和 'M >= 0, integer'），符合车辆数量必须为整数的实际要求。"
+          },
+          "objective_function": {
+            "score": 20,
+            "reason": "目标函数 'Minimize Z = 7V + 10M' 准确反映最小化总污染的优化目标；系数 7 和 10 正确提取自问题描述（van 污染 7 单位，minibus 污染 10 单位）；优化方向为最小化，与问题要求一致。"
+          },
+          "constraint_completeness": {
+            "score": 20,
+            "reason": "所有必要约束均被包含：儿童容量约束（6V + 10M >= 150）、minibus 上限约束（M <= 10）、van-minibus 比较约束（V >= M + 1）、非负性约束（V >= 0, M >= 0）和整数约束。隐含约束（如非负性和整数性）已处理，无冗余或矛盾（例如，M <= 10 和 V >= M + 1 与儿童容量约束兼容）。"
+          },
+          "constraint_accuracy": {
+            "score": 20,
+            "reason": "文字描述到数学表达式的转化精确：'at least 150 kids' 正确转化为 6V + 10M >= 150（载客能力计算无误），'at most 10 minibuses' 转化为 M <= 10，'vans must exceed minibuses' 因整数性正确处理为 V >= M + 1（等价于 V > M）。不等式方向全部正确，无复杂约束需额外处理。"
+          },
+          "expression_standardization": {
+            "score": 18,
+            "reason": "JSON 结构合理（目标函数为字符串，约束为字符串列表），数学符号（V, M, >=, <=）使用规范。但存在小问题：整数约束（'integer'）被附加在非负性不等式后（如 'V >= 0, integer'），而非作为变量属性单独指定，这不符合标准建模惯例（通常整数性应在变量定义中说明）；此外，目标函数中的 'Z =' 冗余，可省略以提升简洁性。"
+          }
+        },
+        "total_score": 98,
+        "issues": [
+          "整数约束（integer）被错误地合并到非负性不等式中（如 'V >= 0, integer'），而非作为独立的变量类型规范，可能导致解析歧义。"
+        ],
+        "suggestions": [
+          "将整数约束移至变量定义部分（例如，添加 'variables': ['V: integer', 'M: integer']），或在约束列表中拆分为单独条目（如 'V integer', 'M integer'）。",
+          "简化目标函数表述，移除冗余的 'Z ='，直接写为 'Minimize 7V + 10M'。"
+        ],
+        "overall_evaluation": "该数学建模整体优秀，准确完整地捕捉了问题核心：变量定义清晰，目标函数和约束正确反映优化目标与业务规则，无实质性错误。仅在表达规范性上存在轻微瑕疵（整数约束的表述方式），不影响模型求解，但稍欠专业严谨性。模型可直接用于整数线性规划求解。",
+        "grade": "A"
+      },
+      {
+        "problem_id": "problem_21",
+        "scores": {
+          "variable_definition": {
+            "score": 18,
+            "reason": "Variables B and R are correctly defined to cover all decision variables (acres of blueberries and raspberries), with clear and conventional naming (B for blueberries, R for raspberries). However, the continuous nature of the variables (as acres can be fractional) is not explicitly annotated in the formulation, though it is correct for linear programming context. Explicitly stating 'continuous' would align with professional modeling standards."
+          },
+          "objective_function": {
+            "score": 20,
+            "reason": "The objective function '56B + 75R' accurately reflects the profit maximization goal, with coefficients correctly extracted from the problem description ($56 per acre for blueberries, $75 per acre for raspberries). The optimization direction 'maximize' is correctly specified, matching the problem's requirement to maximize profit."
+          },
+          "constraint_completeness": {
+            "score": 20,
+            "reason": "All necessary constraints are included: land (B + R <= 300), budget (22B + 25R <= 10000), labor (6B + 3R <= 575), and non-negativity (B >= 0, R >= 0). No implicit constraints (e.g., integer requirements) are missing, as fractional acres are permissible. Constraints are feasible and non-redundant; for example, labor and land constraints bind independently under different scenarios."
+          },
+          "constraint_accuracy": {
+            "score": 20,
+            "reason": "Constraints are accurately translated from the problem description with correct mathematical expressions. Inequality directions (all <= for resource limits) are appropriate, and coefficients match the problem data (e.g., labor: 6 days/acre for blueberries, 3 days/acre for raspberries). No errors in conversion, and simple linear constraints are handled correctly without complexity issues."
+          },
+          "expression_standardization": {
+            "score": 19,
+            "reason": "The JSON structure is logical and adheres to the required format, with clear descriptions for each component. Mathematical symbols (e.g., '56B + 75R') use standard LP notation. However, non-negativity constraints are unnecessarily split into two separate entries (B >= 0 and R >= 0); combining them into a single constraint (e.g., 'B, R >= 0') would improve conciseness and align with common LP presentation practices."
+          }
+        },
+        "total_score": 97,
+        "issues": [
+          "Variable type (continuous) not explicitly specified in the formulation",
+          "Non-negativity constraints listed as two separate entries instead of combined"
+        ],
+        "suggestions": [
+          "Explicitly annotate variables as continuous in the 'variables' section (e.g., add 'type': 'continuous' to each variable definition)",
+          "Combine non-negativity constraints into a single constraint with description 'Non-negativity' and expression 'B >= 0, R >= 0' for better readability"
+        ],
+        "overall_evaluation": "The linear programming model is highly accurate and comprehensive, correctly capturing all problem elements including decision variables, objective, and constraints. Minor presentation issues—such as the lack of explicit variable type annotation and redundant non-negativity constraints—do not affect solution correctness but reduce professionalism. With slight refinements, this model would exemplify best practices in LP formulation.",
+        "grade": "A"
+      },
+      {
+        "problem_id": "problem_8",
+        "scores": {
+          "variable_definition": {
+            "score": 18,
+            "reason": "Variables 'a' and 'c' are well-defined and cover all decision variables (almond and cashew servings), with clear naming conventions ('a' for almonds, 'c' for cashews). However, the continuous nature of the variables is not explicitly stated, which is a critical omission in optimization modeling. Although linear programming typically assumes continuous variables by default, the problem context (servings) might imply potential integer requirements, and best practice requires explicit specification (e.g., 'continuous' or 'integer') to avoid ambiguity in solution interpretation."
+          },
+          "objective_function": {
+            "score": 20,
+            "reason": "The objective function perfectly captures the minimization of total weekly fat intake with accurate coefficients (15g per almond serving, 12g per cashew serving) directly extracted from the problem description. The optimization direction (minimization) is correctly specified, aligning with the goal of minimizing fat consumption."
+          },
+          "constraint_completeness": {
+            "score": 19,
+            "reason": "All necessary constraints are included: calorie requirement (≥10000), protein requirement (≥800g), almond-to-cashew ratio (a ≥ 2c), and non-negativity. However, the protein constraint (20a + 25c ≥ 800) is redundant under the ratio constraint (a ≥ 2c) and calorie constraint, as the minimum protein intake (≈928.5g) when satisfying calories and ratio exceeds 800g. While redundancy does not violate completeness (as the problem explicitly states the protein requirement), it indicates a lack of constraint analysis that could improve model efficiency."
+          },
+          "constraint_accuracy": {
+            "score": 20,
+            "reason": "Constraints are accurately translated from the problem description to mathematical expressions. Inequality directions (all ≥) correctly reflect minimum requirements, and the ratio constraint (a ≥ 2c) is precisely modeled for 'at least twice as many almond servings as cashew servings.' No errors in coefficient extraction or logical conversion are present."
+          },
+          "expression_standardization": {
+            "score": 19,
+            "reason": "The JSON structure is logical and well-organized, with clear descriptions for variables, objective, and constraints. Mathematical symbols (e.g., '>=') are commonly accepted in computational contexts, but standard optimization notation typically uses '≥' for inequalities. Additionally, while variable descriptions are informative, the absence of explicit variable type declarations (e.g., 'continuous') reduces professionalism in formal modeling."
+          }
+        },
+        "total_score": 96,
+        "issues": [
+          "Variables not explicitly declared as continuous, risking ambiguity in solution interpretation (e.g., whether servings must be integers)",
+          "Protein constraint is redundant due to the combined effect of calorie and ratio constraints, potentially reducing computational efficiency",
+          "Use of '>=' instead of standard mathematical symbol '≥' in constraints, though acceptable computationally, deviates from formal optimization notation"
+        ],
+        "suggestions": [
+          "Explicitly specify variable types (e.g., 'a, c ≥ 0 and continuous') in the model to enhance clarity and align with optimization best practices",
+          "Analyze constraint dependencies to identify and document redundancies (e.g., note that protein constraint is inactive under optimal solutions), while retaining it to satisfy problem requirements",
+          "Adopt standard mathematical symbols (e.g., '≥') in inequality expressions for improved readability and professionalism in academic/industrial contexts"
+        ],
+        "overall_evaluation": "The mathematical model is highly accurate and robust, with excellent alignment to the problem description. All core elements—variables, objective, and constraints—are correctly formulated, demonstrating strong understanding of linear programming principles. Minor issues in variable type specification, constraint redundancy, and notation standardization prevent perfection but do not compromise solution validity. This model would yield correct optimal solutions with standard solvers.",
+        "grade": "A"
+      },
+      {
+        "problem_id": "problem_13",
+        "scores": {
+          "variable_definition": {
+            "score": 18,
+            "reason": "Variables x and y are correctly defined and cover all decision variables (clothing and tech investments), with clear naming and descriptive annotations. However, the model does not specify variable types (e.g., continuous), which is a standard requirement in professional optimization modeling. Since investment amounts can be fractional (e.g., $100.50), variables should be explicitly labeled as continuous, but this omission is minor as linear programming typically assumes continuity by default."
+          },
+          "objective_function": {
+            "score": 20,
+            "reason": "The objective function '0.07*x + 0.10*y' accurately reflects the profit maximization goal, with correct coefficients derived from the 7% and 10% return rates. The optimization direction ('maximize') is properly specified, and the function correctly models the total profit without errors."
+          },
+          "constraint_completeness": {
+            "score": 20,
+            "reason": "All necessary constraints are included: budget (x + y ≤ 3000), ratio requirement (x ≥ 4y), tech investment limit (y ≤ 500), and non-negativity (x ≥ 0, y ≥ 0). No implicit constraints (e.g., integer requirements) are needed, as fractional investments are permissible. Although the problem states Jacob invests in both companies (implying y > 0 and x > 0), the optimal solution (x=2500, y=500) satisfies y > 0, and strict positivity is not enforceable in linear programming; thus, no critical omissions exist."
+          },
+          "constraint_accuracy": {
+            "score": 20,
+            "reason": "Constraints are accurately translated from text to mathematical expressions. The ratio constraint 'x ≥ 4*y' correctly handles the 'at least four times' requirement, and inequality directions (≤, ≥) are consistent with the problem description. Budget and tech limits are precisely converted, with no errors in complex relationships or redundant/contradictory constraints (e.g., y ≤ 500 and x ≥ 4y are feasible together)."
+          },
+          "expression_standardization": {
+            "score": 18,
+            "reason": "The JSON structure is logically organized with standard fields (objective, objective_function, constraints, variables). Mathematical symbols (e.g., ≤, ≥, *) are used correctly, and coefficients are properly formatted. However, the variables field uses a simplistic string list without structured metadata (e.g., missing type specifications), and constraints lack descriptive comments for clarity. Best practices recommend including variable types and constraint annotations in the JSON schema."
+          }
+        },
+        "total_score": 96,
+        "issues": [
+          "Variable types (e.g., continuous) are not specified in the variables definition, which is a professional oversight.",
+          "The JSON structure for variables is under-specified, using a basic string list instead of a more informative format (e.g., dictionaries with type/description).",
+          "No explicit handling of the implicit 'invest in both companies' requirement (y > 0), though it does not affect the optimal solution in this case."
+        ],
+        "suggestions": [
+          "Explicitly annotate variable types (e.g., 'x: continuous, amount invested in clothing company') to align with optimization standards.",
+          "Enhance the JSON structure by using dictionaries for variables and constraints (e.g., {'name': 'x', 'type': 'continuous', 'description': '...'}) to improve readability and metadata inclusion.",
+          "Add brief constraint descriptions (e.g., in comments or a separate field) to clarify the purpose of each constraint, especially for complex relationships like 'x >= 4*y'.",
+          "For future models, verify if implicit requirements (e.g., strictly positive investments) need approximation (e.g., y >= 0.01) when critical, though unnecessary here."
+        ],
+        "overall_evaluation": "The mathematical model is highly accurate and effectively captures the problem's core elements, with correct objective function, constraints, and variable definitions. Minor shortcomings include the lack of variable type specification and suboptimal JSON structuring, but these do not impact solution correctness. The optimal solution (x=2500, y=500) is feasible and maximizes profit, demonstrating robust modeling. Overall, this is a strong formulation suitable for implementation.",
+        "grade": "A"
+      },
+      {
+        "problem_id": "problem_23",
+        "scores": {
+          "variable_definition": {
+            "score": 18,
+            "reason": "变量x和y完整覆盖了决策变量（4轮车和3轮车数量），命名x和y在数学建模中常见且简洁，但缺乏描述性（如使用w4或num_4wheeler更清晰）；变量类型正确标注为整数，符合车辆数量必须为整数的要求。主要扣分点在于建模中缺少显式变量定义（如'Let x be the number of 4-wheelers'），仅在约束中隐含使用，这在正式建模中应优先声明。"
+          },
+          "objective_function": {
+            "score": 20,
+            "reason": "目标函数'minimize x + y'准确反映问题要求的最小化总车辆数；系数1正确（每个车辆对总数贡献为1）；优化方向'minimize'正确，与问题描述一致。无任何错误或遗漏。"
+          },
+          "constraint_completeness": {
+            "score": 20,
+            "reason": "包含所有必要约束：行李需求(60x + 40y ≥ 1000)、污染限制(30x + 15y ≤ 430)、非负性(x ≥ 0, y ≥ 0)和整数性(x,y integers)；隐含约束（如整数性由车辆计数隐含）已完整覆盖；无冗余或矛盾（例如，可行解存在：x=6,y=16满足所有约束）。"
+          },
+          "constraint_accuracy": {
+            "score": 20,
+            "reason": "文字描述到数学表达式转化准确：'at least 1000 luggage' → ≥1000，'at most 430 pollutant' → ≤430；不等式方向正确；系数正确提取（4-wheeler行李60/污染30，3-wheeler行李40/污染15）；无复杂约束需特殊处理。"
+          },
+          "expression_standardization": {
+            "score": 18,
+            "reason": "JSON结构合理（objective为字符串，constraints为列表）；但整数约束表述不规范：'x, y are integers'使用文字描述而非标准数学符号（如'x, y \\in \\mathbb{Z}^+'或单独指定变量类型），这在专业建模中应避免；非负性约束显式写出是好的，但整数约束应作为变量属性而非约束列表中的一项。数学符号基本规范，但缺少注释信息。"
+          }
+        },
+        "total_score": 96,
+        "issues": [
+          "变量定义未在建模中显式声明（如缺少'Let x be...'语句）",
+          "整数约束用文字描述（'x, y are integers'）而非标准数学符号，不符合专业建模规范"
+        ],
+        "suggestions": [
+          "在JSON前添加显式变量定义，例如：'Variables: x = number of 4-wheelers, y = number of 3-wheelers (integers)'",
+          "将整数约束移至单独字段（如'variable_types': {'x': 'integer', 'y': 'integer'}）或使用数学符号（如'x, y \\in \\mathbb{Z}^+'）",
+          "考虑简化约束（如行李约束除以20得3x + 2y ≥ 50），但非必需"
+        ],
+        "overall_evaluation": "该数学模型整体优秀，准确完整地捕捉了问题核心：目标函数和约束正确反映最小化车辆数、行李需求及污染限制，且考虑了整数性。主要不足在于变量定义和约束表述的规范性，缺少显式声明和标准符号，但这些是次要问题，不影响模型正确性。求解可得最优解（如x=6,y=16），验证模型有效。",
+        "grade": "A"
+      }
+    ],
+    "bottom_problems": [
+      {
+        "problem_id": "problem_27",
+        "scores": {
+          "variable_definition": {
+            "score": 2,
+            "reason": "变量定义严重错误：问题中仅需两个决策变量（第一混合和第二混合的kg数，如x1和x2），但建模定义了多维索引变量x_{ij}（i∈I, j∈J）和y_j，完全不匹配混合问题场景。命名不清晰（x和y无上下文），且未标注变量类型（虽问题中kg可连续，但定义错误导致类型无关）。变量未覆盖实际决策变量，仅2分因JSON结构存在变量字段。"
+          },
+          "objective_function": {
+            "score": 0,
+            "reason": "目标函数完全错误：指定为'minimize sum c_{ij} x_{ij}'，但问题要求最大化利润（$12/kg和$15/kg）。系数c_{ij}未提取自问题描述（应为12和15），且优化方向错误（最小化成本 vs 最大化利润）。无任何正确元素，得0分。"
+          },
+          "constraint_completeness": {
+            "score": 5,
+            "reason": "约束不完整：包含非负约束（x_{ij} ≥ 0）和运输问题特有的供应/需求约束，但遗漏关键资源约束（cat paw ≤ 20kg和gold shark ≤ 50kg）。需求约束（sum x_{ij} ≥ d_j）冗余且不适用（问题无需求要求），而混合比例约束（如20% cat paw）完全缺失。仅因非负约束存在得5分。"
+          },
+          "constraint_accuracy": {
+            "score": 0,
+            "reason": "约束转化严重失准：未处理混合比例（如cat paw使用量应为0.2x1 + 0.35x2 ≤ 20），而是错误套用运输问题约束。不等式方向在供应约束中虽≤正确，但整体约束与问题描述无关。复杂比例关系未转化，得0分。"
+          },
+          "expression_standardization": {
+            "score": 10,
+            "reason": "JSON结构合理且数学符号规范（如sum_{i in I} notation），但集合描述错误（'origins/destinations'不适用于混合问题），参数未实例化（c,d,s无值）。缺乏问题特定注释（如未说明cat paw/gold shark），内容错误但格式规范，故给10分。"
+          }
+        },
+        "total_score": 17,
+        "issues": [
+          "建模错误应用运输问题框架，而问题实际为混合问题（blending problem）",
+          "决策变量定义不相关：应有两个标量变量（x1, x2），但定义了多维索引变量x_{ij}和y_j",
+          "目标函数优化方向错误（最小化 vs 最大化），且利润系数未指定",
+          "关键资源约束（cat paw和gold shark库存）缺失，需求约束冗余不适用",
+          "混合比例约束（如20% cat paw）完全未处理"
+        ],
+        "suggestions": [
+          "重新定义决策变量：x1 = kg of first mix, x2 = kg of second mix（标量连续变量）",
+          "修正目标函数：maximize 12*x1 + 15*x2",
+          "添加正确约束：0.2*x1 + 0.35*x2 <= 20（cat paw）, 0.8*x1 + 0.65*x2 <= 50（gold shark）, x1 >= 0, x2 >= 0",
+          "移除所有运输问题元素（sets I/J, parameters c/d/s）",
+          "在JSON中补充问题特定描述（如参数值、约束物理意义）"
+        ],
+        "overall_evaluation": "该数学建模质量极差，完全误解问题类型（运输问题 vs 混合问题），导致变量、目标函数和约束全部错误。未反映原始问题描述的核心要素（混合比例、库存限制、利润最大化），建模无效且无法求解实际问题。需彻底重构模型。",
+        "grade": "F"
+      },
+      {
+        "problem_id": "problem_6",
+        "scores": {
+          "variable_definition": {
+            "score": 15,
+            "reason": "变量R和P完整覆盖了决策变量（普通和高级手袋数量），命名清晰易懂（R代表regular，P代表premium）。但变量类型未正确标注：问题中手袋数量必须为整数（'how many' implies discrete units），但建模中未指定整数约束，仅包含非负连续变量假设，这与实际业务场景不符。扣5分。"
+          },
+          "objective_function": {
+            "score": 20,
+            "reason": "目标函数准确反映最大化月利润的优化目标，系数$30和$180正确提取自问题描述的销售利润数据（'sell at a profit of $30 each' and '$180 each'），优化方向为'maximize'正确。无错误。"
+          },
+          "constraint_completeness": {
+            "score": 8,
+            "reason": "遗漏关键约束：问题描述'can sell at most 475 handbags of either type per month' 应解释为每种类型独立约束（R ≤ 475 and P ≤ 475），但建模错误地使用了总销售量约束（R + P ≤ 475），导致约束不完整。同时遗漏隐含整数约束（手袋数量必须为整数）。预算约束和非负约束完整，但销售量约束错误严重，且无冗余或矛盾。扣12分。"
+          },
+          "constraint_accuracy": {
+            "score": 10,
+            "reason": "预算约束（200R + 447P ≤ 250000）转化准确，不等式方向正确。但销售量约束转化严重错误：文字描述'of either type' 明确表示每种类型上限475，应转化为R ≤ 475 and P ≤ 475，而非R + P ≤ 475。非负约束正确。此错误导致模型无法反映实际业务限制。扣10分。"
+          },
+          "expression_standardization": {
+            "score": 16,
+            "reason": "JSON结构合理（variables/objective/constraints分层清晰），数学符号规范（使用≤、变量大写）。但约束列表以字符串形式呈现，未明确区分独立约束（如销售量应拆分为两个不等式）；变量定义缺少类型说明（如'integer'）。描述信息基本完整，但注释不足。扣4分。"
+          }
+        },
+        "total_score": 69,
+        "issues": [
+          "销售量约束错误：将'at most 475 handbags of either type'误解为总销售量约束（R + P ≤ 475），正确应为每种类型独立约束（R ≤ 475 and P ≤ 475）",
+          "遗漏整数约束：手袋数量必须为整数，但模型中仅包含非负连续变量假设",
+          "变量类型未标注：未在定义中指定R和P为整数变量",
+          "约束完整性不足：销售量约束错误导致模型无法捕捉实际业务限制"
+        ],
+        "suggestions": [
+          "修正销售量约束：替换为'R ≤ 475' and 'P ≤ 475'以准确反映'of either type'的含义",
+          "添加整数约束：在variables中指定'R: integer' and 'P: integer'，或在constraints中加入'R integer' and 'P integer'",
+          "在变量定义中明确类型：例如'Number of regular handbags (integer)'",
+          "验证约束逻辑：确保所有约束与问题描述严格一致，避免语义误解"
+        ],
+        "overall_evaluation": "建模存在严重缺陷，核心问题在于销售量约束的错误转化（将类型独立上限误解为总和上限），导致模型无法正确表示业务场景。目标函数正确，但约束不完整且关键错误使解决方案失效。变量定义和表达规范性较好，但整数约束遗漏进一步降低实用性。总分69分，属于较差水平，需重大修正才能用于实际优化。",
+        "grade": "D"
+      },
+      {
+        "problem_id": "problem_17",
+        "scores": {
+          "variable_definition": {
+            "score": 18,
+            "reason": "变量定义完整覆盖决策变量（x 和 y 分别代表手动和自动切片机数量），命名清晰易懂（通过描述说明含义），且正确标注为非负整数类型。但存在轻微冗余：非负性和整数性已在变量定义中指定（'non-negative integer'），却在约束列表中重复声明，降低了简洁性。"
+          },
+          "objective_function": {
+            "score": 20,
+            "reason": "目标函数准确反映最小化总切片机数量的优化目标（min z = x + y），系数正确提取自问题描述（每个切片机贡献1单位），优化方向（最小化）正确无误。z 作为目标变量的引入是标准做法，不影响正确性。"
+          },
+          "constraint_completeness": {
+            "score": 15,
+            "reason": "包含所有必要约束（切割能力、润滑脂使用、手动与自动数量关系、非负性、整数性），但存在关键缺陷：未正确处理整数变量下的严格不等式 'x < y'（应转化为 'x <= y - 1' 以避免可行性问题），且非负性和整数性在变量定义和约束中重复声明，造成冗余。隐含约束（如整数性）已覆盖，但严格不等式处理缺失影响完整性。"
+          },
+          "constraint_accuracy": {
+            "score": 14,
+            "reason": "切割能力（5x + 8y >= 50）和润滑脂约束（3x + 6y <= 35）的转化准确，不等式方向正确。但 'x < y' 的转化严重错误：问题指定 x 和 y 为整数，'x < y' 必须写为 'x <= y - 1' 以适应整数规划（否则可能导致求解器忽略边界或产生不可行解），而建模直接使用严格不等式，未考虑离散特性。"
+          },
+          "expression_standardization": {
+            "score": 16,
+            "reason": "数学符号（x, y）使用规范，决策变量有基本描述。但 JSON 结构使用单引号（非标准 JSON 应使用双引号），且约束列表包含冗余信息（'x >= 0, y >= 0, x and y are integers' 与变量定义重复）。'x < y' 的表达不规范（整数规划中应避免严格不等式），影响专业性。"
+          }
+        },
+        "total_score": 83,
+        "issues": [
+          "x < y 约束未调整为 x <= y - 1 以适应整数变量，可能导致优化求解失败",
+          "非负性和整数性在变量定义和约束中重复声明，造成冗余",
+          "JSON 结构使用单引号，不符合标准 JSON 格式规范"
+        ],
+        "suggestions": [
+          "将约束 'x < y' 替换为 'x <= y - 1'，确保整数变量下的可行性",
+          "移除约束列表中的冗余非负性和整数性声明，仅在变量定义中指定类型",
+          "使用双引号重写 JSON 结构以符合标准，并精简约束表述"
+        ],
+        "overall_evaluation": "该建模在目标函数和基础约束上表现良好，准确捕捉了问题核心，但关键错误在于未处理整数变量下的严格不等式（x < y），这可能导致实际求解时出现不可行解或错误结果。次要问题包括冗余约束和表达不规范，但整体逻辑清晰。经修正后可达到高质量建模标准。",
+        "grade": "B"
+      },
+      {
+        "problem_id": "problem_26",
+        "scores": {
+          "variable_definition": {
+            "score": 18,
+            "reason": "变量完整覆盖决策变量（x为骆驼商队数量，y为沙漠卡车数量），命名清晰且有描述性注释。变量类型正确标注为整数（非负整数），符合问题要求。扣2分是因为整数约束在约束列表中重复指定（如'x >= 0, integer'），而专业建模中变量类型应在变量定义部分统一处理，而非混入约束条件，导致轻微冗余。"
+          },
+          "objective_function": {
+            "score": 20,
+            "reason": "目标函数'minimize 12x + 5y'准确反映最小化总小时数的优化目标。系数12（骆驼商队每 trip 小时）和5（沙漠卡车每 trip 小时）正确提取自问题描述，优化方向（minimize）与问题要求一致，无任何错误。"
+          },
+          "constraint_completeness": {
+            "score": 15,
+            "reason": "包含容量约束（50x + 150y >= 1500）、偏好约束（x >= y）、非负性及整数性约束，但存在关键遗漏：问题明确要求'prefers to have more camel caravans than desert trucks'（即严格多于），应转化为x > y（整数下等价于x >= y + 1），但建模仅用x >= y，允许x = y，未满足'更多'的隐含约束。交付约束使用>=1500合理（因目标函数会自然避免超额交付），但偏好约束不完整导致扣分。"
+          },
+          "constraint_accuracy": {
+            "score": 15,
+            "reason": "容量约束转化准确（50x + 150y >= 1500），不等式方向正确。但偏好约束从文字描述'to have more'到x >= y的转化错误：'more'要求严格不等式（x > y），而x >= y包含相等情况，与问题意图矛盾。整数约束处理正确，但非负性与整数性合并书写（如'x >= 0, integer'）不够精确，应分开表述。"
+          },
+          "expression_standardization": {
+            "score": 16,
+            "reason": "JSON结构基本合理，但约束列表中将变量类型与不等式混合（如'x >= 0, integer'），不符合标准建模范式（整数约束应单独列出）。数学符号使用规范，但缺少约束注释（如未说明'x >= y'对应偏好要求）。variables字段包含必要描述，提升了可读性，但整体表达可更专业。"
+          }
+        },
+        "total_score": 84,
+        "issues": [
+          "偏好约束错误：问题要求骆驼商队数量严格多于沙漠卡车（x > y），但建模使用x >= y，允许相等情况，违反问题描述。",
+          "约束表达不规范：非负性和整数性约束合并书写（如'x >= 0, integer'），应拆分为独立约束项。",
+          "隐含约束处理不足：未将'x > y'在整数规划中转化为x >= y + 1，导致模型可能输出无效解（如x = y）。"
+        ],
+        "suggestions": [
+          "将偏好约束修正为x >= y + 1（因变量为整数），确保x严格大于y。",
+          "在约束列表中分离类型约束：添加'x integer'和'y integer'作为独立项，而非与不等式合并。",
+          "为关键约束添加注释（如在constraints中注明'x >= y + 1: preference for more camel caravans'），提升可读性。",
+          "明确说明交付约束使用>=1500的合理性（目标函数会避免超额交付），避免歧义。"
+        ],
+        "overall_evaluation": "建模整体质量良好，目标函数和核心约束（容量、非负性）准确，但偏好约束的转化错误是主要缺陷，未严格反映问题要求。变量定义和表达规范性有提升空间，但未影响模型基本可行性。经修正后可成为优秀模型。",
+        "grade": "B"
+      },
+      {
+        "problem_id": "problem_4",
+        "scores": {
+          "variable_definition": {
+            "score": 15,
+            "reason": "变量完整覆盖决策变量（x1为橙汁盒数，x2为苹果汁盒数），命名通过描述清晰易懂（'number_of_orange_juice_boxes'等）。但未指定变量类型：问题中果汁盒数必须为整数（离散单位），而模型未标注整数约束（如 'type': 'integer'），仅假设连续变量，这可能导致解不实用（如非整数解）。扣5分。"
+          },
+          "objective_function": {
+            "score": 20,
+            "reason": "目标函数准确反映最大化维生素D摄入的目标，系数正确提取自问题描述（橙汁10单位D，苹果汁12单位D），优化方向（最大化）正确。无错误。"
+          },
+          "constraint_completeness": {
+            "score": 15,
+            "reason": "包含所有必要约束：偏好约束（x2 >= 3*x1）、最小橙汁约束（x1 >= 3）、维生素C上限约束（8*x1 + 6*x2 <= 300）和非负性约束。但遗漏隐含整数约束（果汁盒数应为整数），且非负性约束（x1 >= 0, x2 >= 0）冗余（由x1 >= 3和x2 >= 3*x1隐含），虽非错误但降低简洁性。主要扣分点为整数约束缺失。扣5分。"
+          },
+          "constraint_accuracy": {
+            "score": 20,
+            "reason": "文字描述到数学表达式转化准确：偏好约束（'至少3倍苹果汁盒数比橙汁盒数' → x2 >= 3*x1）、最小橙汁约束（'至少3盒橙汁' → x1 >= 3）、维生素C约束（'最多300单位C' → 8*x1 + 6*x2 <= 300）均正确。不等式方向无误，复杂比例关系处理恰当。问题描述中'and'的歧义（应为'as'）在思考过程中已纠正，模型无转化错误。"
+          },
+          "expression_standardization": {
+            "score": 15,
+            "reason": "JSON结构合理（含model_name、variables等标准字段），数学符号规范（x1/x2命名简洁）。但目标函数和约束表达式硬编码系数（如'10*x1'而非引用参数名'vitamin_D_orange * x1'），降低模型灵活性和可维护性；参数虽定义但未在表达式中使用。此外，冗余非负性约束影响简洁性。扣5分。"
+          }
+        },
+        "total_score": 85,
+        "issues": [
+          "变量类型未指定为整数（果汁盒数应为离散整数，但模型隐含连续假设）",
+          "目标函数和约束中硬编码系数，未使用参数名（如vitamin_D_orange），导致模型不灵活",
+          "包含冗余非负性约束（x1 >= 0, x2 >= 0 已由x1 >= 3和x2 >= 3*x1隐含）"
+        ],
+        "suggestions": [
+          "在variables中添加类型标注（如 'x1': {'description': '...', 'type': 'integer'}）以强制整数解",
+          "修改表达式引用参数名（如 objective: 'vitamin_D_orange * x1 + vitamin_D_apple * x2'），提升可维护性",
+          "移除冗余非负性约束，仅保留必要约束以简化模型"
+        ],
+        "overall_evaluation": "该线性规划模型核心逻辑正确，目标函数和主要约束准确反映问题需求，但存在关键不足：未处理决策变量的整数性质（可能导致非实用解），且表达式硬编码参数值降低模型灵活性。冗余约束虽不影响可行性，但损害简洁性。总体建模质量良好，适用于初步分析，但需改进以符合实际应用场景。建议优先添加整数约束并参数化表达式。",
+        "grade": "B"
+      }
+    ]
+  }
+}
