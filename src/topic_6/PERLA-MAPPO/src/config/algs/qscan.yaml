@@ -1,0 +1,48 @@
+# --- RMC specific parameters ---
+
+# use epsilon greedy action selector
+action_selector: "gumbel"
+epsilon_start: .0
+epsilon_finish: .0
+epsilon_anneal_time: 100000
+mask_before_softmax: True
+
+mac: 'lica_mac'
+
+# runner: "parallel" # train -> parallel, test -> episode
+# batch_size_run: 8 # batch_size_run=4, buffer_size = 2500, batch_size=64  for 3s5z_vs_3s6z
+
+runner: "episode"
+batch_size_run: 1
+# Leave empty unless you want to load a saved checkpoint
+checkpoint_path: ""
+
+buffer_size: 128
+batch_size: 32
+
+off_buffer_size: 5000
+off_batch_size: 64
+run: "on_off"
+
+t_max: 10050000
+
+# update the target network every {} episodes
+target_update_interval: 200
+
+# use the Q_Learner to train
+agent_output_type: "pi_logits"
+
+learner: "fmac_learner"
+mixer: "qmix"
+mixing_embed_dim: 32
+hypernet_embed: 64
+critic_hidden_dim: 128
+
+lr: 0.001 # Learning rate for agents
+critic_lr: 0.001
+lambd: 0.6
+entropy_coef: 0.03
+optimizer: 'adam'
+abs: True # monotonicity condition
+
+name: "qscan"
