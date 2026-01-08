@@ -1,0 +1,5 @@
+llm:
+  api_type: "openai"
+  model: "qwen3-235b-a22b-thinking-2507"
+  base_url: "https://dashscope.aliyuncs.com/compatible-mode/v1"
+  api_key: "sk-ceef74739d724f56b350294075b857f1"

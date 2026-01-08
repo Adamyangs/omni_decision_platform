@@ -1,0 +1,11 @@
+# Full Example: https://github.com/geekan/MetaGPT/blob/main/config/config2.example.yaml
+# Reflected Code: https://github.com/geekan/MetaGPT/blob/main/metagpt/config2.py
+llm:
+  api_type: "openai"  # or azure / ollama / open_llm etc. Check LLMType for more options
+  model: "deepseek-v3.2"  # or gpt-3.5-turbo-1106 / gpt-4-1106-preview
+  base_url: "https://dashscope.aliyuncs.com/compatible-mode/v1"  # or forward url / other llm url
+  api_key: "sk-ceef74739d724f56b350294075b857f1"
+  # api_type: "ollama"  # or azure / ollama / open_llm etc. Check LLMType for more options
+  # model: "llama3:8b-instruct-fp16"  # or gpt-3.5-turbo-1106 / gpt-4-1106-preview
+  # base_url: "http://127.0.0.1:11434/api"  # or forward url / other llm url
+  # api_key: "ollama"

@@ -1,0 +1,574 @@
+{
+    "env": {
+        "desc": "",
+        "roles": {
+            "model_llm": {
+                "name": "Alice",
+                "profile": "model_llm",
+                "goal": "",
+                "constraints": "",
+                "desc": "",
+                "is_human": false,
+                "role_id": "",
+                "states": [
+                    "0. Thinking",
+                    "1. Formulation",
+                    "2. Trans_2_latex"
+                ],
+                "actions": [
+                    {
+                        "name": "Thinking",
+                        "i_context": "",
+                        "prefix": "You are a model_llm, named Alice, your goal is . ",
+                        "desc": "",
+                        "llm_name_or_type": null,
+                        "PROMPT_TEMPLATE": "\n    At present, you are given an Operations Research problem, your role is to :\n    1. Identify and extract relevant parameters from the problem description. Parameters refer to fixed values that define certain aspects of the problem but are not subject to change during the optimization process.\n    2. Identify and extract the relevant variables from the problem statement. Variables represent the unknowns or decision variables in the optimization problem.\n    3. Identify and extract the constraints from the problem description. Constraints represent the limitations or conditions that need to be satisfied in the optimization problem. Translate the constraints into mathematical expressions.\n    4. Identify and extract the objective function from the problem statement. The objective function represents the goal of the optimization problem. Translate the objective funtion into mathematical expressions.\n\n    The problem description is as following, please review carefully and organize in response format. \n    Note: ONLY give steps, do not output formulation, response in following json schema:\n    {response_json_schema}\n\n    Note: ONLY output the mathematical expression of the model, return ```json your_output_here ``` with NO other texts\n\n\n    ## Given Problem\n    {information}\n\n    ## Thinking steps\n    ```json\n    ",
+                        "response_format": "{\n    \"title\": \"Steps\",\n    \"type\": \"object\",\n    \"properties\": {\n        \"Step_1\": {\n            \"description\": \"variables and sets mentioned in problem description\",\n            \"type\": \"string\"\n        },\n        \"Step_2\": {\n            \"description\": \"parameters in problem description\",\n            \"type\": \"string\"\n        },\n        \"Step_3\": {\n            \"description\": \"objective funtion consists of variables and numerical parameters\",\n            \"type\": \"string\"\n        },\n        \"Step_4\": {\n            \"description\": \"all the constraints consist of variables and numerical parameters\",\n            \"type\": \"string\"\n        }\n    },\n    \"required\": [\"Step_1\", \"Step_2\", \"Step_3\", \"Step_4\"]\n}\n",
+                        "__module_class_name": "actions.thinking.Thinking"
+                    },
+                    {
+                        "name": "Formulation",
+                        "i_context": "",
+                        "prefix": "You are a model_llm, named Alice, your goal is . ",
+                        "desc": "",
+                        "llm_name_or_type": null,
+                        "PROMPT_TEMPLATE": "\n    Now, according to what you write on your scratchpads, summary the mathematical expression of the model directly and explicitly in response in JSON.\n    Note: ONLY output the mathematical expression of the model, return ```json your_output_here ``` with NO other texts\n\n    ## Scratch pad\n    {scratch_pad}\n\n    ## Model\n    ```json\n    ",
+                        "response_format": "{\n    \"title\": \"Formulation\",\n    \"type\": \"object\",\n    \"properties\": {\n        \"objective_function\": {\n            \"title\": \"objective_function\",\n            \"type\": \"string\",\n            \"description\": \"The objective function consists of parameters and variables from an operations research problem, using numerical representations for parameters and standard mathematical symbols for variables.\"\n        },\n        \"constraints\": {\n            \"title\": \"constraints\",\n            \"type\": \"string\",\n            \"description\": \"Constraints consist of numerical parameters and variables from an operations research problem, using numerical representations for parameters and standard mathematical symbols for variables.\"\n        }\n    },\n    \"required\": [\"objective_function\", \"constraints\"]\n}\n\n",
+                        "__module_class_name": "actions.formulation.Formulation"
+                    },
+                    {
+                        "name": "Trans_2_latex",
+                        "i_context": "",
+                        "prefix": "You are a model_llm, named Alice, your goal is . ",
+                        "desc": "",
+                        "llm_name_or_type": null,
+                        "PROMPT_TEMPLATE": "\n    Now, according to what you write on your scratchpads, give the LATEX format of the model directly.\n    NOTE: MUST USE LATEX MATH SYMBOLS\n    ## Scratch pad\n    {scratch_pad}\n\n    ## Model\n    ```latex\n",
+                        "__module_class_name": "actions.trans_2_latex.Trans_2_latex"
+                    }
+                ],
+                "rc": {
+                    "memory": {
+                        "storage": [
+                            {
+                                "id": "8911d8eec4954dacac7db3849ede6c62",
+                                "content": "A patient with a sore throat can drink two syrups, syrup 1 and syrup 2 for treatment. Per serving, syrup 1 delivers 0.5 units of medicine to the throat and 0.4 units of medicine to the lungs. Per serving, syrup 2 delivers 0.2 units of medicine to the throat and 0.5 units of medicine to the lungs. Furthermore, syrup 1 contains 0.5 units of sugar while syrup 2 contains 0.3 units of sugar per serving. The patient can get at most 5 units of medicine for the throat and at least 4 units of medicine to the lungs. How many servings of each should the patient take to minimize his sugar intake?",
+                                "instruct_content": null,
+                                "role": "Human",
+                                "cause_by": "metagpt.actions.add_requirement.UserRequirement",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "5d3d5bc750df4a7f873b6655130e04c6",
+                                "content": "Variables: x1 = number of servings of syrup 1, x2 = number of servings of syrup 2., Parameters: Medicine per serving to throat from syrup 1 = 0.5, from syrup 2 = 0.2; Medicine per serving to lungs from syrup 1 = 0.4, from syrup 2 = 0.5; Sugar per serving from syrup 1 = 0.5, from syrup 2 = 0.3; Maximum medicine for throat = 5 units; Minimum medicine for lungs = 4 units., Objective function: Minimize total sugar intake = 0.5*x1 + 0.3*x2., Constraints: Throat medicine constraint: 0.5*x1 + 0.2*x2 ≤ 5; Lungs medicine constraint: 0.4*x1 + 0.5*x2 ≥ 4; Non-negativity constraints: x1 ≥ 0, x2 ≥ 0., ",
+                                "instruct_content": null,
+                                "role": "model_llm",
+                                "cause_by": "actions.thinking.Thinking",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "67a350576fb44ed79d9a76d7fe7b3f54",
+                                "content": "{'objective_function': 'minimize 0.5*x1 + 0.3*x2', 'constraints': ['0.5*x1 + 0.2*x2 <= 5', '0.4*x1 + 0.5*x2 >= 4', 'x1 >= 0', 'x2 >= 0']}",
+                                "instruct_content": null,
+                                "role": "model_llm",
+                                "cause_by": "actions.formulation.Formulation",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "d1a0df7bf0ee4c0d9d06db5c59725c38",
+                                "content": "Based on the scratch pad, the linear programming model in LaTeX format is:\n\n\\[\n\\begin{aligned}\n& \\text{minimize} \\quad 0.5x_1 + 0.3x_2 \\\\\n& \\text{subject to} \\\\\n& \\qquad 0.5x_1 + 0.2x_2 \\leq 5 \\\\\n& \\qquad 0.4x_1 + 0.5x_2 \\geq 4 \\\\\n& \\qquad x_1 \\geq 0 \\\\\n& \\qquad x_2 \\geq 0\n\\end{aligned}\n\\]",
+                                "instruct_content": null,
+                                "role": "model_llm",
+                                "cause_by": "actions.trans_2_latex.Trans_2_latex",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "8bd1beb26efd4a99af560899314eea98",
+                                "content": "One critical issue in the code is the **inefficient and error-prone way of constructing the inequality constraints**.  \n\nInstead of using `np.vstack()` and `np.append()` sequentially, the constraints should be defined in a single step for clarity and maintainability. Mixing these operations can lead to mistakes if constraints are added or rearranged later.  \n\n**Improved approach**: Define `A_ub` and `b_ub` in one clear block:  \n```python\nA_ub = np.array([\n    [0.5, 0.2],    # 0.5x1 + 0.2x2 <= 5\n    [-0.4, -0.5]   # -0.4x1 - 0.5x2 <= -4  (converted from 0.4x1 + 0.5x2 >= 4)\n])\nb_ub = np.array([5, -4])\n```\nThis enhances readability and reduces the risk of misalignment between rows of `A_ub` and `b_ub`.",
+                                "instruct_content": null,
+                                "role": "code_llm",
+                                "cause_by": "actions.write_review.Write_review",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            }
+                        ],
+                        "index": {
+                            "metagpt.actions.add_requirement.UserRequirement": [
+                                {
+                                    "id": "8911d8eec4954dacac7db3849ede6c62",
+                                    "content": "A patient with a sore throat can drink two syrups, syrup 1 and syrup 2 for treatment. Per serving, syrup 1 delivers 0.5 units of medicine to the throat and 0.4 units of medicine to the lungs. Per serving, syrup 2 delivers 0.2 units of medicine to the throat and 0.5 units of medicine to the lungs. Furthermore, syrup 1 contains 0.5 units of sugar while syrup 2 contains 0.3 units of sugar per serving. The patient can get at most 5 units of medicine for the throat and at least 4 units of medicine to the lungs. How many servings of each should the patient take to minimize his sugar intake?",
+                                    "instruct_content": null,
+                                    "role": "Human",
+                                    "cause_by": "metagpt.actions.add_requirement.UserRequirement",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.thinking.Thinking": [
+                                {
+                                    "id": "5d3d5bc750df4a7f873b6655130e04c6",
+                                    "content": "Variables: x1 = number of servings of syrup 1, x2 = number of servings of syrup 2., Parameters: Medicine per serving to throat from syrup 1 = 0.5, from syrup 2 = 0.2; Medicine per serving to lungs from syrup 1 = 0.4, from syrup 2 = 0.5; Sugar per serving from syrup 1 = 0.5, from syrup 2 = 0.3; Maximum medicine for throat = 5 units; Minimum medicine for lungs = 4 units., Objective function: Minimize total sugar intake = 0.5*x1 + 0.3*x2., Constraints: Throat medicine constraint: 0.5*x1 + 0.2*x2 ≤ 5; Lungs medicine constraint: 0.4*x1 + 0.5*x2 ≥ 4; Non-negativity constraints: x1 ≥ 0, x2 ≥ 0., ",
+                                    "instruct_content": null,
+                                    "role": "model_llm",
+                                    "cause_by": "actions.thinking.Thinking",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.formulation.Formulation": [
+                                {
+                                    "id": "67a350576fb44ed79d9a76d7fe7b3f54",
+                                    "content": "{'objective_function': 'minimize 0.5*x1 + 0.3*x2', 'constraints': ['0.5*x1 + 0.2*x2 <= 5', '0.4*x1 + 0.5*x2 >= 4', 'x1 >= 0', 'x2 >= 0']}",
+                                    "instruct_content": null,
+                                    "role": "model_llm",
+                                    "cause_by": "actions.formulation.Formulation",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.trans_2_latex.Trans_2_latex": [
+                                {
+                                    "id": "d1a0df7bf0ee4c0d9d06db5c59725c38",
+                                    "content": "Based on the scratch pad, the linear programming model in LaTeX format is:\n\n\\[\n\\begin{aligned}\n& \\text{minimize} \\quad 0.5x_1 + 0.3x_2 \\\\\n& \\text{subject to} \\\\\n& \\qquad 0.5x_1 + 0.2x_2 \\leq 5 \\\\\n& \\qquad 0.4x_1 + 0.5x_2 \\geq 4 \\\\\n& \\qquad x_1 \\geq 0 \\\\\n& \\qquad x_2 \\geq 0\n\\end{aligned}\n\\]",
+                                    "instruct_content": null,
+                                    "role": "model_llm",
+                                    "cause_by": "actions.trans_2_latex.Trans_2_latex",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.write_review.Write_review": [
+                                {
+                                    "id": "8bd1beb26efd4a99af560899314eea98",
+                                    "content": "One critical issue in the code is the **inefficient and error-prone way of constructing the inequality constraints**.  \n\nInstead of using `np.vstack()` and `np.append()` sequentially, the constraints should be defined in a single step for clarity and maintainability. Mixing these operations can lead to mistakes if constraints are added or rearranged later.  \n\n**Improved approach**: Define `A_ub` and `b_ub` in one clear block:  \n```python\nA_ub = np.array([\n    [0.5, 0.2],    # 0.5x1 + 0.2x2 <= 5\n    [-0.4, -0.5]   # -0.4x1 - 0.5x2 <= -4  (converted from 0.4x1 + 0.5x2 >= 4)\n])\nb_ub = np.array([5, -4])\n```\nThis enhances readability and reduces the risk of misalignment between rows of `A_ub` and `b_ub`.",
+                                    "instruct_content": null,
+                                    "role": "code_llm",
+                                    "cause_by": "actions.write_review.Write_review",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ]
+                        },
+                        "ignore_id": false
+                    },
+                    "working_memory": {
+                        "storage": [],
+                        "index": {},
+                        "ignore_id": false
+                    },
+                    "state": -1,
+                    "watch": [
+                        "metagpt.actions.add_requirement.UserRequirement"
+                    ],
+                    "react_mode": "by_order",
+                    "max_react_loop": 3
+                },
+                "addresses": [
+                    "__main__.Model_llm",
+                    "Alice"
+                ],
+                "planner": {
+                    "plan": {
+                        "goal": "",
+                        "context": "",
+                        "tasks": [],
+                        "task_map": {},
+                        "current_task_id": ""
+                    },
+                    "working_memory": {
+                        "storage": [],
+                        "index": {},
+                        "ignore_id": false
+                    },
+                    "auto_run": false
+                },
+                "recovered": false,
+                "latest_observed_msg": null,
+                "__module_class_name": "__main__.Model_llm"
+            },
+            "code_llm": {
+                "name": "Alice",
+                "profile": "code_llm",
+                "goal": "",
+                "constraints": "",
+                "desc": "",
+                "is_human": false,
+                "role_id": "",
+                "states": [
+                    "0. Write_code",
+                    "1. Run_code",
+                    "2. Write_review"
+                ],
+                "actions": [
+                    {
+                        "name": "Write_code",
+                        "i_context": "",
+                        "prefix": "You are a code_llm, named Alice, your goal is . ",
+                        "desc": "",
+                        "llm_name_or_type": null,
+                        "PROMPT_TEMPLATE": "\n    Imagine you are an expert in programming. Based on the correct mathematical model established above, please write a code to solve this math problem.\n    Remember, the code you generate should exactly correspond to the mathematical model, especially the objective function and constraints.\n    Ensure the code includes the necessary imports, defines the inputs, solves the problem, and prints the result.\"\n    NOTE: You are ONLY allowed to using << Numpy, SciPy, OR-Tools >> libraries to solve the problem.\n    Return ```python your_code_here ``` with NO other texts\n\n    ## Mathematical Model\n    {math_model}\n\n    ## Code\n    ```python \n    \n",
+                        "__module_class_name": "actions.write_code.Write_code"
+                    },
+                    {
+                        "name": "Run_code",
+                        "i_context": "",
+                        "prefix": "You are a code_llm, named Alice, your goal is . ",
+                        "desc": "",
+                        "llm_name_or_type": null,
+                        "__module_class_name": "actions.run_code.Run_code"
+                    },
+                    {
+                        "name": "Write_review",
+                        "i_context": "",
+                        "prefix": "You are a code_llm, named Alice, your goal is . ",
+                        "desc": "",
+                        "llm_name_or_type": null,
+                        "PROMPT_TEMPLATE": "\n    ## Code\n    {code_text}\n\n    ## Execution result\n    {result}\n\n    Review the test code and result of execution provide one critical comments:\n    ",
+                        "__module_class_name": "actions.write_review.Write_review"
+                    }
+                ],
+                "rc": {
+                    "memory": {
+                        "storage": [
+                            {
+                                "id": "8911d8eec4954dacac7db3849ede6c62",
+                                "content": "A patient with a sore throat can drink two syrups, syrup 1 and syrup 2 for treatment. Per serving, syrup 1 delivers 0.5 units of medicine to the throat and 0.4 units of medicine to the lungs. Per serving, syrup 2 delivers 0.2 units of medicine to the throat and 0.5 units of medicine to the lungs. Furthermore, syrup 1 contains 0.5 units of sugar while syrup 2 contains 0.3 units of sugar per serving. The patient can get at most 5 units of medicine for the throat and at least 4 units of medicine to the lungs. How many servings of each should the patient take to minimize his sugar intake?",
+                                "instruct_content": null,
+                                "role": "Human",
+                                "cause_by": "metagpt.actions.add_requirement.UserRequirement",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "d1a0df7bf0ee4c0d9d06db5c59725c38",
+                                "content": "Based on the scratch pad, the linear programming model in LaTeX format is:\n\n\\[\n\\begin{aligned}\n& \\text{minimize} \\quad 0.5x_1 + 0.3x_2 \\\\\n& \\text{subject to} \\\\\n& \\qquad 0.5x_1 + 0.2x_2 \\leq 5 \\\\\n& \\qquad 0.4x_1 + 0.5x_2 \\geq 4 \\\\\n& \\qquad x_1 \\geq 0 \\\\\n& \\qquad x_2 \\geq 0\n\\end{aligned}\n\\]",
+                                "instruct_content": null,
+                                "role": "model_llm",
+                                "cause_by": "actions.trans_2_latex.Trans_2_latex",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "2d81a2551f144b688492ffd804cffeb8",
+                                "content": "import numpy as np\nfrom scipy.optimize import linprog\n\n# Coefficients of the objective function (to be minimized)\nc = np.array([0.5, 0.3])\n\n# Inequality constraints matrix A_ub * x <= b_ub\n# First constraint: 0.5x1 + 0.2x2 <= 5\nA_ub = np.array([[0.5, 0.2]])\nb_ub = np.array([5])\n\n# Second constraint: 0.4x1 + 0.5x2 >= 4\n# We rewrite it as -0.4x1 - 0.5x2 <= -4\nA_ub = np.vstack([A_ub, [-0.4, -0.5]])\nb_ub = np.append(b_ub, [-4])\n\n# Bounds: x1 >= 0, x2 >= 0\nbounds = [(0, None), (0, None)]\n\n# Solve the linear programming problem\nresult = linprog(c, A_ub=A_ub, b_ub=b_ub, bounds=bounds, method='highs')\n\n# Print the result\nif result.success:\n    print(\"Optimal solution found:\")\n    print(f\"x1 = {result.x[0]:.4f}\")\n    print(f\"x2 = {result.x[1]:.4f}\")\n    print(f\"Minimum objective value = {result.fun:.4f}\")\nelse:\n    print(\"No optimal solution found.\")\n    print(\"Status:\", result.message)\n",
+                                "instruct_content": null,
+                                "role": "code_llm",
+                                "cause_by": "actions.write_code.Write_code",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "962c938904d64d4f8c6cda50b4c70822",
+                                "content": "Optimal solution found:\nx1 = 0.0000\nx2 = 8.0000\nMinimum objective value = 2.4000\n",
+                                "instruct_content": null,
+                                "role": "code_llm",
+                                "cause_by": "actions.run_code.Run_code",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "8bd1beb26efd4a99af560899314eea98",
+                                "content": "One critical issue in the code is the **inefficient and error-prone way of constructing the inequality constraints**.  \n\nInstead of using `np.vstack()` and `np.append()` sequentially, the constraints should be defined in a single step for clarity and maintainability. Mixing these operations can lead to mistakes if constraints are added or rearranged later.  \n\n**Improved approach**: Define `A_ub` and `b_ub` in one clear block:  \n```python\nA_ub = np.array([\n    [0.5, 0.2],    # 0.5x1 + 0.2x2 <= 5\n    [-0.4, -0.5]   # -0.4x1 - 0.5x2 <= -4  (converted from 0.4x1 + 0.5x2 >= 4)\n])\nb_ub = np.array([5, -4])\n```\nThis enhances readability and reduces the risk of misalignment between rows of `A_ub` and `b_ub`.",
+                                "instruct_content": null,
+                                "role": "code_llm",
+                                "cause_by": "actions.write_review.Write_review",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            }
+                        ],
+                        "index": {
+                            "metagpt.actions.add_requirement.UserRequirement": [
+                                {
+                                    "id": "8911d8eec4954dacac7db3849ede6c62",
+                                    "content": "A patient with a sore throat can drink two syrups, syrup 1 and syrup 2 for treatment. Per serving, syrup 1 delivers 0.5 units of medicine to the throat and 0.4 units of medicine to the lungs. Per serving, syrup 2 delivers 0.2 units of medicine to the throat and 0.5 units of medicine to the lungs. Furthermore, syrup 1 contains 0.5 units of sugar while syrup 2 contains 0.3 units of sugar per serving. The patient can get at most 5 units of medicine for the throat and at least 4 units of medicine to the lungs. How many servings of each should the patient take to minimize his sugar intake?",
+                                    "instruct_content": null,
+                                    "role": "Human",
+                                    "cause_by": "metagpt.actions.add_requirement.UserRequirement",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.trans_2_latex.Trans_2_latex": [
+                                {
+                                    "id": "d1a0df7bf0ee4c0d9d06db5c59725c38",
+                                    "content": "Based on the scratch pad, the linear programming model in LaTeX format is:\n\n\\[\n\\begin{aligned}\n& \\text{minimize} \\quad 0.5x_1 + 0.3x_2 \\\\\n& \\text{subject to} \\\\\n& \\qquad 0.5x_1 + 0.2x_2 \\leq 5 \\\\\n& \\qquad 0.4x_1 + 0.5x_2 \\geq 4 \\\\\n& \\qquad x_1 \\geq 0 \\\\\n& \\qquad x_2 \\geq 0\n\\end{aligned}\n\\]",
+                                    "instruct_content": null,
+                                    "role": "model_llm",
+                                    "cause_by": "actions.trans_2_latex.Trans_2_latex",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.write_code.Write_code": [
+                                {
+                                    "id": "2d81a2551f144b688492ffd804cffeb8",
+                                    "content": "import numpy as np\nfrom scipy.optimize import linprog\n\n# Coefficients of the objective function (to be minimized)\nc = np.array([0.5, 0.3])\n\n# Inequality constraints matrix A_ub * x <= b_ub\n# First constraint: 0.5x1 + 0.2x2 <= 5\nA_ub = np.array([[0.5, 0.2]])\nb_ub = np.array([5])\n\n# Second constraint: 0.4x1 + 0.5x2 >= 4\n# We rewrite it as -0.4x1 - 0.5x2 <= -4\nA_ub = np.vstack([A_ub, [-0.4, -0.5]])\nb_ub = np.append(b_ub, [-4])\n\n# Bounds: x1 >= 0, x2 >= 0\nbounds = [(0, None), (0, None)]\n\n# Solve the linear programming problem\nresult = linprog(c, A_ub=A_ub, b_ub=b_ub, bounds=bounds, method='highs')\n\n# Print the result\nif result.success:\n    print(\"Optimal solution found:\")\n    print(f\"x1 = {result.x[0]:.4f}\")\n    print(f\"x2 = {result.x[1]:.4f}\")\n    print(f\"Minimum objective value = {result.fun:.4f}\")\nelse:\n    print(\"No optimal solution found.\")\n    print(\"Status:\", result.message)\n",
+                                    "instruct_content": null,
+                                    "role": "code_llm",
+                                    "cause_by": "actions.write_code.Write_code",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.run_code.Run_code": [
+                                {
+                                    "id": "962c938904d64d4f8c6cda50b4c70822",
+                                    "content": "Optimal solution found:\nx1 = 0.0000\nx2 = 8.0000\nMinimum objective value = 2.4000\n",
+                                    "instruct_content": null,
+                                    "role": "code_llm",
+                                    "cause_by": "actions.run_code.Run_code",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.write_review.Write_review": [
+                                {
+                                    "id": "8bd1beb26efd4a99af560899314eea98",
+                                    "content": "One critical issue in the code is the **inefficient and error-prone way of constructing the inequality constraints**.  \n\nInstead of using `np.vstack()` and `np.append()` sequentially, the constraints should be defined in a single step for clarity and maintainability. Mixing these operations can lead to mistakes if constraints are added or rearranged later.  \n\n**Improved approach**: Define `A_ub` and `b_ub` in one clear block:  \n```python\nA_ub = np.array([\n    [0.5, 0.2],    # 0.5x1 + 0.2x2 <= 5\n    [-0.4, -0.5]   # -0.4x1 - 0.5x2 <= -4  (converted from 0.4x1 + 0.5x2 >= 4)\n])\nb_ub = np.array([5, -4])\n```\nThis enhances readability and reduces the risk of misalignment between rows of `A_ub` and `b_ub`.",
+                                    "instruct_content": null,
+                                    "role": "code_llm",
+                                    "cause_by": "actions.write_review.Write_review",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ]
+                        },
+                        "ignore_id": false
+                    },
+                    "working_memory": {
+                        "storage": [],
+                        "index": {},
+                        "ignore_id": false
+                    },
+                    "state": -1,
+                    "watch": [
+                        "actions.trans_2_latex.Trans_2_latex"
+                    ],
+                    "react_mode": "by_order",
+                    "max_react_loop": 3
+                },
+                "addresses": [
+                    "__main__.Code_llm",
+                    "Alice"
+                ],
+                "planner": {
+                    "plan": {
+                        "goal": "",
+                        "context": "",
+                        "tasks": [],
+                        "task_map": {},
+                        "current_task_id": ""
+                    },
+                    "working_memory": {
+                        "storage": [],
+                        "index": {},
+                        "ignore_id": false
+                    },
+                    "auto_run": false
+                },
+                "recovered": false,
+                "latest_observed_msg": null,
+                "__module_class_name": "__main__.Code_llm"
+            },
+            "test_llm": {
+                "name": "Bob",
+                "profile": "test_llm",
+                "goal": "",
+                "constraints": "",
+                "desc": "",
+                "is_human": false,
+                "role_id": "",
+                "states": [
+                    "0. Write_test"
+                ],
+                "actions": [
+                    {
+                        "name": "Write_test",
+                        "i_context": "",
+                        "prefix": "You are a test_llm, named Bob, your goal is . ",
+                        "desc": "",
+                        "llm_name_or_type": null,
+                        "PROMPT_TEMPLATE": "\n    Context: {context}\n    Wrap above code to a function for solving math problem and Write {k} unit tests using pytest for the solving function.\n    Return ```python your_code_here ``` with NO other texts, \n    You must start with ```python.\n    your code:\n    ",
+                        "__module_class_name": "actions.write_test.Write_test"
+                    }
+                ],
+                "rc": {
+                    "memory": {
+                        "storage": [
+                            {
+                                "id": "8911d8eec4954dacac7db3849ede6c62",
+                                "content": "A patient with a sore throat can drink two syrups, syrup 1 and syrup 2 for treatment. Per serving, syrup 1 delivers 0.5 units of medicine to the throat and 0.4 units of medicine to the lungs. Per serving, syrup 2 delivers 0.2 units of medicine to the throat and 0.5 units of medicine to the lungs. Furthermore, syrup 1 contains 0.5 units of sugar while syrup 2 contains 0.3 units of sugar per serving. The patient can get at most 5 units of medicine for the throat and at least 4 units of medicine to the lungs. How many servings of each should the patient take to minimize his sugar intake?",
+                                "instruct_content": null,
+                                "role": "Human",
+                                "cause_by": "metagpt.actions.add_requirement.UserRequirement",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "d1a0df7bf0ee4c0d9d06db5c59725c38",
+                                "content": "Based on the scratch pad, the linear programming model in LaTeX format is:\n\n\\[\n\\begin{aligned}\n& \\text{minimize} \\quad 0.5x_1 + 0.3x_2 \\\\\n& \\text{subject to} \\\\\n& \\qquad 0.5x_1 + 0.2x_2 \\leq 5 \\\\\n& \\qquad 0.4x_1 + 0.5x_2 \\geq 4 \\\\\n& \\qquad x_1 \\geq 0 \\\\\n& \\qquad x_2 \\geq 0\n\\end{aligned}\n\\]",
+                                "instruct_content": null,
+                                "role": "model_llm",
+                                "cause_by": "actions.trans_2_latex.Trans_2_latex",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "8bd1beb26efd4a99af560899314eea98",
+                                "content": "One critical issue in the code is the **inefficient and error-prone way of constructing the inequality constraints**.  \n\nInstead of using `np.vstack()` and `np.append()` sequentially, the constraints should be defined in a single step for clarity and maintainability. Mixing these operations can lead to mistakes if constraints are added or rearranged later.  \n\n**Improved approach**: Define `A_ub` and `b_ub` in one clear block:  \n```python\nA_ub = np.array([\n    [0.5, 0.2],    # 0.5x1 + 0.2x2 <= 5\n    [-0.4, -0.5]   # -0.4x1 - 0.5x2 <= -4  (converted from 0.4x1 + 0.5x2 >= 4)\n])\nb_ub = np.array([5, -4])\n```\nThis enhances readability and reduces the risk of misalignment between rows of `A_ub` and `b_ub`.",
+                                "instruct_content": null,
+                                "role": "code_llm",
+                                "cause_by": "actions.write_review.Write_review",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            }
+                        ],
+                        "index": {
+                            "metagpt.actions.add_requirement.UserRequirement": [
+                                {
+                                    "id": "8911d8eec4954dacac7db3849ede6c62",
+                                    "content": "A patient with a sore throat can drink two syrups, syrup 1 and syrup 2 for treatment. Per serving, syrup 1 delivers 0.5 units of medicine to the throat and 0.4 units of medicine to the lungs. Per serving, syrup 2 delivers 0.2 units of medicine to the throat and 0.5 units of medicine to the lungs. Furthermore, syrup 1 contains 0.5 units of sugar while syrup 2 contains 0.3 units of sugar per serving. The patient can get at most 5 units of medicine for the throat and at least 4 units of medicine to the lungs. How many servings of each should the patient take to minimize his sugar intake?",
+                                    "instruct_content": null,
+                                    "role": "Human",
+                                    "cause_by": "metagpt.actions.add_requirement.UserRequirement",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.trans_2_latex.Trans_2_latex": [
+                                {
+                                    "id": "d1a0df7bf0ee4c0d9d06db5c59725c38",
+                                    "content": "Based on the scratch pad, the linear programming model in LaTeX format is:\n\n\\[\n\\begin{aligned}\n& \\text{minimize} \\quad 0.5x_1 + 0.3x_2 \\\\\n& \\text{subject to} \\\\\n& \\qquad 0.5x_1 + 0.2x_2 \\leq 5 \\\\\n& \\qquad 0.4x_1 + 0.5x_2 \\geq 4 \\\\\n& \\qquad x_1 \\geq 0 \\\\\n& \\qquad x_2 \\geq 0\n\\end{aligned}\n\\]",
+                                    "instruct_content": null,
+                                    "role": "model_llm",
+                                    "cause_by": "actions.trans_2_latex.Trans_2_latex",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.write_review.Write_review": [
+                                {
+                                    "id": "8bd1beb26efd4a99af560899314eea98",
+                                    "content": "One critical issue in the code is the **inefficient and error-prone way of constructing the inequality constraints**.  \n\nInstead of using `np.vstack()` and `np.append()` sequentially, the constraints should be defined in a single step for clarity and maintainability. Mixing these operations can lead to mistakes if constraints are added or rearranged later.  \n\n**Improved approach**: Define `A_ub` and `b_ub` in one clear block:  \n```python\nA_ub = np.array([\n    [0.5, 0.2],    # 0.5x1 + 0.2x2 <= 5\n    [-0.4, -0.5]   # -0.4x1 - 0.5x2 <= -4  (converted from 0.4x1 + 0.5x2 >= 4)\n])\nb_ub = np.array([5, -4])\n```\nThis enhances readability and reduces the risk of misalignment between rows of `A_ub` and `b_ub`.",
+                                    "instruct_content": null,
+                                    "role": "code_llm",
+                                    "cause_by": "actions.write_review.Write_review",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ]
+                        },
+                        "ignore_id": false
+                    },
+                    "working_memory": {
+                        "storage": [],
+                        "index": {},
+                        "ignore_id": false
+                    },
+                    "state": -1,
+                    "watch": [
+                        "actions.write_review.Write_review",
+                        "actions.write_code.Write_code"
+                    ],
+                    "react_mode": "react",
+                    "max_react_loop": 1
+                },
+                "addresses": [
+                    "__main__.Test_llm",
+                    "Bob"
+                ],
+                "planner": {
+                    "plan": {
+                        "goal": "",
+                        "context": "",
+                        "tasks": [],
+                        "task_map": {},
+                        "current_task_id": ""
+                    },
+                    "working_memory": {
+                        "storage": [],
+                        "index": {},
+                        "ignore_id": false
+                    },
+                    "auto_run": false
+                },
+                "recovered": false,
+                "latest_observed_msg": {
+                    "id": "8bd1beb26efd4a99af560899314eea98",
+                    "content": "One critical issue in the code is the **inefficient and error-prone way of constructing the inequality constraints**.  \n\nInstead of using `np.vstack()` and `np.append()` sequentially, the constraints should be defined in a single step for clarity and maintainability. Mixing these operations can lead to mistakes if constraints are added or rearranged later.  \n\n**Improved approach**: Define `A_ub` and `b_ub` in one clear block:  \n```python\nA_ub = np.array([\n    [0.5, 0.2],    # 0.5x1 + 0.2x2 <= 5\n    [-0.4, -0.5]   # -0.4x1 - 0.5x2 <= -4  (converted from 0.4x1 + 0.5x2 >= 4)\n])\nb_ub = np.array([5, -4])\n```\nThis enhances readability and reduces the risk of misalignment between rows of `A_ub` and `b_ub`.",
+                    "instruct_content": null,
+                    "role": "code_llm",
+                    "cause_by": "actions.write_review.Write_review",
+                    "sent_from": "",
+                    "send_to": [
+                        "<all>"
+                    ]
+                },
+                "__module_class_name": "__main__.Test_llm"
+            }
+        },
+        "history": "\nHuman: A patient with a sore throat can drink two syrups, syrup 1 and syrup 2 for treatment. Per serving, syrup 1 delivers 0.5 units of medicine to the throat and 0.4 units of medicine to the lungs. Per serving, syrup 2 delivers 0.2 units of medicine to the throat and 0.5 units of medicine to the lungs. Furthermore, syrup 1 contains 0.5 units of sugar while syrup 2 contains 0.3 units of sugar per serving. The patient can get at most 5 units of medicine for the throat and at least 4 units of medicine to the lungs. How many servings of each should the patient take to minimize his sugar intake?\nmodel_llm: Based on the scratch pad, the linear programming model in LaTeX format is:\n\n\\[\n\\begin{aligned}\n& \\text{minimize} \\quad 0.5x_1 + 0.3x_2 \\\\\n& \\text{subject to} \\\\\n& \\qquad 0.5x_1 + 0.2x_2 \\leq 5 \\\\\n& \\qquad 0.4x_1 + 0.5x_2 \\geq 4 \\\\\n& \\qquad x_1 \\geq 0 \\\\\n& \\qquad x_2 \\geq 0\n\\end{aligned}\n\\]\ncode_llm: One critical issue in the code is the **inefficient and error-prone way of constructing the inequality constraints**.  \n\nInstead of using `np.vstack()` and `np.append()` sequentially, the constraints should be defined in a single step for clarity and maintainability. Mixing these operations can lead to mistakes if constraints are added or rearranged later.  \n\n**Improved approach**: Define `A_ub` and `b_ub` in one clear block:  \n```python\nA_ub = np.array([\n    [0.5, 0.2],    # 0.5x1 + 0.2x2 <= 5\n    [-0.4, -0.5]   # -0.4x1 - 0.5x2 <= -4  (converted from 0.4x1 + 0.5x2 >= 4)\n])\nb_ub = np.array([5, -4])\n```\nThis enhances readability and reduces the risk of misalignment between rows of `A_ub` and `b_ub`.\ntest_llm: import numpy as np\nfrom scipy.optimize import linprog\nimport pytest\n\ndef solve_syrup_problem():\n    \"\"\"\n    Solves the linear programming problem to minimize sugar intake\n    while meeting throat medicine constraints and lung medicine requirements.\n    \n    Returns:\n        dict: A dictionary containing:\n            - 'servings': tuple of (x1, x2) servings for syrup 1 and syrup 2\n            - 'sugar': total sugar intake at optimal solution\n            - 'throat_medicine': actual throat medicine delivered\n            - 'lung_medicine': actual lung medicine delivered\n            - 'status': optimization status message\n    \"\"\"\n    # Objective function coefficients (minimize sugar)\n    c = [0.5, 0.3]\n    \n    # Inequality constraints\n    # 1. 0.5x1 + 0.2x2 <= 5 (throat medicine constraint)\n    # 2. 0.4x1 + 0.5x2 >= 4 (lung medicine constraint)\n    #    Convert to -0.4x1 - 0.5x2 <= -4 for linprog\n    A_ub = np.array([\n        [0.5, 0.2],    # throat medicine constraint\n        [-0.4, -0.5]   # lung medicine constraint (converted)\n    ])\n    b_ub = np.array([5, -4])\n    \n    # Bounds (non-negativity)\n    bounds = [(0, None), (0, None)]\n    \n    # Solve the linear programming problem\n    result = linprog(c, A_ub=A_ub, b_ub=b_ub, bounds=bounds, method='highs')\n    \n    # Extract solution\n    if result.success:\n        x1, x2 = result.x\n        sugar_total = 0.5*x1 + 0.3*x2\n        throat_total = 0.5*x1 + 0.2*x2\n        lung_total = 0.4*x1 + 0.5*x2\n        \n        return {\n            'servings': (x1, x2),\n            'sugar': sugar_total,\n            'throat_medicine': throat_total,\n            'lung_medicine': lung_total,\n            'status': result.message\n        }\n    else:\n        return {\n            'servings': (None, None),\n            'sugar': None,\n            'throat_medicine': None,\n            'lung_medicine': None,\n            'status': result.message\n        }\n\n\n# Unit tests using pytest\ndef test_basic_solution():\n    \"\"\"Test that the solver returns a valid solution.\"\"\"\n    result = solve_syrup_problem()\n    \n    assert result['status'] == 'Optimization terminated successfully.'\n    assert result['servings'][0] is not None\n    assert result['servings'][1] is not None\n    assert result['sugar'] >= 0\n    \n    # Check constraints are satisfied\n    assert result['throat_medicine'] <= 5 + 1e-6  # Allow small numerical error\n    assert result['lung_medicine'] >= 4 - 1e-6    # Allow small numerical error\n    assert result['servings'][0] >= 0\n    assert result['servings'][1] >= 0\n\ndef test_throat_constraint():\n    \"\"\"Test that throat medicine constraint is not exceeded.\"\"\"\n    result = solve_syrup_problem()\n    x1, x2 = result['servings']\n    \n    throat_medicine = 0.5*x1 + 0.2*x2\n    assert throat_medicine <= 5 + 1e-6, f\"Throat medicine {throat_medicine} exceeds limit 5\"\n\ndef test_lung_constraint():\n    \"\"\"Test that lung medicine requirement is met.\"\"\"\n    result = solve_syrup_problem()\n    x1, x2 = result['servings']\n    \n    lung_medicine = 0.4*x1 + 0.5*x2\n    assert lung_medicine >= 4 - 1e-6, f\"Lung medicine {lung_medicine} below requirement 4\"\n\ndef test_non_negative_servings():\n    \"\"\"Test that servings are non-negative.\"\"\"\n    result = solve_syrup_problem()\n    x1, x2 = result['servings']\n    \n    assert x1 >= 0, f\"Syrup 1 serving {x1} is negative\"\n    assert x2 >= 0, f\"Syrup 2 serving {x2} is negative\"\n\ndef test_sugar_calculation():\n    \"\"\"Test that sugar calculation is correct.\"\"\"\n    result = solve_syrup_problem()\n    x1, x2 = result['servings']\n    \n    calculated_sugar = 0.5*x1 + 0.3*x2\n    assert abs(result['sugar'] - calculated_sugar) < 1e-6, \\\n        f\"Sugar mismatch: {result['sugar']} vs {calculated_sugar}\"\n\ndef test_medicine_calculations():\n    \"\"\"Test that medicine calculations are correct.\"\"\"\n    result = solve_syrup_problem()\n    x1, x2 = result['servings']\n    \n    # Check throat medicine calculation\n    calculated_throat = 0.5*x1 + 0.2*x2\n    assert abs(result['throat_medicine'] - calculated_throat) < 1e-6, \\\n        f\"Throat medicine mismatch: {result['throat_medicine']} vs {calculated_throat}\"\n    \n    # Check lung medicine calculation\n    calculated_lung = 0.4*x1 + 0.5*x2\n    assert abs(result['lung_medicine'] - calculated_lung) < 1e-6, \\\n        f\"Lung medicine mismatch: {result['lung_medicine']} vs {calculated_lung}\"\n\nif __name__ == \"__main__\":\n    # Run the solver and print results\n    solution = solve_syrup_problem()\n    \n    print(\"Optimal Solution:\")\n    print(f\"Syrup 1 servings: {solution['servings'][0]:.4f}\")\n    print(f\"Syrup 2 servings: {solution['servings'][1]:.4f}\")\n    print(f\"Total sugar intake: {solution['sugar']:.4f}\")\n    print(f\"Throat medicine delivered: {solution['throat_medicine']:.4f}\")\n    print(f\"Lung medicine delivered: {solution['lung_medicine']:.4f}\")\n    print(f\"Status: {solution['status']}\")\n    \n    # Run pytest tests\n    print(\"\\nRunning tests...\")\n    pytest.main([__file__, \"-v\"])\n"
+    },
+    "investment": 3.0,
+    "idea": "A patient with a sore throat can drink two syrups, syrup 1 and syrup 2 for treatment. Per serving, syrup 1 delivers 0.5 units of medicine to the throat and 0.4 units of medicine to the lungs. Per serving, syrup 2 delivers 0.2 units of medicine to the throat and 0.5 units of medicine to the lungs. Furthermore, syrup 1 contains 0.5 units of sugar while syrup 2 contains 0.3 units of sugar per serving. The patient can get at most 5 units of medicine for the throat and at least 4 units of medicine to the lungs. How many servings of each should the patient take to minimize his sugar intake?",
+    "context": {
+        "workdir": "",
+        "kwargs": {},
+        "cost_manager": "{\"total_prompt_tokens\":0,\"total_completion_tokens\":0,\"total_budget\":0.0,\"max_budget\":3.0,\"total_cost\":0.0,\"token_costs\":{\"gpt-3.5-turbo\":{\"prompt\":0.0015,\"completion\":0.002},\"gpt-3.5-turbo-0301\":{\"prompt\":0.0015,\"completion\":0.002},\"gpt-3.5-turbo-0613\":{\"prompt\":0.0015,\"completion\":0.002},\"gpt-3.5-turbo-16k\":{\"prompt\":0.003,\"completion\":0.004},\"gpt-3.5-turbo-16k-0613\":{\"prompt\":0.003,\"completion\":0.004},\"gpt-35-turbo\":{\"prompt\":0.0015,\"completion\":0.002},\"gpt-35-turbo-16k\":{\"prompt\":0.003,\"completion\":0.004},\"gpt-3.5-turbo-1106\":{\"prompt\":0.001,\"completion\":0.002},\"gpt-3.5-turbo-0125\":{\"prompt\":0.001,\"completion\":0.002},\"gpt-4-0314\":{\"prompt\":0.03,\"completion\":0.06},\"gpt-4\":{\"prompt\":0.03,\"completion\":0.06},\"gpt-4-32k\":{\"prompt\":0.06,\"completion\":0.12},\"gpt-4-32k-0314\":{\"prompt\":0.06,\"completion\":0.12},\"gpt-4-0613\":{\"prompt\":0.06,\"completion\":0.12},\"gpt-4-turbo-preview\":{\"prompt\":0.01,\"completion\":0.03},\"gpt-4-1106-preview\":{\"prompt\":0.01,\"completion\":0.03},\"gpt-4-0125-preview\":{\"prompt\":0.01,\"completion\":0.03},\"gpt-4-turbo\":{\"prompt\":0.01,\"completion\":0.03},\"gpt-4-turbo-2024-04-09\":{\"prompt\":0.01,\"completion\":0.03},\"gpt-4-vision-preview\":{\"prompt\":0.01,\"completion\":0.03},\"gpt-4-1106-vision-preview\":{\"prompt\":0.01,\"completion\":0.03},\"gpt-4o\":{\"prompt\":0.005,\"completion\":0.015},\"gpt-4o-mini\":{\"prompt\":0.00015,\"completion\":0.0006},\"gpt-4o-mini-2024-07-18\":{\"prompt\":0.00015,\"completion\":0.0006},\"gpt-4o-2024-05-13\":{\"prompt\":0.005,\"completion\":0.015},\"gpt-4o-2024-08-06\":{\"prompt\":0.0025,\"completion\":0.01},\"o1-preview\":{\"prompt\":0.015,\"completion\":0.06},\"o1-preview-2024-09-12\":{\"prompt\":0.015,\"completion\":0.06},\"o1-mini\":{\"prompt\":0.003,\"completion\":0.012},\"o1-mini-2024-09-12\":{\"prompt\":0.003,\"completion\":0.012},\"text-embedding-ada-002\":{\"prompt\":0.0004,\"completion\":0.0},\"glm-3-turbo\":{\"prompt\":0.0007,\"completion\":0.0007},\"glm-4\":{\"prompt\":0.014,\"completion\":0.014},\"glm-4-flash\":{\"prompt\":0.0,\"completion\":0.0},\"glm-4-plus\":{\"prompt\":0.007,\"completion\":0.007},\"gemini-1.5-flash\":{\"prompt\":0.000075,\"completion\":0.0003},\"gemini-1.5-pro\":{\"prompt\":0.0035,\"completion\":0.0105},\"gemini-1.0-pro\":{\"prompt\":0.0005,\"completion\":0.0015},\"moonshot-v1-8k\":{\"prompt\":0.012,\"completion\":0.012},\"moonshot-v1-32k\":{\"prompt\":0.024,\"completion\":0.024},\"moonshot-v1-128k\":{\"prompt\":0.06,\"completion\":0.06},\"open-mistral-7b\":{\"prompt\":0.00025,\"completion\":0.00025},\"open-mixtral-8x7b\":{\"prompt\":0.0007,\"completion\":0.0007},\"mistral-small-latest\":{\"prompt\":0.002,\"completion\":0.006},\"mistral-medium-latest\":{\"prompt\":0.0027,\"completion\":0.0081},\"mistral-large-latest\":{\"prompt\":0.008,\"completion\":0.024},\"claude-instant-1.2\":{\"prompt\":0.0008,\"completion\":0.0024},\"claude-2.0\":{\"prompt\":0.008,\"completion\":0.024},\"claude-2.1\":{\"prompt\":0.008,\"completion\":0.024},\"claude-3-sonnet-20240229\":{\"prompt\":0.003,\"completion\":0.015},\"claude-3-5-sonnet\":{\"prompt\":0.003,\"completion\":0.015},\"claude-3-5-sonnet-v2\":{\"prompt\":0.003,\"completion\":0.015},\"claude-3-5-sonnet-20240620\":{\"prompt\":0.003,\"completion\":0.015},\"claude-3-opus-20240229\":{\"prompt\":0.015,\"completion\":0.075},\"claude-3-haiku-20240307\":{\"prompt\":0.00025,\"completion\":0.00125},\"yi-34b-chat-0205\":{\"prompt\":0.0003,\"completion\":0.0003},\"yi-34b-chat-200k\":{\"prompt\":0.0017,\"completion\":0.0017},\"yi-large\":{\"prompt\":0.0028,\"completion\":0.0028},\"microsoft/wizardlm-2-8x22b\":{\"prompt\":0.00108,\"completion\":0.00108},\"meta-llama/llama-3-70b-instruct\":{\"prompt\":0.008,\"completion\":0.008},\"llama3-70b-8192\":{\"prompt\":0.0059,\"completion\":0.0079},\"openai/gpt-3.5-turbo-0125\":{\"prompt\":0.0005,\"completion\":0.0015},\"openai/gpt-4-turbo-preview\":{\"prompt\":0.01,\"completion\":0.03},\"openai/o1-preview\":{\"prompt\":0.015,\"completion\":0.06},\"openai/o1-mini\":{\"prompt\":0.003,\"completion\":0.012},\"anthropic/claude-3-opus\":{\"prompt\":0.015,\"completion\":0.075},\"anthropic/claude-3.5-sonnet\":{\"prompt\":0.003,\"completion\":0.015},\"google/gemini-pro-1.5\":{\"prompt\":0.0025,\"completion\":0.0075},\"deepseek-chat\":{\"prompt\":0.00014,\"completion\":0.00028},\"deepseek-coder\":{\"prompt\":0.00014,\"completion\":0.00028},\"doubao-lite-4k-240515\":{\"prompt\":0.000043,\"completion\":0.000086},\"doubao-lite-32k-240515\":{\"prompt\":0.000043,\"completion\":0.000086},\"doubao-lite-128k-240515\":{\"prompt\":0.00011,\"completion\":0.00014},\"doubao-pro-4k-240515\":{\"prompt\":0.00011,\"completion\":0.00029},\"doubao-pro-32k-240515\":{\"prompt\":0.00011,\"completion\":0.00029},\"doubao-pro-128k-240515\":{\"prompt\":0.0007,\"completion\":0.0013},\"llama3-70b-llama3-70b-instruct\":{\"prompt\":0.0,\"completion\":0.0},\"llama3-8b-llama3-8b-instruct\":{\"prompt\":0.0,\"completion\":0.0}}}"
+    }
+}

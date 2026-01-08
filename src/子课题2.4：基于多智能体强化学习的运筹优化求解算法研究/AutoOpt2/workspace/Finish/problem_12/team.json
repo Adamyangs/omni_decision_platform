@@ -1,0 +1,574 @@
+{
+    "env": {
+        "desc": "",
+        "roles": {
+            "model_llm": {
+                "name": "Alice",
+                "profile": "model_llm",
+                "goal": "",
+                "constraints": "",
+                "desc": "",
+                "is_human": false,
+                "role_id": "",
+                "states": [
+                    "0. Thinking",
+                    "1. Formulation",
+                    "2. Trans_2_latex"
+                ],
+                "actions": [
+                    {
+                        "name": "Thinking",
+                        "i_context": "",
+                        "prefix": "You are a model_llm, named Alice, your goal is . ",
+                        "desc": "",
+                        "llm_name_or_type": null,
+                        "PROMPT_TEMPLATE": "\n    At present, you are given an Operations Research problem, your role is to :\n    1. Identify and extract relevant parameters from the problem description. Parameters refer to fixed values that define certain aspects of the problem but are not subject to change during the optimization process.\n    2. Identify and extract the relevant variables from the problem statement. Variables represent the unknowns or decision variables in the optimization problem.\n    3. Identify and extract the constraints from the problem description. Constraints represent the limitations or conditions that need to be satisfied in the optimization problem. Translate the constraints into mathematical expressions.\n    4. Identify and extract the objective function from the problem statement. The objective function represents the goal of the optimization problem. Translate the objective funtion into mathematical expressions.\n\n    The problem description is as following, please review carefully and organize in response format. \n    Note: ONLY give steps, do not output formulation, response in following json schema:\n    {response_json_schema}\n\n    Note: ONLY output the mathematical expression of the model, return ```json your_output_here ``` with NO other texts\n\n\n    ## Given Problem\n    {information}\n\n    ## Thinking steps\n    ```json\n    ",
+                        "response_format": "{\n    \"title\": \"Steps\",\n    \"type\": \"object\",\n    \"properties\": {\n        \"Step_1\": {\n            \"description\": \"variables and sets mentioned in problem description\",\n            \"type\": \"string\"\n        },\n        \"Step_2\": {\n            \"description\": \"parameters in problem description\",\n            \"type\": \"string\"\n        },\n        \"Step_3\": {\n            \"description\": \"objective funtion consists of variables and numerical parameters\",\n            \"type\": \"string\"\n        },\n        \"Step_4\": {\n            \"description\": \"all the constraints consist of variables and numerical parameters\",\n            \"type\": \"string\"\n        }\n    },\n    \"required\": [\"Step_1\", \"Step_2\", \"Step_3\", \"Step_4\"]\n}\n",
+                        "__module_class_name": "actions.thinking.Thinking"
+                    },
+                    {
+                        "name": "Formulation",
+                        "i_context": "",
+                        "prefix": "You are a model_llm, named Alice, your goal is . ",
+                        "desc": "",
+                        "llm_name_or_type": null,
+                        "PROMPT_TEMPLATE": "\n    Now, according to what you write on your scratchpads, summary the mathematical expression of the model directly and explicitly in response in JSON.\n    Note: ONLY output the mathematical expression of the model, return ```json your_output_here ``` with NO other texts\n\n    ## Scratch pad\n    {scratch_pad}\n\n    ## Model\n    ```json\n    ",
+                        "response_format": "{\n    \"title\": \"Formulation\",\n    \"type\": \"object\",\n    \"properties\": {\n        \"objective_function\": {\n            \"title\": \"objective_function\",\n            \"type\": \"string\",\n            \"description\": \"The objective function consists of parameters and variables from an operations research problem, using numerical representations for parameters and standard mathematical symbols for variables.\"\n        },\n        \"constraints\": {\n            \"title\": \"constraints\",\n            \"type\": \"string\",\n            \"description\": \"Constraints consist of numerical parameters and variables from an operations research problem, using numerical representations for parameters and standard mathematical symbols for variables.\"\n        }\n    },\n    \"required\": [\"objective_function\", \"constraints\"]\n}\n\n",
+                        "__module_class_name": "actions.formulation.Formulation"
+                    },
+                    {
+                        "name": "Trans_2_latex",
+                        "i_context": "",
+                        "prefix": "You are a model_llm, named Alice, your goal is . ",
+                        "desc": "",
+                        "llm_name_or_type": null,
+                        "PROMPT_TEMPLATE": "\n    Now, according to what you write on your scratchpads, give the LATEX format of the model directly.\n    NOTE: MUST USE LATEX MATH SYMBOLS\n    ## Scratch pad\n    {scratch_pad}\n\n    ## Model\n    ```latex\n",
+                        "__module_class_name": "actions.trans_2_latex.Trans_2_latex"
+                    }
+                ],
+                "rc": {
+                    "memory": {
+                        "storage": [
+                            {
+                                "id": "18360add9dde4be590ef99ad93bececd",
+                                "content": "A hospital prepares batches of medication patches and anti-biotic creams. Each medication patch requires 3 minutes to prepare and 5 units of materials. Each anti-biotic cream requires 5 minutes to prepare and 6 units of materials. Since anti-biotic creams are used more often, there must be at least twice as many anti-biotic creams as medication patches. Due to storage reasons, the hospital can make at most 100 batches of medication patches and anti-biotic creams in total. The hospital has available 400 minutes of staff to spare and 530 units of materials. If each batch of medication patches can treat 3 people and each batch of anti-biotic cream can treat 2 people, how many batches of each should be made to maximize the number of people that can be treated?",
+                                "instruct_content": null,
+                                "role": "Human",
+                                "cause_by": "metagpt.actions.add_requirement.UserRequirement",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "a6aaaa474c9c4f1a927f05e1581430d7",
+                                "content": "Let x = number of batches of medication patches, y = number of batches of anti-biotic creams., Time per medication patch = 3 minutes, time per anti-biotic cream = 5 minutes, material per medication patch = 5 units, material per anti-biotic cream = 6 units, maximum total batches = 100, total available time = 400 minutes, total available material = 530 units, treatment per medication patch = 3 people, treatment per anti-biotic cream = 2 people., Maximize Z = 3x + 2y, where Z is the total number of people treated., Constraints: 3x + 5y ≤ 400 (time constraint), 5x + 6y ≤ 530 (material constraint), y ≥ 2x (at least twice as many anti-biotic creams as medication patches), x + y ≤ 100 (storage constraint), x ≥ 0, y ≥ 0 (non-negativity constraints)., ",
+                                "instruct_content": null,
+                                "role": "model_llm",
+                                "cause_by": "actions.thinking.Thinking",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "38a92f1a79be4aa49c72f12c17bcb3c3",
+                                "content": "{'objective': 'Maximize Z = 3x + 2y', 'variables': {'x': 'number of batches of medication patches', 'y': 'number of batches of anti-biotic creams'}, 'constraints': ['3x + 5y ≤ 400', '5x + 6y ≤ 530', 'y ≥ 2x', 'x + y ≤ 100', 'x ≥ 0', 'y ≥ 0'], 'interpretation': {'objective': 'Z is the total number of people treated.', 'constraints': ['Time constraint (in minutes)', 'Material constraint (in units)', 'Production ratio constraint', 'Storage constraint (maximum total batches)', 'Non-negativity constraint for x', 'Non-negativity constraint for y']}}",
+                                "instruct_content": null,
+                                "role": "model_llm",
+                                "cause_by": "actions.formulation.Formulation",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "ee649fd8fa2c4bbeb89920e3873d5bfe",
+                                "content": "\\[\n\\begin{aligned}\n\\text{Maximize} \\quad & Z = 3x + 2y \\\\\n\\text{subject to} \\quad & 3x + 5y \\leq 400 \\\\\n& 5x + 6y \\leq 530 \\\\\n& -2x + y \\geq 0 \\\\\n& x + y \\leq 100 \\\\\n& x \\geq 0, \\quad y \\geq 0\n\\end{aligned}\n\\]\n\n**Where:**\n- \\(x\\): number of batches of medication patches\n- \\(y\\): number of batches of anti-biotic creams\n- \\(Z\\): total number of people treated\n\n**Constraints Interpretation:**\n1. Time constraint (in minutes): \\(3x + 5y \\leq 400\\)\n2. Material constraint (in units): \\(5x + 6y \\leq 530\\)\n3. Production ratio constraint: \\(y \\geq 2x\\)\n4. Storage constraint (maximum total batches): \\(x + y \\leq 100\\)\n5. Non-negativity constraints: \\(x \\geq 0, \\, y \\geq 0\\)",
+                                "instruct_content": null,
+                                "role": "model_llm",
+                                "cause_by": "actions.trans_2_latex.Trans_2_latex",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "7fcf70e658a14044ad65657addba0880",
+                                "content": "One critical comment: The constraint `2x - y <= 0` (originally `-2x + y >= 0`) is incorrectly implemented. It should be `-2x + y >= 0`, which translates to `2x - y <= 0` in the `A_ub` matrix. However, the sign is correct, but this constraint forces `y ≥ 2x`, which may be overly restrictive or unintended given the context of optimizing medication production. Double-check if this constraint logically makes sense for the problem, as it significantly limits `x` relative to `y`.",
+                                "instruct_content": null,
+                                "role": "code_llm",
+                                "cause_by": "actions.write_review.Write_review",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            }
+                        ],
+                        "index": {
+                            "metagpt.actions.add_requirement.UserRequirement": [
+                                {
+                                    "id": "18360add9dde4be590ef99ad93bececd",
+                                    "content": "A hospital prepares batches of medication patches and anti-biotic creams. Each medication patch requires 3 minutes to prepare and 5 units of materials. Each anti-biotic cream requires 5 minutes to prepare and 6 units of materials. Since anti-biotic creams are used more often, there must be at least twice as many anti-biotic creams as medication patches. Due to storage reasons, the hospital can make at most 100 batches of medication patches and anti-biotic creams in total. The hospital has available 400 minutes of staff to spare and 530 units of materials. If each batch of medication patches can treat 3 people and each batch of anti-biotic cream can treat 2 people, how many batches of each should be made to maximize the number of people that can be treated?",
+                                    "instruct_content": null,
+                                    "role": "Human",
+                                    "cause_by": "metagpt.actions.add_requirement.UserRequirement",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.thinking.Thinking": [
+                                {
+                                    "id": "a6aaaa474c9c4f1a927f05e1581430d7",
+                                    "content": "Let x = number of batches of medication patches, y = number of batches of anti-biotic creams., Time per medication patch = 3 minutes, time per anti-biotic cream = 5 minutes, material per medication patch = 5 units, material per anti-biotic cream = 6 units, maximum total batches = 100, total available time = 400 minutes, total available material = 530 units, treatment per medication patch = 3 people, treatment per anti-biotic cream = 2 people., Maximize Z = 3x + 2y, where Z is the total number of people treated., Constraints: 3x + 5y ≤ 400 (time constraint), 5x + 6y ≤ 530 (material constraint), y ≥ 2x (at least twice as many anti-biotic creams as medication patches), x + y ≤ 100 (storage constraint), x ≥ 0, y ≥ 0 (non-negativity constraints)., ",
+                                    "instruct_content": null,
+                                    "role": "model_llm",
+                                    "cause_by": "actions.thinking.Thinking",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.formulation.Formulation": [
+                                {
+                                    "id": "38a92f1a79be4aa49c72f12c17bcb3c3",
+                                    "content": "{'objective': 'Maximize Z = 3x + 2y', 'variables': {'x': 'number of batches of medication patches', 'y': 'number of batches of anti-biotic creams'}, 'constraints': ['3x + 5y ≤ 400', '5x + 6y ≤ 530', 'y ≥ 2x', 'x + y ≤ 100', 'x ≥ 0', 'y ≥ 0'], 'interpretation': {'objective': 'Z is the total number of people treated.', 'constraints': ['Time constraint (in minutes)', 'Material constraint (in units)', 'Production ratio constraint', 'Storage constraint (maximum total batches)', 'Non-negativity constraint for x', 'Non-negativity constraint for y']}}",
+                                    "instruct_content": null,
+                                    "role": "model_llm",
+                                    "cause_by": "actions.formulation.Formulation",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.trans_2_latex.Trans_2_latex": [
+                                {
+                                    "id": "ee649fd8fa2c4bbeb89920e3873d5bfe",
+                                    "content": "\\[\n\\begin{aligned}\n\\text{Maximize} \\quad & Z = 3x + 2y \\\\\n\\text{subject to} \\quad & 3x + 5y \\leq 400 \\\\\n& 5x + 6y \\leq 530 \\\\\n& -2x + y \\geq 0 \\\\\n& x + y \\leq 100 \\\\\n& x \\geq 0, \\quad y \\geq 0\n\\end{aligned}\n\\]\n\n**Where:**\n- \\(x\\): number of batches of medication patches\n- \\(y\\): number of batches of anti-biotic creams\n- \\(Z\\): total number of people treated\n\n**Constraints Interpretation:**\n1. Time constraint (in minutes): \\(3x + 5y \\leq 400\\)\n2. Material constraint (in units): \\(5x + 6y \\leq 530\\)\n3. Production ratio constraint: \\(y \\geq 2x\\)\n4. Storage constraint (maximum total batches): \\(x + y \\leq 100\\)\n5. Non-negativity constraints: \\(x \\geq 0, \\, y \\geq 0\\)",
+                                    "instruct_content": null,
+                                    "role": "model_llm",
+                                    "cause_by": "actions.trans_2_latex.Trans_2_latex",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.write_review.Write_review": [
+                                {
+                                    "id": "7fcf70e658a14044ad65657addba0880",
+                                    "content": "One critical comment: The constraint `2x - y <= 0` (originally `-2x + y >= 0`) is incorrectly implemented. It should be `-2x + y >= 0`, which translates to `2x - y <= 0` in the `A_ub` matrix. However, the sign is correct, but this constraint forces `y ≥ 2x`, which may be overly restrictive or unintended given the context of optimizing medication production. Double-check if this constraint logically makes sense for the problem, as it significantly limits `x` relative to `y`.",
+                                    "instruct_content": null,
+                                    "role": "code_llm",
+                                    "cause_by": "actions.write_review.Write_review",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ]
+                        },
+                        "ignore_id": false
+                    },
+                    "working_memory": {
+                        "storage": [],
+                        "index": {},
+                        "ignore_id": false
+                    },
+                    "state": -1,
+                    "watch": [
+                        "metagpt.actions.add_requirement.UserRequirement"
+                    ],
+                    "react_mode": "by_order",
+                    "max_react_loop": 3
+                },
+                "addresses": [
+                    "__main__.Model_llm",
+                    "Alice"
+                ],
+                "planner": {
+                    "plan": {
+                        "goal": "",
+                        "context": "",
+                        "tasks": [],
+                        "task_map": {},
+                        "current_task_id": ""
+                    },
+                    "working_memory": {
+                        "storage": [],
+                        "index": {},
+                        "ignore_id": false
+                    },
+                    "auto_run": false
+                },
+                "recovered": false,
+                "latest_observed_msg": null,
+                "__module_class_name": "__main__.Model_llm"
+            },
+            "code_llm": {
+                "name": "Alice",
+                "profile": "code_llm",
+                "goal": "",
+                "constraints": "",
+                "desc": "",
+                "is_human": false,
+                "role_id": "",
+                "states": [
+                    "0. Write_code",
+                    "1. Run_code",
+                    "2. Write_review"
+                ],
+                "actions": [
+                    {
+                        "name": "Write_code",
+                        "i_context": "",
+                        "prefix": "You are a code_llm, named Alice, your goal is . ",
+                        "desc": "",
+                        "llm_name_or_type": null,
+                        "PROMPT_TEMPLATE": "\n    Imagine you are an expert in programming. Based on the correct mathematical model established above, please write a code to solve this math problem.\n    Remember, the code you generate should exactly correspond to the mathematical model, especially the objective function and constraints.\n    Ensure the code includes the necessary imports, defines the inputs, solves the problem, and prints the result.\"\n    NOTE: You are ONLY allowed to using << Numpy, SciPy, OR-Tools >> libraries to solve the problem.\n    Return ```python your_code_here ``` with NO other texts\n\n    ## Mathematical Model\n    {math_model}\n\n    ## Code\n    ```python \n    \n",
+                        "__module_class_name": "actions.write_code.Write_code"
+                    },
+                    {
+                        "name": "Run_code",
+                        "i_context": "",
+                        "prefix": "You are a code_llm, named Alice, your goal is . ",
+                        "desc": "",
+                        "llm_name_or_type": null,
+                        "__module_class_name": "actions.run_code.Run_code"
+                    },
+                    {
+                        "name": "Write_review",
+                        "i_context": "",
+                        "prefix": "You are a code_llm, named Alice, your goal is . ",
+                        "desc": "",
+                        "llm_name_or_type": null,
+                        "PROMPT_TEMPLATE": "\n    ## Code\n    {code_text}\n\n    ## Execution result\n    {result}\n\n    Review the test code and result of execution provide one critical comments:\n    ",
+                        "__module_class_name": "actions.write_review.Write_review"
+                    }
+                ],
+                "rc": {
+                    "memory": {
+                        "storage": [
+                            {
+                                "id": "18360add9dde4be590ef99ad93bececd",
+                                "content": "A hospital prepares batches of medication patches and anti-biotic creams. Each medication patch requires 3 minutes to prepare and 5 units of materials. Each anti-biotic cream requires 5 minutes to prepare and 6 units of materials. Since anti-biotic creams are used more often, there must be at least twice as many anti-biotic creams as medication patches. Due to storage reasons, the hospital can make at most 100 batches of medication patches and anti-biotic creams in total. The hospital has available 400 minutes of staff to spare and 530 units of materials. If each batch of medication patches can treat 3 people and each batch of anti-biotic cream can treat 2 people, how many batches of each should be made to maximize the number of people that can be treated?",
+                                "instruct_content": null,
+                                "role": "Human",
+                                "cause_by": "metagpt.actions.add_requirement.UserRequirement",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "ee649fd8fa2c4bbeb89920e3873d5bfe",
+                                "content": "\\[\n\\begin{aligned}\n\\text{Maximize} \\quad & Z = 3x + 2y \\\\\n\\text{subject to} \\quad & 3x + 5y \\leq 400 \\\\\n& 5x + 6y \\leq 530 \\\\\n& -2x + y \\geq 0 \\\\\n& x + y \\leq 100 \\\\\n& x \\geq 0, \\quad y \\geq 0\n\\end{aligned}\n\\]\n\n**Where:**\n- \\(x\\): number of batches of medication patches\n- \\(y\\): number of batches of anti-biotic creams\n- \\(Z\\): total number of people treated\n\n**Constraints Interpretation:**\n1. Time constraint (in minutes): \\(3x + 5y \\leq 400\\)\n2. Material constraint (in units): \\(5x + 6y \\leq 530\\)\n3. Production ratio constraint: \\(y \\geq 2x\\)\n4. Storage constraint (maximum total batches): \\(x + y \\leq 100\\)\n5. Non-negativity constraints: \\(x \\geq 0, \\, y \\geq 0\\)",
+                                "instruct_content": null,
+                                "role": "model_llm",
+                                "cause_by": "actions.trans_2_latex.Trans_2_latex",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "8551c4ab4aaa43988f0162cfc9da00c4",
+                                "content": "import numpy as np\nfrom scipy.optimize import linprog\n\n# Objective function coefficients (maximization problem)\n# For linprog, we minimize, so we negate the coefficients for maximization\nc = [-3, -2]  # Z = 3x + 2y -> minimize -3x - 2y\n\n# Inequality constraints (A_ub * x <= b_ub)\nA_ub = [\n    [3, 5],    # 3x + 5y <= 400\n    [5, 6],    # 5x + 6y <= 530\n    [2, -1],   # -2x + y >= 0 -> 2x - y <= 0\n    [1, 1]     # x + y <= 100\n]\nb_ub = [400, 530, 0, 100]\n\n# Non-negativity constraints (bounds)\nx_bounds = (0, None)\ny_bounds = (0, None)\n\n# Solve the linear programming problem\nresult = linprog(c, A_ub=A_ub, b_ub=b_ub, bounds=[x_bounds, y_bounds], method='highs')\n\nif result.success:\n    x_opt, y_opt = result.x\n    Z_opt = -result.fun  # Convert back from minimization to maximization\n    \n    print(f\"Optimal number of medication patches (x): {x_opt:.2f}\")\n    print(f\"Optimal number of anti-biotic creams (y): {y_opt:.2f}\")\n    print(f\"Maximum number of people treated (Z): {Z_opt:.2f}\")\nelse:\n    print(\"Optimization failed:\", result.message)\n",
+                                "instruct_content": null,
+                                "role": "code_llm",
+                                "cause_by": "actions.write_code.Write_code",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "3affaf2263d54b93a4ddeb02129f39e1",
+                                "content": "Optimal number of medication patches (x): 30.77\nOptimal number of anti-biotic creams (y): 61.54\nMaximum number of people treated (Z): 215.38\n",
+                                "instruct_content": null,
+                                "role": "code_llm",
+                                "cause_by": "actions.run_code.Run_code",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "7fcf70e658a14044ad65657addba0880",
+                                "content": "One critical comment: The constraint `2x - y <= 0` (originally `-2x + y >= 0`) is incorrectly implemented. It should be `-2x + y >= 0`, which translates to `2x - y <= 0` in the `A_ub` matrix. However, the sign is correct, but this constraint forces `y ≥ 2x`, which may be overly restrictive or unintended given the context of optimizing medication production. Double-check if this constraint logically makes sense for the problem, as it significantly limits `x` relative to `y`.",
+                                "instruct_content": null,
+                                "role": "code_llm",
+                                "cause_by": "actions.write_review.Write_review",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            }
+                        ],
+                        "index": {
+                            "metagpt.actions.add_requirement.UserRequirement": [
+                                {
+                                    "id": "18360add9dde4be590ef99ad93bececd",
+                                    "content": "A hospital prepares batches of medication patches and anti-biotic creams. Each medication patch requires 3 minutes to prepare and 5 units of materials. Each anti-biotic cream requires 5 minutes to prepare and 6 units of materials. Since anti-biotic creams are used more often, there must be at least twice as many anti-biotic creams as medication patches. Due to storage reasons, the hospital can make at most 100 batches of medication patches and anti-biotic creams in total. The hospital has available 400 minutes of staff to spare and 530 units of materials. If each batch of medication patches can treat 3 people and each batch of anti-biotic cream can treat 2 people, how many batches of each should be made to maximize the number of people that can be treated?",
+                                    "instruct_content": null,
+                                    "role": "Human",
+                                    "cause_by": "metagpt.actions.add_requirement.UserRequirement",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.trans_2_latex.Trans_2_latex": [
+                                {
+                                    "id": "ee649fd8fa2c4bbeb89920e3873d5bfe",
+                                    "content": "\\[\n\\begin{aligned}\n\\text{Maximize} \\quad & Z = 3x + 2y \\\\\n\\text{subject to} \\quad & 3x + 5y \\leq 400 \\\\\n& 5x + 6y \\leq 530 \\\\\n& -2x + y \\geq 0 \\\\\n& x + y \\leq 100 \\\\\n& x \\geq 0, \\quad y \\geq 0\n\\end{aligned}\n\\]\n\n**Where:**\n- \\(x\\): number of batches of medication patches\n- \\(y\\): number of batches of anti-biotic creams\n- \\(Z\\): total number of people treated\n\n**Constraints Interpretation:**\n1. Time constraint (in minutes): \\(3x + 5y \\leq 400\\)\n2. Material constraint (in units): \\(5x + 6y \\leq 530\\)\n3. Production ratio constraint: \\(y \\geq 2x\\)\n4. Storage constraint (maximum total batches): \\(x + y \\leq 100\\)\n5. Non-negativity constraints: \\(x \\geq 0, \\, y \\geq 0\\)",
+                                    "instruct_content": null,
+                                    "role": "model_llm",
+                                    "cause_by": "actions.trans_2_latex.Trans_2_latex",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.write_code.Write_code": [
+                                {
+                                    "id": "8551c4ab4aaa43988f0162cfc9da00c4",
+                                    "content": "import numpy as np\nfrom scipy.optimize import linprog\n\n# Objective function coefficients (maximization problem)\n# For linprog, we minimize, so we negate the coefficients for maximization\nc = [-3, -2]  # Z = 3x + 2y -> minimize -3x - 2y\n\n# Inequality constraints (A_ub * x <= b_ub)\nA_ub = [\n    [3, 5],    # 3x + 5y <= 400\n    [5, 6],    # 5x + 6y <= 530\n    [2, -1],   # -2x + y >= 0 -> 2x - y <= 0\n    [1, 1]     # x + y <= 100\n]\nb_ub = [400, 530, 0, 100]\n\n# Non-negativity constraints (bounds)\nx_bounds = (0, None)\ny_bounds = (0, None)\n\n# Solve the linear programming problem\nresult = linprog(c, A_ub=A_ub, b_ub=b_ub, bounds=[x_bounds, y_bounds], method='highs')\n\nif result.success:\n    x_opt, y_opt = result.x\n    Z_opt = -result.fun  # Convert back from minimization to maximization\n    \n    print(f\"Optimal number of medication patches (x): {x_opt:.2f}\")\n    print(f\"Optimal number of anti-biotic creams (y): {y_opt:.2f}\")\n    print(f\"Maximum number of people treated (Z): {Z_opt:.2f}\")\nelse:\n    print(\"Optimization failed:\", result.message)\n",
+                                    "instruct_content": null,
+                                    "role": "code_llm",
+                                    "cause_by": "actions.write_code.Write_code",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.run_code.Run_code": [
+                                {
+                                    "id": "3affaf2263d54b93a4ddeb02129f39e1",
+                                    "content": "Optimal number of medication patches (x): 30.77\nOptimal number of anti-biotic creams (y): 61.54\nMaximum number of people treated (Z): 215.38\n",
+                                    "instruct_content": null,
+                                    "role": "code_llm",
+                                    "cause_by": "actions.run_code.Run_code",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.write_review.Write_review": [
+                                {
+                                    "id": "7fcf70e658a14044ad65657addba0880",
+                                    "content": "One critical comment: The constraint `2x - y <= 0` (originally `-2x + y >= 0`) is incorrectly implemented. It should be `-2x + y >= 0`, which translates to `2x - y <= 0` in the `A_ub` matrix. However, the sign is correct, but this constraint forces `y ≥ 2x`, which may be overly restrictive or unintended given the context of optimizing medication production. Double-check if this constraint logically makes sense for the problem, as it significantly limits `x` relative to `y`.",
+                                    "instruct_content": null,
+                                    "role": "code_llm",
+                                    "cause_by": "actions.write_review.Write_review",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ]
+                        },
+                        "ignore_id": false
+                    },
+                    "working_memory": {
+                        "storage": [],
+                        "index": {},
+                        "ignore_id": false
+                    },
+                    "state": -1,
+                    "watch": [
+                        "actions.trans_2_latex.Trans_2_latex"
+                    ],
+                    "react_mode": "by_order",
+                    "max_react_loop": 3
+                },
+                "addresses": [
+                    "Alice",
+                    "__main__.Code_llm"
+                ],
+                "planner": {
+                    "plan": {
+                        "goal": "",
+                        "context": "",
+                        "tasks": [],
+                        "task_map": {},
+                        "current_task_id": ""
+                    },
+                    "working_memory": {
+                        "storage": [],
+                        "index": {},
+                        "ignore_id": false
+                    },
+                    "auto_run": false
+                },
+                "recovered": false,
+                "latest_observed_msg": null,
+                "__module_class_name": "__main__.Code_llm"
+            },
+            "test_llm": {
+                "name": "Bob",
+                "profile": "test_llm",
+                "goal": "",
+                "constraints": "",
+                "desc": "",
+                "is_human": false,
+                "role_id": "",
+                "states": [
+                    "0. Write_test"
+                ],
+                "actions": [
+                    {
+                        "name": "Write_test",
+                        "i_context": "",
+                        "prefix": "You are a test_llm, named Bob, your goal is . ",
+                        "desc": "",
+                        "llm_name_or_type": null,
+                        "PROMPT_TEMPLATE": "\n    Context: {context}\n    Wrap above code to a function for solving math problem and Write {k} unit tests using pytest for the solving function.\n    Return ```python your_code_here ``` with NO other texts, \n    You must start with ```python.\n    your code:\n    ",
+                        "__module_class_name": "actions.write_test.Write_test"
+                    }
+                ],
+                "rc": {
+                    "memory": {
+                        "storage": [
+                            {
+                                "id": "18360add9dde4be590ef99ad93bececd",
+                                "content": "A hospital prepares batches of medication patches and anti-biotic creams. Each medication patch requires 3 minutes to prepare and 5 units of materials. Each anti-biotic cream requires 5 minutes to prepare and 6 units of materials. Since anti-biotic creams are used more often, there must be at least twice as many anti-biotic creams as medication patches. Due to storage reasons, the hospital can make at most 100 batches of medication patches and anti-biotic creams in total. The hospital has available 400 minutes of staff to spare and 530 units of materials. If each batch of medication patches can treat 3 people and each batch of anti-biotic cream can treat 2 people, how many batches of each should be made to maximize the number of people that can be treated?",
+                                "instruct_content": null,
+                                "role": "Human",
+                                "cause_by": "metagpt.actions.add_requirement.UserRequirement",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "ee649fd8fa2c4bbeb89920e3873d5bfe",
+                                "content": "\\[\n\\begin{aligned}\n\\text{Maximize} \\quad & Z = 3x + 2y \\\\\n\\text{subject to} \\quad & 3x + 5y \\leq 400 \\\\\n& 5x + 6y \\leq 530 \\\\\n& -2x + y \\geq 0 \\\\\n& x + y \\leq 100 \\\\\n& x \\geq 0, \\quad y \\geq 0\n\\end{aligned}\n\\]\n\n**Where:**\n- \\(x\\): number of batches of medication patches\n- \\(y\\): number of batches of anti-biotic creams\n- \\(Z\\): total number of people treated\n\n**Constraints Interpretation:**\n1. Time constraint (in minutes): \\(3x + 5y \\leq 400\\)\n2. Material constraint (in units): \\(5x + 6y \\leq 530\\)\n3. Production ratio constraint: \\(y \\geq 2x\\)\n4. Storage constraint (maximum total batches): \\(x + y \\leq 100\\)\n5. Non-negativity constraints: \\(x \\geq 0, \\, y \\geq 0\\)",
+                                "instruct_content": null,
+                                "role": "model_llm",
+                                "cause_by": "actions.trans_2_latex.Trans_2_latex",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "7fcf70e658a14044ad65657addba0880",
+                                "content": "One critical comment: The constraint `2x - y <= 0` (originally `-2x + y >= 0`) is incorrectly implemented. It should be `-2x + y >= 0`, which translates to `2x - y <= 0` in the `A_ub` matrix. However, the sign is correct, but this constraint forces `y ≥ 2x`, which may be overly restrictive or unintended given the context of optimizing medication production. Double-check if this constraint logically makes sense for the problem, as it significantly limits `x` relative to `y`.",
+                                "instruct_content": null,
+                                "role": "code_llm",
+                                "cause_by": "actions.write_review.Write_review",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            }
+                        ],
+                        "index": {
+                            "metagpt.actions.add_requirement.UserRequirement": [
+                                {
+                                    "id": "18360add9dde4be590ef99ad93bececd",
+                                    "content": "A hospital prepares batches of medication patches and anti-biotic creams. Each medication patch requires 3 minutes to prepare and 5 units of materials. Each anti-biotic cream requires 5 minutes to prepare and 6 units of materials. Since anti-biotic creams are used more often, there must be at least twice as many anti-biotic creams as medication patches. Due to storage reasons, the hospital can make at most 100 batches of medication patches and anti-biotic creams in total. The hospital has available 400 minutes of staff to spare and 530 units of materials. If each batch of medication patches can treat 3 people and each batch of anti-biotic cream can treat 2 people, how many batches of each should be made to maximize the number of people that can be treated?",
+                                    "instruct_content": null,
+                                    "role": "Human",
+                                    "cause_by": "metagpt.actions.add_requirement.UserRequirement",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.trans_2_latex.Trans_2_latex": [
+                                {
+                                    "id": "ee649fd8fa2c4bbeb89920e3873d5bfe",
+                                    "content": "\\[\n\\begin{aligned}\n\\text{Maximize} \\quad & Z = 3x + 2y \\\\\n\\text{subject to} \\quad & 3x + 5y \\leq 400 \\\\\n& 5x + 6y \\leq 530 \\\\\n& -2x + y \\geq 0 \\\\\n& x + y \\leq 100 \\\\\n& x \\geq 0, \\quad y \\geq 0\n\\end{aligned}\n\\]\n\n**Where:**\n- \\(x\\): number of batches of medication patches\n- \\(y\\): number of batches of anti-biotic creams\n- \\(Z\\): total number of people treated\n\n**Constraints Interpretation:**\n1. Time constraint (in minutes): \\(3x + 5y \\leq 400\\)\n2. Material constraint (in units): \\(5x + 6y \\leq 530\\)\n3. Production ratio constraint: \\(y \\geq 2x\\)\n4. Storage constraint (maximum total batches): \\(x + y \\leq 100\\)\n5. Non-negativity constraints: \\(x \\geq 0, \\, y \\geq 0\\)",
+                                    "instruct_content": null,
+                                    "role": "model_llm",
+                                    "cause_by": "actions.trans_2_latex.Trans_2_latex",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.write_review.Write_review": [
+                                {
+                                    "id": "7fcf70e658a14044ad65657addba0880",
+                                    "content": "One critical comment: The constraint `2x - y <= 0` (originally `-2x + y >= 0`) is incorrectly implemented. It should be `-2x + y >= 0`, which translates to `2x - y <= 0` in the `A_ub` matrix. However, the sign is correct, but this constraint forces `y ≥ 2x`, which may be overly restrictive or unintended given the context of optimizing medication production. Double-check if this constraint logically makes sense for the problem, as it significantly limits `x` relative to `y`.",
+                                    "instruct_content": null,
+                                    "role": "code_llm",
+                                    "cause_by": "actions.write_review.Write_review",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ]
+                        },
+                        "ignore_id": false
+                    },
+                    "working_memory": {
+                        "storage": [],
+                        "index": {},
+                        "ignore_id": false
+                    },
+                    "state": -1,
+                    "watch": [
+                        "actions.write_review.Write_review",
+                        "actions.write_code.Write_code"
+                    ],
+                    "react_mode": "react",
+                    "max_react_loop": 1
+                },
+                "addresses": [
+                    "__main__.Test_llm",
+                    "Bob"
+                ],
+                "planner": {
+                    "plan": {
+                        "goal": "",
+                        "context": "",
+                        "tasks": [],
+                        "task_map": {},
+                        "current_task_id": ""
+                    },
+                    "working_memory": {
+                        "storage": [],
+                        "index": {},
+                        "ignore_id": false
+                    },
+                    "auto_run": false
+                },
+                "recovered": false,
+                "latest_observed_msg": {
+                    "id": "7fcf70e658a14044ad65657addba0880",
+                    "content": "One critical comment: The constraint `2x - y <= 0` (originally `-2x + y >= 0`) is incorrectly implemented. It should be `-2x + y >= 0`, which translates to `2x - y <= 0` in the `A_ub` matrix. However, the sign is correct, but this constraint forces `y ≥ 2x`, which may be overly restrictive or unintended given the context of optimizing medication production. Double-check if this constraint logically makes sense for the problem, as it significantly limits `x` relative to `y`.",
+                    "instruct_content": null,
+                    "role": "code_llm",
+                    "cause_by": "actions.write_review.Write_review",
+                    "sent_from": "",
+                    "send_to": [
+                        "<all>"
+                    ]
+                },
+                "__module_class_name": "__main__.Test_llm"
+            }
+        },
+        "history": "\nHuman: A hospital prepares batches of medication patches and anti-biotic creams. Each medication patch requires 3 minutes to prepare and 5 units of materials. Each anti-biotic cream requires 5 minutes to prepare and 6 units of materials. Since anti-biotic creams are used more often, there must be at least twice as many anti-biotic creams as medication patches. Due to storage reasons, the hospital can make at most 100 batches of medication patches and anti-biotic creams in total. The hospital has available 400 minutes of staff to spare and 530 units of materials. If each batch of medication patches can treat 3 people and each batch of anti-biotic cream can treat 2 people, how many batches of each should be made to maximize the number of people that can be treated?\nmodel_llm: \\[\n\\begin{aligned}\n\\text{Maximize} \\quad & Z = 3x + 2y \\\\\n\\text{subject to} \\quad & 3x + 5y \\leq 400 \\\\\n& 5x + 6y \\leq 530 \\\\\n& -2x + y \\geq 0 \\\\\n& x + y \\leq 100 \\\\\n& x \\geq 0, \\quad y \\geq 0\n\\end{aligned}\n\\]\n\n**Where:**\n- \\(x\\): number of batches of medication patches\n- \\(y\\): number of batches of anti-biotic creams\n- \\(Z\\): total number of people treated\n\n**Constraints Interpretation:**\n1. Time constraint (in minutes): \\(3x + 5y \\leq 400\\)\n2. Material constraint (in units): \\(5x + 6y \\leq 530\\)\n3. Production ratio constraint: \\(y \\geq 2x\\)\n4. Storage constraint (maximum total batches): \\(x + y \\leq 100\\)\n5. Non-negativity constraints: \\(x \\geq 0, \\, y \\geq 0\\)\ncode_llm: One critical comment: The constraint `2x - y <= 0` (originally `-2x + y >= 0`) is incorrectly implemented. It should be `-2x + y >= 0`, which translates to `2x - y <= 0` in the `A_ub` matrix. However, the sign is correct, but this constraint forces `y ≥ 2x`, which may be overly restrictive or unintended given the context of optimizing medication production. Double-check if this constraint logically makes sense for the problem, as it significantly limits `x` relative to `y`.\ntest_llm: import pulp\nimport numpy as np\nfrom typing import Tuple, Dict, Any\nimport pytest\n\ndef solve_medication_optimization() -> Dict[str, Any]:\n    \"\"\"\n    Solve the medication production optimization problem to maximize the number of people treated.\n    \n    Returns:\n        Dict containing:\n            - 'status': Status of the solution\n            - 'x': Optimal number of medication patch batches\n            - 'y': Optimal number of antibiotic cream batches\n            - 'z': Maximum number of people treated\n            - 'constraints': Dictionary with slack values for each constraint\n    \"\"\"\n    # Create the linear programming problem\n    prob = pulp.LpProblem('Medication_Optimization', pulp.LpMaximize)\n    \n    # Decision variables\n    x = pulp.LpVariable('x', lowBound=0, cat='Integer')  # batches of medication patches\n    y = pulp.LpVariable('y', lowBound=0, cat='Integer')  # batches of antibiotic creams\n    \n    # Objective function: maximize people treated\n    prob += 3*x + 2*y, 'People_Treated'\n    \n    # Constraints\n    prob += 3*x + 5*y <= 400, 'Time_Constraint'  # 400 minutes available\n    prob += 5*x + 6*y <= 530, 'Material_Constraint'  # 530 units of materials\n    prob += y >= 2*x, 'Production_Ratio'  # at least twice as many creams as patches\n    prob += x + y <= 100, 'Storage_Constraint'  # at most 100 total batches\n    \n    # Solve the problem\n    solver = pulp.PULP_CBC_CMD(msg=False)\n    prob.solve(solver)\n    \n    # Extract results\n    status = pulp.LpStatus[prob.status]\n    x_val = int(x.value()) if x.value() is not None else 0\n    y_val = int(y.value()) if y.value() is not None else 0\n    z_val = int(3*x_val + 2*y_val)\n    \n    # Calculate slack for each constraint\n    constraints = {\n        'time_slack': 400 - (3*x_val + 5*y_val),\n        'material_slack': 530 - (5*x_val + 6*y_val),\n        'ratio_slack': y_val - 2*x_val,  # How much y exceeds 2x\n        'storage_slack': 100 - (x_val + y_val)\n    }\n    \n    return {\n        'status': status,\n        'x': x_val,\n        'y': y_val,\n        'z': z_val,\n        'constraints': constraints\n    }\n\ndef test_optimal_solution():\n    \"\"\"Test that the solution meets all constraints and is optimal.\"\"\"\n    result = solve_medication_optimization()\n    \n    # Check solution status\n    assert result['status'] == 'Optimal', \"Solution should be optimal\"\n    \n    # Extract values\n    x, y = result['x'], result['y']\n    \n    # Verify all constraints\n    assert 3*x + 5*y <= 400, \"Time constraint violated\"\n    assert 5*x + 6*y <= 530, \"Material constraint violated\"\n    assert y >= 2*x, \"Production ratio constraint violated\"\n    assert x + y <= 100, \"Storage constraint violated\"\n    assert x >= 0 and y >= 0, \"Non-negativity constraint violated\"\n    \n    # Verify objective function calculation\n    assert result['z'] == 3*x + 2*y, \"Objective value miscalculated\"\n\ndef test_feasibility_conditions():\n    \"\"\"Test that slack values are non-negative (constraints are satisfied).\"\"\"\n    result = solve_medication_optimization()\n    constraints = result['constraints']\n    \n    # All slack should be >= 0 (except ratio slack which can be >= 0)\n    assert constraints['time_slack'] >= 0, \"Negative time slack\"\n    assert constraints['material_slack'] >= 0, \"Negative material slack\"\n    assert constraints['ratio_slack'] >= 0, \"Negative ratio slack\"\n    assert constraints['storage_slack'] >= 0, \"Negative storage slack\"\n\ndef test_production_ratio():\n    \"\"\"Test that antibiotic creams are at least twice as many as patches.\"\"\"\n    result = solve_medication_optimization()\n    x, y = result['x'], result['y']\n    \n    # Check the specific constraint y >= 2x\n    assert y >= 2*x, f\"Ratio constraint failed: y={y}, 2x={2*x}\"\n    \n    # Also check that ratio slack is properly calculated\n    assert result['constraints']['ratio_slack'] == y - 2*x\n\ndef test_resource_utilization():\n    \"\"\"Test that resources are not over-utilized.\"\"\"\n    result = solve_medication_optimization()\n    x, y = result['x'], result['y']\n    constraints = result['constraints']\n    \n    # Resources should not exceed available amounts\n    time_used = 3*x + 5*y\n    material_used = 5*x + 6*y\n    \n    assert time_used <= 400, f\"Time overused: {time_used} > 400\"\n    assert material_used <= 530, f\"Material overused: {material_used} > 530\"\n    \n    # Verify slack calculations match\n    assert constraints['time_slack'] == 400 - time_used\n    assert constraints['material_slack'] == 530 - material_used\n\ndef test_storage_constraint():\n    \"\"\"Test that total batches don't exceed storage capacity.\"\"\"\n    result = solve_medication_optimization()\n    x, y = result['x'], result['y']\n    total_batches = x + y\n    \n    assert total_batches <= 100, f\"Storage exceeded: {total_batches} > 100\"\n    assert result['constraints']['storage_slack'] == 100 - total_batches\n\nif __name__ == \"__main__\":\n    # Run tests\n    pytest.main([__file__, \"-v\"])\n"
+    },
+    "investment": 3.0,
+    "idea": "A hospital prepares batches of medication patches and anti-biotic creams. Each medication patch requires 3 minutes to prepare and 5 units of materials. Each anti-biotic cream requires 5 minutes to prepare and 6 units of materials. Since anti-biotic creams are used more often, there must be at least twice as many anti-biotic creams as medication patches. Due to storage reasons, the hospital can make at most 100 batches of medication patches and anti-biotic creams in total. The hospital has available 400 minutes of staff to spare and 530 units of materials. If each batch of medication patches can treat 3 people and each batch of anti-biotic cream can treat 2 people, how many batches of each should be made to maximize the number of people that can be treated?",
+    "context": {
+        "workdir": "",
+        "kwargs": {},
+        "cost_manager": "{\"total_prompt_tokens\":0,\"total_completion_tokens\":0,\"total_budget\":0.0,\"max_budget\":3.0,\"total_cost\":0.0,\"token_costs\":{\"gpt-3.5-turbo\":{\"prompt\":0.0015,\"completion\":0.002},\"gpt-3.5-turbo-0301\":{\"prompt\":0.0015,\"completion\":0.002},\"gpt-3.5-turbo-0613\":{\"prompt\":0.0015,\"completion\":0.002},\"gpt-3.5-turbo-16k\":{\"prompt\":0.003,\"completion\":0.004},\"gpt-3.5-turbo-16k-0613\":{\"prompt\":0.003,\"completion\":0.004},\"gpt-35-turbo\":{\"prompt\":0.0015,\"completion\":0.002},\"gpt-35-turbo-16k\":{\"prompt\":0.003,\"completion\":0.004},\"gpt-3.5-turbo-1106\":{\"prompt\":0.001,\"completion\":0.002},\"gpt-3.5-turbo-0125\":{\"prompt\":0.001,\"completion\":0.002},\"gpt-4-0314\":{\"prompt\":0.03,\"completion\":0.06},\"gpt-4\":{\"prompt\":0.03,\"completion\":0.06},\"gpt-4-32k\":{\"prompt\":0.06,\"completion\":0.12},\"gpt-4-32k-0314\":{\"prompt\":0.06,\"completion\":0.12},\"gpt-4-0613\":{\"prompt\":0.06,\"completion\":0.12},\"gpt-4-turbo-preview\":{\"prompt\":0.01,\"completion\":0.03},\"gpt-4-1106-preview\":{\"prompt\":0.01,\"completion\":0.03},\"gpt-4-0125-preview\":{\"prompt\":0.01,\"completion\":0.03},\"gpt-4-turbo\":{\"prompt\":0.01,\"completion\":0.03},\"gpt-4-turbo-2024-04-09\":{\"prompt\":0.01,\"completion\":0.03},\"gpt-4-vision-preview\":{\"prompt\":0.01,\"completion\":0.03},\"gpt-4-1106-vision-preview\":{\"prompt\":0.01,\"completion\":0.03},\"gpt-4o\":{\"prompt\":0.005,\"completion\":0.015},\"gpt-4o-mini\":{\"prompt\":0.00015,\"completion\":0.0006},\"gpt-4o-mini-2024-07-18\":{\"prompt\":0.00015,\"completion\":0.0006},\"gpt-4o-2024-05-13\":{\"prompt\":0.005,\"completion\":0.015},\"gpt-4o-2024-08-06\":{\"prompt\":0.0025,\"completion\":0.01},\"o1-preview\":{\"prompt\":0.015,\"completion\":0.06},\"o1-preview-2024-09-12\":{\"prompt\":0.015,\"completion\":0.06},\"o1-mini\":{\"prompt\":0.003,\"completion\":0.012},\"o1-mini-2024-09-12\":{\"prompt\":0.003,\"completion\":0.012},\"text-embedding-ada-002\":{\"prompt\":0.0004,\"completion\":0.0},\"glm-3-turbo\":{\"prompt\":0.0007,\"completion\":0.0007},\"glm-4\":{\"prompt\":0.014,\"completion\":0.014},\"glm-4-flash\":{\"prompt\":0.0,\"completion\":0.0},\"glm-4-plus\":{\"prompt\":0.007,\"completion\":0.007},\"gemini-1.5-flash\":{\"prompt\":0.000075,\"completion\":0.0003},\"gemini-1.5-pro\":{\"prompt\":0.0035,\"completion\":0.0105},\"gemini-1.0-pro\":{\"prompt\":0.0005,\"completion\":0.0015},\"moonshot-v1-8k\":{\"prompt\":0.012,\"completion\":0.012},\"moonshot-v1-32k\":{\"prompt\":0.024,\"completion\":0.024},\"moonshot-v1-128k\":{\"prompt\":0.06,\"completion\":0.06},\"open-mistral-7b\":{\"prompt\":0.00025,\"completion\":0.00025},\"open-mixtral-8x7b\":{\"prompt\":0.0007,\"completion\":0.0007},\"mistral-small-latest\":{\"prompt\":0.002,\"completion\":0.006},\"mistral-medium-latest\":{\"prompt\":0.0027,\"completion\":0.0081},\"mistral-large-latest\":{\"prompt\":0.008,\"completion\":0.024},\"claude-instant-1.2\":{\"prompt\":0.0008,\"completion\":0.0024},\"claude-2.0\":{\"prompt\":0.008,\"completion\":0.024},\"claude-2.1\":{\"prompt\":0.008,\"completion\":0.024},\"claude-3-sonnet-20240229\":{\"prompt\":0.003,\"completion\":0.015},\"claude-3-5-sonnet\":{\"prompt\":0.003,\"completion\":0.015},\"claude-3-5-sonnet-v2\":{\"prompt\":0.003,\"completion\":0.015},\"claude-3-5-sonnet-20240620\":{\"prompt\":0.003,\"completion\":0.015},\"claude-3-opus-20240229\":{\"prompt\":0.015,\"completion\":0.075},\"claude-3-haiku-20240307\":{\"prompt\":0.00025,\"completion\":0.00125},\"yi-34b-chat-0205\":{\"prompt\":0.0003,\"completion\":0.0003},\"yi-34b-chat-200k\":{\"prompt\":0.0017,\"completion\":0.0017},\"yi-large\":{\"prompt\":0.0028,\"completion\":0.0028},\"microsoft/wizardlm-2-8x22b\":{\"prompt\":0.00108,\"completion\":0.00108},\"meta-llama/llama-3-70b-instruct\":{\"prompt\":0.008,\"completion\":0.008},\"llama3-70b-8192\":{\"prompt\":0.0059,\"completion\":0.0079},\"openai/gpt-3.5-turbo-0125\":{\"prompt\":0.0005,\"completion\":0.0015},\"openai/gpt-4-turbo-preview\":{\"prompt\":0.01,\"completion\":0.03},\"openai/o1-preview\":{\"prompt\":0.015,\"completion\":0.06},\"openai/o1-mini\":{\"prompt\":0.003,\"completion\":0.012},\"anthropic/claude-3-opus\":{\"prompt\":0.015,\"completion\":0.075},\"anthropic/claude-3.5-sonnet\":{\"prompt\":0.003,\"completion\":0.015},\"google/gemini-pro-1.5\":{\"prompt\":0.0025,\"completion\":0.0075},\"deepseek-chat\":{\"prompt\":0.00014,\"completion\":0.00028},\"deepseek-coder\":{\"prompt\":0.00014,\"completion\":0.00028},\"doubao-lite-4k-240515\":{\"prompt\":0.000043,\"completion\":0.000086},\"doubao-lite-32k-240515\":{\"prompt\":0.000043,\"completion\":0.000086},\"doubao-lite-128k-240515\":{\"prompt\":0.00011,\"completion\":0.00014},\"doubao-pro-4k-240515\":{\"prompt\":0.00011,\"completion\":0.00029},\"doubao-pro-32k-240515\":{\"prompt\":0.00011,\"completion\":0.00029},\"doubao-pro-128k-240515\":{\"prompt\":0.0007,\"completion\":0.0013},\"llama3-70b-llama3-70b-instruct\":{\"prompt\":0.0,\"completion\":0.0},\"llama3-8b-llama3-8b-instruct\":{\"prompt\":0.0,\"completion\":0.0}}}"
+    }
+}

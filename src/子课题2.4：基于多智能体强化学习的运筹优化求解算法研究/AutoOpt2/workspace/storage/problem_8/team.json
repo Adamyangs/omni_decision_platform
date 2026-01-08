@@ -1,0 +1,574 @@
+{
+    "env": {
+        "desc": "",
+        "roles": {
+            "model_llm": {
+                "name": "Alice",
+                "profile": "model_llm",
+                "goal": "",
+                "constraints": "",
+                "desc": "",
+                "is_human": false,
+                "role_id": "",
+                "states": [
+                    "0. Thinking",
+                    "1. Formulation",
+                    "2. Trans_2_latex"
+                ],
+                "actions": [
+                    {
+                        "name": "Thinking",
+                        "i_context": "",
+                        "prefix": "You are a model_llm, named Alice, your goal is . ",
+                        "desc": "",
+                        "llm_name_or_type": null,
+                        "PROMPT_TEMPLATE": "\n    At present, you are given an Operations Research problem, your role is to :\n    1. Identify and extract relevant parameters from the problem description. Parameters refer to fixed values that define certain aspects of the problem but are not subject to change during the optimization process.\n    2. Identify and extract the relevant variables from the problem statement. Variables represent the unknowns or decision variables in the optimization problem.\n    3. Identify and extract the constraints from the problem description. Constraints represent the limitations or conditions that need to be satisfied in the optimization problem. Translate the constraints into mathematical expressions.\n    4. Identify and extract the objective function from the problem statement. The objective function represents the goal of the optimization problem. Translate the objective funtion into mathematical expressions.\n\n    The problem description is as following, please review carefully and organize in response format. \n    Note: ONLY give steps, do not output formulation, response in following json schema:\n    {response_json_schema}\n\n    Note: ONLY output the mathematical expression of the model, return ```json your_output_here ``` with NO other texts\n\n\n    ## Given Problem\n    {information}\n\n    ## Thinking steps\n    ```json\n    ",
+                        "response_format": "{\n    \"title\": \"Steps\",\n    \"type\": \"object\",\n    \"properties\": {\n        \"Step_1\": {\n            \"description\": \"variables and sets mentioned in problem description\",\n            \"type\": \"string\"\n        },\n        \"Step_2\": {\n            \"description\": \"parameters in problem description\",\n            \"type\": \"string\"\n        },\n        \"Step_3\": {\n            \"description\": \"objective funtion consists of variables and numerical parameters\",\n            \"type\": \"string\"\n        },\n        \"Step_4\": {\n            \"description\": \"all the constraints consist of variables and numerical parameters\",\n            \"type\": \"string\"\n        }\n    },\n    \"required\": [\"Step_1\", \"Step_2\", \"Step_3\", \"Step_4\"]\n}\n",
+                        "__module_class_name": "actions.thinking.Thinking"
+                    },
+                    {
+                        "name": "Formulation",
+                        "i_context": "",
+                        "prefix": "You are a model_llm, named Alice, your goal is . ",
+                        "desc": "",
+                        "llm_name_or_type": null,
+                        "PROMPT_TEMPLATE": "\n    Now, according to what you write on your scratchpads, summary the mathematical expression of the model directly and explicitly in response in JSON.\n    Note: ONLY output the mathematical expression of the model, return ```json your_output_here ``` with NO other texts\n\n    ## Scratch pad\n    {scratch_pad}\n\n    ## Model\n    ```json\n    ",
+                        "response_format": "{\n    \"title\": \"Formulation\",\n    \"type\": \"object\",\n    \"properties\": {\n        \"objective_function\": {\n            \"title\": \"objective_function\",\n            \"type\": \"string\",\n            \"description\": \"The objective function consists of parameters and variables from an operations research problem, using numerical representations for parameters and standard mathematical symbols for variables.\"\n        },\n        \"constraints\": {\n            \"title\": \"constraints\",\n            \"type\": \"string\",\n            \"description\": \"Constraints consist of numerical parameters and variables from an operations research problem, using numerical representations for parameters and standard mathematical symbols for variables.\"\n        }\n    },\n    \"required\": [\"objective_function\", \"constraints\"]\n}\n\n",
+                        "__module_class_name": "actions.formulation.Formulation"
+                    },
+                    {
+                        "name": "Trans_2_latex",
+                        "i_context": "",
+                        "prefix": "You are a model_llm, named Alice, your goal is . ",
+                        "desc": "",
+                        "llm_name_or_type": null,
+                        "PROMPT_TEMPLATE": "\n    Now, according to what you write on your scratchpads, give the LATEX format of the model directly.\n    NOTE: MUST USE LATEX MATH SYMBOLS\n    ## Scratch pad\n    {scratch_pad}\n\n    ## Model\n    ```latex\n",
+                        "__module_class_name": "actions.trans_2_latex.Trans_2_latex"
+                    }
+                ],
+                "rc": {
+                    "memory": {
+                        "storage": [
+                            {
+                                "id": "4afb790989cc409b81c6006e39287b24",
+                                "content": "A hospital prepares batches of medication patches and anti-biotic creams. Each medication patch requires 3 minutes to prepare and 5 units of materials. Each anti-biotic cream requires 5 minutes to prepare and 6 units of materials. Since anti-biotic creams are used more often, there must be at least twice as many anti-biotic creams as medication patches. Due to storage reasons, the hospital can make at most 100 batches of medication patches and anti-biotic creams in total. The hospital has available 400 minutes of staff to spare and 530 units of materials. If each batch of medication patches can treat 3 people and each batch of anti-biotic cream can treat 2 people, how many batches of each should be made to maximize the number of people that can be treated?",
+                                "instruct_content": null,
+                                "role": "Human",
+                                "cause_by": "metagpt.actions.add_requirement.UserRequirement",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "546ce71575834baf9234ae07b255bbc1",
+                                "content": "Decision variables: let x be the number of batches of medication patches; let y be the number of batches of anti-biotic creams., Parameters: 3 minutes per medication patch, 5 units of materials per medication patch; 5 minutes per anti-biotic cream, 6 units of materials per anti-biotic cream; at most 100 total batches; 400 total minutes available; 530 total units of materials available; each batch of medication patches treats 3 people, each batch of anti-biotic creams treats 2 people; the number of anti-biotic creams must be at least twice the number of medication patches., Objective function: Maximize total number of people treated = 3x + 2y., Constraints: (1) Time constraint: 3x + 5y ≤ 400; (2) Material constraint: 5x + 6y ≤ 530; (3) Total batches constraint: x + y ≤ 100; (4) Ratio constraint: y ≥ 2x; (5) Non-negativity: x ≥ 0, y ≥ 0., ",
+                                "instruct_content": null,
+                                "role": "model_llm",
+                                "cause_by": "actions.thinking.Thinking",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "cf3b25f5df994da3bc2e1107596fef9d",
+                                "content": "{'objective': 'Maximize 3x + 2y', 'decision_variables': ['x = number of batches of medication patches', 'y = number of batches of anti-biotic creams'], 'constraints': ['3x + 5y ≤ 400', '5x + 6y ≤ 530', 'x + y ≤ 100', 'y ≥ 2x', 'x ≥ 0', 'y ≥ 0']}",
+                                "instruct_content": null,
+                                "role": "model_llm",
+                                "cause_by": "actions.formulation.Formulation",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "af88b9d3e542431e9345089b310b3848",
+                                "content": "\\[\n\\begin{aligned}\n& \\text{Maximize} \\quad && 3x + 2y \\\\\n& \\text{Subject to} \\quad && 3x + 5y \\le 400 \\\\\n& && 5x + 6y \\le 530 \\\\\n& && x + y \\le 100 \\\\\n& && y \\ge 2x \\\\\n& && x \\ge 0, \\; y \\ge 0 \\\\\n\\end{aligned}\n\\]",
+                                "instruct_content": null,
+                                "role": "model_llm",
+                                "cause_by": "actions.trans_2_latex.Trans_2_latex",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "d817aad2fb9e4061a083e5adf35e8b2f",
+                                "content": "One critical issue is that the constraint `y ≥ 2x` has been incorrectly set up as `-2x + y ≥ 0` in matrix `A`. This should be `2x - y ≤ 0` (i.e., `-2x + y ≥ 0` rearranged to the standard form `2x - y ≤ 0` for `A_ub`). The current implementation uses `[-2, 1]` in `A` with `b = 0`, which effectively represents `-2x + y ≤ 0`. This flips the inequality direction, violating the intended `y ≥ 2x` constraint.\n\nThis error likely leads to the solution `(x=100, y=0)`, which does not satisfy `y ≥ 2x`, since `0` is not greater than or equal to `200`.",
+                                "instruct_content": null,
+                                "role": "code_llm",
+                                "cause_by": "actions.write_review.Write_review",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            }
+                        ],
+                        "index": {
+                            "metagpt.actions.add_requirement.UserRequirement": [
+                                {
+                                    "id": "4afb790989cc409b81c6006e39287b24",
+                                    "content": "A hospital prepares batches of medication patches and anti-biotic creams. Each medication patch requires 3 minutes to prepare and 5 units of materials. Each anti-biotic cream requires 5 minutes to prepare and 6 units of materials. Since anti-biotic creams are used more often, there must be at least twice as many anti-biotic creams as medication patches. Due to storage reasons, the hospital can make at most 100 batches of medication patches and anti-biotic creams in total. The hospital has available 400 minutes of staff to spare and 530 units of materials. If each batch of medication patches can treat 3 people and each batch of anti-biotic cream can treat 2 people, how many batches of each should be made to maximize the number of people that can be treated?",
+                                    "instruct_content": null,
+                                    "role": "Human",
+                                    "cause_by": "metagpt.actions.add_requirement.UserRequirement",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.thinking.Thinking": [
+                                {
+                                    "id": "546ce71575834baf9234ae07b255bbc1",
+                                    "content": "Decision variables: let x be the number of batches of medication patches; let y be the number of batches of anti-biotic creams., Parameters: 3 minutes per medication patch, 5 units of materials per medication patch; 5 minutes per anti-biotic cream, 6 units of materials per anti-biotic cream; at most 100 total batches; 400 total minutes available; 530 total units of materials available; each batch of medication patches treats 3 people, each batch of anti-biotic creams treats 2 people; the number of anti-biotic creams must be at least twice the number of medication patches., Objective function: Maximize total number of people treated = 3x + 2y., Constraints: (1) Time constraint: 3x + 5y ≤ 400; (2) Material constraint: 5x + 6y ≤ 530; (3) Total batches constraint: x + y ≤ 100; (4) Ratio constraint: y ≥ 2x; (5) Non-negativity: x ≥ 0, y ≥ 0., ",
+                                    "instruct_content": null,
+                                    "role": "model_llm",
+                                    "cause_by": "actions.thinking.Thinking",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.formulation.Formulation": [
+                                {
+                                    "id": "cf3b25f5df994da3bc2e1107596fef9d",
+                                    "content": "{'objective': 'Maximize 3x + 2y', 'decision_variables': ['x = number of batches of medication patches', 'y = number of batches of anti-biotic creams'], 'constraints': ['3x + 5y ≤ 400', '5x + 6y ≤ 530', 'x + y ≤ 100', 'y ≥ 2x', 'x ≥ 0', 'y ≥ 0']}",
+                                    "instruct_content": null,
+                                    "role": "model_llm",
+                                    "cause_by": "actions.formulation.Formulation",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.trans_2_latex.Trans_2_latex": [
+                                {
+                                    "id": "af88b9d3e542431e9345089b310b3848",
+                                    "content": "\\[\n\\begin{aligned}\n& \\text{Maximize} \\quad && 3x + 2y \\\\\n& \\text{Subject to} \\quad && 3x + 5y \\le 400 \\\\\n& && 5x + 6y \\le 530 \\\\\n& && x + y \\le 100 \\\\\n& && y \\ge 2x \\\\\n& && x \\ge 0, \\; y \\ge 0 \\\\\n\\end{aligned}\n\\]",
+                                    "instruct_content": null,
+                                    "role": "model_llm",
+                                    "cause_by": "actions.trans_2_latex.Trans_2_latex",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.write_review.Write_review": [
+                                {
+                                    "id": "d817aad2fb9e4061a083e5adf35e8b2f",
+                                    "content": "One critical issue is that the constraint `y ≥ 2x` has been incorrectly set up as `-2x + y ≥ 0` in matrix `A`. This should be `2x - y ≤ 0` (i.e., `-2x + y ≥ 0` rearranged to the standard form `2x - y ≤ 0` for `A_ub`). The current implementation uses `[-2, 1]` in `A` with `b = 0`, which effectively represents `-2x + y ≤ 0`. This flips the inequality direction, violating the intended `y ≥ 2x` constraint.\n\nThis error likely leads to the solution `(x=100, y=0)`, which does not satisfy `y ≥ 2x`, since `0` is not greater than or equal to `200`.",
+                                    "instruct_content": null,
+                                    "role": "code_llm",
+                                    "cause_by": "actions.write_review.Write_review",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ]
+                        },
+                        "ignore_id": false
+                    },
+                    "working_memory": {
+                        "storage": [],
+                        "index": {},
+                        "ignore_id": false
+                    },
+                    "state": -1,
+                    "watch": [
+                        "metagpt.actions.add_requirement.UserRequirement"
+                    ],
+                    "react_mode": "by_order",
+                    "max_react_loop": 3
+                },
+                "addresses": [
+                    "__main__.Model_llm",
+                    "Alice"
+                ],
+                "planner": {
+                    "plan": {
+                        "goal": "",
+                        "context": "",
+                        "tasks": [],
+                        "task_map": {},
+                        "current_task_id": ""
+                    },
+                    "working_memory": {
+                        "storage": [],
+                        "index": {},
+                        "ignore_id": false
+                    },
+                    "auto_run": false
+                },
+                "recovered": false,
+                "latest_observed_msg": null,
+                "__module_class_name": "__main__.Model_llm"
+            },
+            "code_llm": {
+                "name": "Alice",
+                "profile": "code_llm",
+                "goal": "",
+                "constraints": "",
+                "desc": "",
+                "is_human": false,
+                "role_id": "",
+                "states": [
+                    "0. Write_code",
+                    "1. Run_code",
+                    "2. Write_review"
+                ],
+                "actions": [
+                    {
+                        "name": "Write_code",
+                        "i_context": "",
+                        "prefix": "You are a code_llm, named Alice, your goal is . ",
+                        "desc": "",
+                        "llm_name_or_type": null,
+                        "PROMPT_TEMPLATE": "\n    Imagine you are an expert in programming. Based on the correct mathematical model established above, please write a code to solve this math problem.\n    Remember, the code you generate should exactly correspond to the mathematical model, especially the objective function and constraints.\n    Ensure the code includes the necessary imports, defines the inputs, solves the problem, and prints the result.\"\n    NOTE: You are ONLY allowed to using << Numpy, SciPy, OR-Tools >> libraries to solve the problem.\n    Return ```python your_code_here ``` with NO other texts\n\n    ## Mathematical Model\n    {math_model}\n\n    ## Code\n    ```python \n    \n",
+                        "__module_class_name": "actions.write_code.Write_code"
+                    },
+                    {
+                        "name": "Run_code",
+                        "i_context": "",
+                        "prefix": "You are a code_llm, named Alice, your goal is . ",
+                        "desc": "",
+                        "llm_name_or_type": null,
+                        "__module_class_name": "actions.run_code.Run_code"
+                    },
+                    {
+                        "name": "Write_review",
+                        "i_context": "",
+                        "prefix": "You are a code_llm, named Alice, your goal is . ",
+                        "desc": "",
+                        "llm_name_or_type": null,
+                        "PROMPT_TEMPLATE": "\n    ## Code\n    {code_text}\n\n    ## Execution result\n    {result}\n\n    Review the test code and result of execution provide one critical comments:\n    ",
+                        "__module_class_name": "actions.write_review.Write_review"
+                    }
+                ],
+                "rc": {
+                    "memory": {
+                        "storage": [
+                            {
+                                "id": "4afb790989cc409b81c6006e39287b24",
+                                "content": "A hospital prepares batches of medication patches and anti-biotic creams. Each medication patch requires 3 minutes to prepare and 5 units of materials. Each anti-biotic cream requires 5 minutes to prepare and 6 units of materials. Since anti-biotic creams are used more often, there must be at least twice as many anti-biotic creams as medication patches. Due to storage reasons, the hospital can make at most 100 batches of medication patches and anti-biotic creams in total. The hospital has available 400 minutes of staff to spare and 530 units of materials. If each batch of medication patches can treat 3 people and each batch of anti-biotic cream can treat 2 people, how many batches of each should be made to maximize the number of people that can be treated?",
+                                "instruct_content": null,
+                                "role": "Human",
+                                "cause_by": "metagpt.actions.add_requirement.UserRequirement",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "af88b9d3e542431e9345089b310b3848",
+                                "content": "\\[\n\\begin{aligned}\n& \\text{Maximize} \\quad && 3x + 2y \\\\\n& \\text{Subject to} \\quad && 3x + 5y \\le 400 \\\\\n& && 5x + 6y \\le 530 \\\\\n& && x + y \\le 100 \\\\\n& && y \\ge 2x \\\\\n& && x \\ge 0, \\; y \\ge 0 \\\\\n\\end{aligned}\n\\]",
+                                "instruct_content": null,
+                                "role": "model_llm",
+                                "cause_by": "actions.trans_2_latex.Trans_2_latex",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "0da338ab4c9a4ca981e507ea8ae05288",
+                                "content": "import numpy as np\nfrom scipy.optimize import linprog\n\n# Coefficients of the objective function (to maximize)\n# Since linprog minimizes, we multiply by -1\nc = np.array([-3, -2])\n\n# Inequality constraints (left-hand side coefficients)\nA = np.array([\n    [3, 5],    # 3x + 5y ≤ 400\n    [5, 6],    # 5x + 6y ≤ 530\n    [1, 1],    # x + y ≤ 100\n    [-2, 1]    # y ≥ 2x → -2x + y ≥ 0 → -2x + y ≥ 0\n])\n\n# Right-hand side of inequality constraints\nb = np.array([400, 530, 100, 0])\n\n# Bounds for variables (x ≥ 0, y ≥ 0)\nx_bounds = (0, None)\ny_bounds = (0, None)\n\n# Solve the linear programming problem\nresult = linprog(c, A_ub=A, b_ub=b, bounds=[x_bounds, y_bounds], method='highs')\n\n# Extract results\nif result.success:\n    x_opt = result.x[0]\n    y_opt = result.x[1]\n    max_value = -result.fun  # Convert back to maximization\n    print(f\"Optimal solution:\")\n    print(f\"x = {x_opt:.2f}\")\n    print(f\"y = {y_opt:.2f}\")\n    print(f\"Maximum value of 3x + 2y = {max_value:.2f}\")\nelse:\n    print(\"No optimal solution found\")\n",
+                                "instruct_content": null,
+                                "role": "code_llm",
+                                "cause_by": "actions.write_code.Write_code",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "250ec2a637dd4b9a88c44548af239142",
+                                "content": "Optimal solution:\nx = 100.00\ny = 0.00\nMaximum value of 3x + 2y = 300.00\n",
+                                "instruct_content": null,
+                                "role": "code_llm",
+                                "cause_by": "actions.run_code.Run_code",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "d817aad2fb9e4061a083e5adf35e8b2f",
+                                "content": "One critical issue is that the constraint `y ≥ 2x` has been incorrectly set up as `-2x + y ≥ 0` in matrix `A`. This should be `2x - y ≤ 0` (i.e., `-2x + y ≥ 0` rearranged to the standard form `2x - y ≤ 0` for `A_ub`). The current implementation uses `[-2, 1]` in `A` with `b = 0`, which effectively represents `-2x + y ≤ 0`. This flips the inequality direction, violating the intended `y ≥ 2x` constraint.\n\nThis error likely leads to the solution `(x=100, y=0)`, which does not satisfy `y ≥ 2x`, since `0` is not greater than or equal to `200`.",
+                                "instruct_content": null,
+                                "role": "code_llm",
+                                "cause_by": "actions.write_review.Write_review",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            }
+                        ],
+                        "index": {
+                            "metagpt.actions.add_requirement.UserRequirement": [
+                                {
+                                    "id": "4afb790989cc409b81c6006e39287b24",
+                                    "content": "A hospital prepares batches of medication patches and anti-biotic creams. Each medication patch requires 3 minutes to prepare and 5 units of materials. Each anti-biotic cream requires 5 minutes to prepare and 6 units of materials. Since anti-biotic creams are used more often, there must be at least twice as many anti-biotic creams as medication patches. Due to storage reasons, the hospital can make at most 100 batches of medication patches and anti-biotic creams in total. The hospital has available 400 minutes of staff to spare and 530 units of materials. If each batch of medication patches can treat 3 people and each batch of anti-biotic cream can treat 2 people, how many batches of each should be made to maximize the number of people that can be treated?",
+                                    "instruct_content": null,
+                                    "role": "Human",
+                                    "cause_by": "metagpt.actions.add_requirement.UserRequirement",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.trans_2_latex.Trans_2_latex": [
+                                {
+                                    "id": "af88b9d3e542431e9345089b310b3848",
+                                    "content": "\\[\n\\begin{aligned}\n& \\text{Maximize} \\quad && 3x + 2y \\\\\n& \\text{Subject to} \\quad && 3x + 5y \\le 400 \\\\\n& && 5x + 6y \\le 530 \\\\\n& && x + y \\le 100 \\\\\n& && y \\ge 2x \\\\\n& && x \\ge 0, \\; y \\ge 0 \\\\\n\\end{aligned}\n\\]",
+                                    "instruct_content": null,
+                                    "role": "model_llm",
+                                    "cause_by": "actions.trans_2_latex.Trans_2_latex",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.write_code.Write_code": [
+                                {
+                                    "id": "0da338ab4c9a4ca981e507ea8ae05288",
+                                    "content": "import numpy as np\nfrom scipy.optimize import linprog\n\n# Coefficients of the objective function (to maximize)\n# Since linprog minimizes, we multiply by -1\nc = np.array([-3, -2])\n\n# Inequality constraints (left-hand side coefficients)\nA = np.array([\n    [3, 5],    # 3x + 5y ≤ 400\n    [5, 6],    # 5x + 6y ≤ 530\n    [1, 1],    # x + y ≤ 100\n    [-2, 1]    # y ≥ 2x → -2x + y ≥ 0 → -2x + y ≥ 0\n])\n\n# Right-hand side of inequality constraints\nb = np.array([400, 530, 100, 0])\n\n# Bounds for variables (x ≥ 0, y ≥ 0)\nx_bounds = (0, None)\ny_bounds = (0, None)\n\n# Solve the linear programming problem\nresult = linprog(c, A_ub=A, b_ub=b, bounds=[x_bounds, y_bounds], method='highs')\n\n# Extract results\nif result.success:\n    x_opt = result.x[0]\n    y_opt = result.x[1]\n    max_value = -result.fun  # Convert back to maximization\n    print(f\"Optimal solution:\")\n    print(f\"x = {x_opt:.2f}\")\n    print(f\"y = {y_opt:.2f}\")\n    print(f\"Maximum value of 3x + 2y = {max_value:.2f}\")\nelse:\n    print(\"No optimal solution found\")\n",
+                                    "instruct_content": null,
+                                    "role": "code_llm",
+                                    "cause_by": "actions.write_code.Write_code",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.run_code.Run_code": [
+                                {
+                                    "id": "250ec2a637dd4b9a88c44548af239142",
+                                    "content": "Optimal solution:\nx = 100.00\ny = 0.00\nMaximum value of 3x + 2y = 300.00\n",
+                                    "instruct_content": null,
+                                    "role": "code_llm",
+                                    "cause_by": "actions.run_code.Run_code",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.write_review.Write_review": [
+                                {
+                                    "id": "d817aad2fb9e4061a083e5adf35e8b2f",
+                                    "content": "One critical issue is that the constraint `y ≥ 2x` has been incorrectly set up as `-2x + y ≥ 0` in matrix `A`. This should be `2x - y ≤ 0` (i.e., `-2x + y ≥ 0` rearranged to the standard form `2x - y ≤ 0` for `A_ub`). The current implementation uses `[-2, 1]` in `A` with `b = 0`, which effectively represents `-2x + y ≤ 0`. This flips the inequality direction, violating the intended `y ≥ 2x` constraint.\n\nThis error likely leads to the solution `(x=100, y=0)`, which does not satisfy `y ≥ 2x`, since `0` is not greater than or equal to `200`.",
+                                    "instruct_content": null,
+                                    "role": "code_llm",
+                                    "cause_by": "actions.write_review.Write_review",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ]
+                        },
+                        "ignore_id": false
+                    },
+                    "working_memory": {
+                        "storage": [],
+                        "index": {},
+                        "ignore_id": false
+                    },
+                    "state": -1,
+                    "watch": [
+                        "actions.trans_2_latex.Trans_2_latex"
+                    ],
+                    "react_mode": "by_order",
+                    "max_react_loop": 3
+                },
+                "addresses": [
+                    "__main__.Code_llm",
+                    "Alice"
+                ],
+                "planner": {
+                    "plan": {
+                        "goal": "",
+                        "context": "",
+                        "tasks": [],
+                        "task_map": {},
+                        "current_task_id": ""
+                    },
+                    "working_memory": {
+                        "storage": [],
+                        "index": {},
+                        "ignore_id": false
+                    },
+                    "auto_run": false
+                },
+                "recovered": false,
+                "latest_observed_msg": null,
+                "__module_class_name": "__main__.Code_llm"
+            },
+            "test_llm": {
+                "name": "Bob",
+                "profile": "test_llm",
+                "goal": "",
+                "constraints": "",
+                "desc": "",
+                "is_human": false,
+                "role_id": "",
+                "states": [
+                    "0. Write_test"
+                ],
+                "actions": [
+                    {
+                        "name": "Write_test",
+                        "i_context": "",
+                        "prefix": "You are a test_llm, named Bob, your goal is . ",
+                        "desc": "",
+                        "llm_name_or_type": null,
+                        "PROMPT_TEMPLATE": "\n    Context: {context}\n    Wrap above code to a function for solving math problem and Write {k} unit tests using pytest for the solving function.\n    Return ```python your_code_here ``` with NO other texts, \n    You must start with ```python.\n    your code:\n    ",
+                        "__module_class_name": "actions.write_test.Write_test"
+                    }
+                ],
+                "rc": {
+                    "memory": {
+                        "storage": [
+                            {
+                                "id": "4afb790989cc409b81c6006e39287b24",
+                                "content": "A hospital prepares batches of medication patches and anti-biotic creams. Each medication patch requires 3 minutes to prepare and 5 units of materials. Each anti-biotic cream requires 5 minutes to prepare and 6 units of materials. Since anti-biotic creams are used more often, there must be at least twice as many anti-biotic creams as medication patches. Due to storage reasons, the hospital can make at most 100 batches of medication patches and anti-biotic creams in total. The hospital has available 400 minutes of staff to spare and 530 units of materials. If each batch of medication patches can treat 3 people and each batch of anti-biotic cream can treat 2 people, how many batches of each should be made to maximize the number of people that can be treated?",
+                                "instruct_content": null,
+                                "role": "Human",
+                                "cause_by": "metagpt.actions.add_requirement.UserRequirement",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "af88b9d3e542431e9345089b310b3848",
+                                "content": "\\[\n\\begin{aligned}\n& \\text{Maximize} \\quad && 3x + 2y \\\\\n& \\text{Subject to} \\quad && 3x + 5y \\le 400 \\\\\n& && 5x + 6y \\le 530 \\\\\n& && x + y \\le 100 \\\\\n& && y \\ge 2x \\\\\n& && x \\ge 0, \\; y \\ge 0 \\\\\n\\end{aligned}\n\\]",
+                                "instruct_content": null,
+                                "role": "model_llm",
+                                "cause_by": "actions.trans_2_latex.Trans_2_latex",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            },
+                            {
+                                "id": "d817aad2fb9e4061a083e5adf35e8b2f",
+                                "content": "One critical issue is that the constraint `y ≥ 2x` has been incorrectly set up as `-2x + y ≥ 0` in matrix `A`. This should be `2x - y ≤ 0` (i.e., `-2x + y ≥ 0` rearranged to the standard form `2x - y ≤ 0` for `A_ub`). The current implementation uses `[-2, 1]` in `A` with `b = 0`, which effectively represents `-2x + y ≤ 0`. This flips the inequality direction, violating the intended `y ≥ 2x` constraint.\n\nThis error likely leads to the solution `(x=100, y=0)`, which does not satisfy `y ≥ 2x`, since `0` is not greater than or equal to `200`.",
+                                "instruct_content": null,
+                                "role": "code_llm",
+                                "cause_by": "actions.write_review.Write_review",
+                                "sent_from": "",
+                                "send_to": [
+                                    "<all>"
+                                ]
+                            }
+                        ],
+                        "index": {
+                            "metagpt.actions.add_requirement.UserRequirement": [
+                                {
+                                    "id": "4afb790989cc409b81c6006e39287b24",
+                                    "content": "A hospital prepares batches of medication patches and anti-biotic creams. Each medication patch requires 3 minutes to prepare and 5 units of materials. Each anti-biotic cream requires 5 minutes to prepare and 6 units of materials. Since anti-biotic creams are used more often, there must be at least twice as many anti-biotic creams as medication patches. Due to storage reasons, the hospital can make at most 100 batches of medication patches and anti-biotic creams in total. The hospital has available 400 minutes of staff to spare and 530 units of materials. If each batch of medication patches can treat 3 people and each batch of anti-biotic cream can treat 2 people, how many batches of each should be made to maximize the number of people that can be treated?",
+                                    "instruct_content": null,
+                                    "role": "Human",
+                                    "cause_by": "metagpt.actions.add_requirement.UserRequirement",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.trans_2_latex.Trans_2_latex": [
+                                {
+                                    "id": "af88b9d3e542431e9345089b310b3848",
+                                    "content": "\\[\n\\begin{aligned}\n& \\text{Maximize} \\quad && 3x + 2y \\\\\n& \\text{Subject to} \\quad && 3x + 5y \\le 400 \\\\\n& && 5x + 6y \\le 530 \\\\\n& && x + y \\le 100 \\\\\n& && y \\ge 2x \\\\\n& && x \\ge 0, \\; y \\ge 0 \\\\\n\\end{aligned}\n\\]",
+                                    "instruct_content": null,
+                                    "role": "model_llm",
+                                    "cause_by": "actions.trans_2_latex.Trans_2_latex",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ],
+                            "actions.write_review.Write_review": [
+                                {
+                                    "id": "d817aad2fb9e4061a083e5adf35e8b2f",
+                                    "content": "One critical issue is that the constraint `y ≥ 2x` has been incorrectly set up as `-2x + y ≥ 0` in matrix `A`. This should be `2x - y ≤ 0` (i.e., `-2x + y ≥ 0` rearranged to the standard form `2x - y ≤ 0` for `A_ub`). The current implementation uses `[-2, 1]` in `A` with `b = 0`, which effectively represents `-2x + y ≤ 0`. This flips the inequality direction, violating the intended `y ≥ 2x` constraint.\n\nThis error likely leads to the solution `(x=100, y=0)`, which does not satisfy `y ≥ 2x`, since `0` is not greater than or equal to `200`.",
+                                    "instruct_content": null,
+                                    "role": "code_llm",
+                                    "cause_by": "actions.write_review.Write_review",
+                                    "sent_from": "",
+                                    "send_to": [
+                                        "<all>"
+                                    ]
+                                }
+                            ]
+                        },
+                        "ignore_id": false
+                    },
+                    "working_memory": {
+                        "storage": [],
+                        "index": {},
+                        "ignore_id": false
+                    },
+                    "state": -1,
+                    "watch": [
+                        "actions.write_review.Write_review",
+                        "actions.write_code.Write_code"
+                    ],
+                    "react_mode": "react",
+                    "max_react_loop": 1
+                },
+                "addresses": [
+                    "__main__.Test_llm",
+                    "Bob"
+                ],
+                "planner": {
+                    "plan": {
+                        "goal": "",
+                        "context": "",
+                        "tasks": [],
+                        "task_map": {},
+                        "current_task_id": ""
+                    },
+                    "working_memory": {
+                        "storage": [],
+                        "index": {},
+                        "ignore_id": false
+                    },
+                    "auto_run": false
+                },
+                "recovered": false,
+                "latest_observed_msg": {
+                    "id": "d817aad2fb9e4061a083e5adf35e8b2f",
+                    "content": "One critical issue is that the constraint `y ≥ 2x` has been incorrectly set up as `-2x + y ≥ 0` in matrix `A`. This should be `2x - y ≤ 0` (i.e., `-2x + y ≥ 0` rearranged to the standard form `2x - y ≤ 0` for `A_ub`). The current implementation uses `[-2, 1]` in `A` with `b = 0`, which effectively represents `-2x + y ≤ 0`. This flips the inequality direction, violating the intended `y ≥ 2x` constraint.\n\nThis error likely leads to the solution `(x=100, y=0)`, which does not satisfy `y ≥ 2x`, since `0` is not greater than or equal to `200`.",
+                    "instruct_content": null,
+                    "role": "code_llm",
+                    "cause_by": "actions.write_review.Write_review",
+                    "sent_from": "",
+                    "send_to": [
+                        "<all>"
+                    ]
+                },
+                "__module_class_name": "__main__.Test_llm"
+            }
+        },
+        "history": "\nHuman: A hospital prepares batches of medication patches and anti-biotic creams. Each medication patch requires 3 minutes to prepare and 5 units of materials. Each anti-biotic cream requires 5 minutes to prepare and 6 units of materials. Since anti-biotic creams are used more often, there must be at least twice as many anti-biotic creams as medication patches. Due to storage reasons, the hospital can make at most 100 batches of medication patches and anti-biotic creams in total. The hospital has available 400 minutes of staff to spare and 530 units of materials. If each batch of medication patches can treat 3 people and each batch of anti-biotic cream can treat 2 people, how many batches of each should be made to maximize the number of people that can be treated?\nmodel_llm: \\[\n\\begin{aligned}\n& \\text{Maximize} \\quad && 3x + 2y \\\\\n& \\text{Subject to} \\quad && 3x + 5y \\le 400 \\\\\n& && 5x + 6y \\le 530 \\\\\n& && x + y \\le 100 \\\\\n& && y \\ge 2x \\\\\n& && x \\ge 0, \\; y \\ge 0 \\\\\n\\end{aligned}\n\\]\ncode_llm: One critical issue is that the constraint `y ≥ 2x` has been incorrectly set up as `-2x + y ≥ 0` in matrix `A`. This should be `2x - y ≤ 0` (i.e., `-2x + y ≥ 0` rearranged to the standard form `2x - y ≤ 0` for `A_ub`). The current implementation uses `[-2, 1]` in `A` with `b = 0`, which effectively represents `-2x + y ≤ 0`. This flips the inequality direction, violating the intended `y ≥ 2x` constraint.\n\nThis error likely leads to the solution `(x=100, y=0)`, which does not satisfy `y ≥ 2x`, since `0` is not greater than or equal to `200`.\ntest_llm: import numpy as np\nfrom scipy.optimize import linprog\n\ndef solve_medication_problem():\n    \"\"\"\n    Solves the linear programming problem for medication patches and anti-biotic creams.\n    \n    Returns:\n        tuple: (x, y, objective_value) where:\n            x: number of medication patch batches\n            y: number of anti-biotic cream batches\n            objective_value: maximum number of people that can be treated\n    \"\"\"\n    # Objective coefficients (maximize 3x + 2y = minimize -3x - 2y)\n    c = np.array([-3, -2])\n    \n    # Inequality constraints (A_ub * x <= b_ub)\n    A_ub = np.array([\n        [3, 5],      # Time constraint: 3x + 5y <= 400\n        [5, 6],      # Material constraint: 5x + 6y <= 530\n        [1, 1],      # Total batches constraint: x + y <= 100\n        [2, -1]      # Creams >= 2*Patches constraint: 2x - y <= 0\n    ])\n    \n    b_ub = np.array([400, 530, 100, 0])\n    \n    # Non-negativity bounds\n    x_bounds = (0, None)\n    y_bounds = (0, None)\n    \n    # Solve the linear programming problem\n    result = linprog(c, A_ub=A_ub, b_ub=b_ub, bounds=[x_bounds, y_bounds])\n    \n    if result.success:\n        x = round(result.x[0])\n        y = round(result.x[1])\n        objective_value = round(-result.fun)\n        return x, y, objective_value\n    else:\n        raise ValueError(f\"Optimization failed: {result.message}\")\n\ndef test_solve_medication_problem_basic():\n    \"\"\"Test basic solution properties.\"\"\"\n    x, y, objective = solve_medication_problem()\n    \n    # Verify non-negativity\n    assert x >= 0, f\"x should be non-negative, got {x}\"\n    assert y >= 0, f\"y should be non-negative, got {y}\"\n    \n    # Verify integer values (batches should be whole numbers)\n    assert isinstance(x, int), f\"x should be integer, got {x}\"\n    assert isinstance(y, int), f\"y should be integer, got {y}\"\n    \n    # Verify creams constraint: y >= 2x\n    assert y >= 2 * x, f\"Creams constraint violated: y={y} < 2*x={2*x}\"\n\ndef test_solve_medication_problem_constraints():\n    \"\"\"Test that all constraints are satisfied.\"\"\"\n    x, y, _ = solve_medication_problem()\n    \n    # Time constraint: 3x + 5y <= 400\n    time_used = 3 * x + 5 * y\n    assert time_used <= 400, f\"Time constraint violated: {time_used} > 400\"\n    \n    # Material constraint: 5x + 6y <= 530\n    material_used = 5 * x + 6 * y\n    assert material_used <= 530, f\"Material constraint violated: {material_used} > 530\"\n    \n    # Total batches constraint: x + y <= 100\n    total_batches = x + y\n    assert total_batches <= 100, f\"Total batches constraint violated: {total_batches} > 100\"\n    \n    # Creams constraint: y >= 2x\n    assert y >= 2 * x, f\"Creams constraint violated: {y} < 2*x={2*x}\"\n\ndef test_solve_medication_problem_optimality():\n    \"\"\"Test that the solution appears optimal by checking nearby points.\"\"\"\n    x, y, objective = solve_medication_problem()\n    \n    # Check a few nearby integer points to ensure they don't yield better results\n    # while respecting all constraints\n    test_points = [\n        (x-1, y) if x > 0 else None,\n        (x, y-1) if y > 0 else None,\n        (x+1, y) if x + 1 + y <= 100 else None,\n        (x, y+1) if x + y + 1 <= 100 else None,\n        (x-1, y+1) if x > 0 and x-1 + y+1 <= 100 else None,\n        (x+1, y-1) if y > 0 and x+1 + y-1 <= 100 else None,\n    ]\n    \n    for point in test_points:\n        if point:\n            px, py = point\n            \n            # Check if point satisfies all constraints\n            if (px >= 0 and py >= 0 and\n                3*px + 5*py <= 400 and\n                5*px + 6*py <= 530 and\n                px + py <= 100 and\n                py >= 2*px):\n                \n                # Calculate objective for this point\n                point_objective = 3 * px + 2 * py\n                assert objective >= point_objective, \\\n                    f\"Found better point ({px}, {py}) with objective {point_objective} > {objective}\"\n\ndef test_solve_medication_problem_feasibility():\n    \"\"\"Test that the problem has a feasible solution.\"\"\"\n    try:\n        x, y, objective = solve_medication_problem()\n        # If we get here, solution was found\n        assert True\n    except ValueError as e:\n        # If optimization fails, it should be because no feasible solution exists\n        assert \"Optimization failed\" in str(e), f\"Unexpected error: {e}\"\n\ndef test_solve_medication_problem_resource_usage():\n    \"\"\"Test that resources are used efficiently.\"\"\"\n    x, y, objective = solve_medication_problem()\n    \n    # Calculate resource usage\n    time_used = 3 * x + 5 * y\n    material_used = 5 * x + 6 * y\n    \n    # Check that at least one resource is near capacity or one constraint is binding\n    # (optimal solution should use resources efficiently)\n    constraints = [\n        (time_used, 400, \"time\"),\n        (material_used, 530, \"material\"),\n        (x + y, 100, \"total batches\"),\n        (y, 2 * x, \"creams ratio\")\n    ]\n    \n    # Check if at least one constraint is nearly binding (within 5% or exact)\n    nearly_binding = False\n    for used, limit, name in constraints:\n        if used >= 0.95 * limit or (limit == 0 and used == 0):\n            nearly_binding = True\n            break\n    \n    assert nearly_binding, \\\n        f\"No constraint appears binding. Time used: {time_used}/400, \" \\\n        f\"Material used: {material_used}/530, Total batches: {x+y}/100, \" \\\n        f\"Creams ratio: y={y}, 2x={2*x}\"\n"
+    },
+    "investment": 3.0,
+    "idea": "A hospital prepares batches of medication patches and anti-biotic creams. Each medication patch requires 3 minutes to prepare and 5 units of materials. Each anti-biotic cream requires 5 minutes to prepare and 6 units of materials. Since anti-biotic creams are used more often, there must be at least twice as many anti-biotic creams as medication patches. Due to storage reasons, the hospital can make at most 100 batches of medication patches and anti-biotic creams in total. The hospital has available 400 minutes of staff to spare and 530 units of materials. If each batch of medication patches can treat 3 people and each batch of anti-biotic cream can treat 2 people, how many batches of each should be made to maximize the number of people that can be treated?",
+    "context": {
+        "workdir": "",
+        "kwargs": {},
+        "cost_manager": "{\"total_prompt_tokens\":0,\"total_completion_tokens\":0,\"total_budget\":0.0,\"max_budget\":3.0,\"total_cost\":0.0,\"token_costs\":{\"gpt-3.5-turbo\":{\"prompt\":0.0015,\"completion\":0.002},\"gpt-3.5-turbo-0301\":{\"prompt\":0.0015,\"completion\":0.002},\"gpt-3.5-turbo-0613\":{\"prompt\":0.0015,\"completion\":0.002},\"gpt-3.5-turbo-16k\":{\"prompt\":0.003,\"completion\":0.004},\"gpt-3.5-turbo-16k-0613\":{\"prompt\":0.003,\"completion\":0.004},\"gpt-35-turbo\":{\"prompt\":0.0015,\"completion\":0.002},\"gpt-35-turbo-16k\":{\"prompt\":0.003,\"completion\":0.004},\"gpt-3.5-turbo-1106\":{\"prompt\":0.001,\"completion\":0.002},\"gpt-3.5-turbo-0125\":{\"prompt\":0.001,\"completion\":0.002},\"gpt-4-0314\":{\"prompt\":0.03,\"completion\":0.06},\"gpt-4\":{\"prompt\":0.03,\"completion\":0.06},\"gpt-4-32k\":{\"prompt\":0.06,\"completion\":0.12},\"gpt-4-32k-0314\":{\"prompt\":0.06,\"completion\":0.12},\"gpt-4-0613\":{\"prompt\":0.06,\"completion\":0.12},\"gpt-4-turbo-preview\":{\"prompt\":0.01,\"completion\":0.03},\"gpt-4-1106-preview\":{\"prompt\":0.01,\"completion\":0.03},\"gpt-4-0125-preview\":{\"prompt\":0.01,\"completion\":0.03},\"gpt-4-turbo\":{\"prompt\":0.01,\"completion\":0.03},\"gpt-4-turbo-2024-04-09\":{\"prompt\":0.01,\"completion\":0.03},\"gpt-4-vision-preview\":{\"prompt\":0.01,\"completion\":0.03},\"gpt-4-1106-vision-preview\":{\"prompt\":0.01,\"completion\":0.03},\"gpt-4o\":{\"prompt\":0.005,\"completion\":0.015},\"gpt-4o-mini\":{\"prompt\":0.00015,\"completion\":0.0006},\"gpt-4o-mini-2024-07-18\":{\"prompt\":0.00015,\"completion\":0.0006},\"gpt-4o-2024-05-13\":{\"prompt\":0.005,\"completion\":0.015},\"gpt-4o-2024-08-06\":{\"prompt\":0.0025,\"completion\":0.01},\"o1-preview\":{\"prompt\":0.015,\"completion\":0.06},\"o1-preview-2024-09-12\":{\"prompt\":0.015,\"completion\":0.06},\"o1-mini\":{\"prompt\":0.003,\"completion\":0.012},\"o1-mini-2024-09-12\":{\"prompt\":0.003,\"completion\":0.012},\"text-embedding-ada-002\":{\"prompt\":0.0004,\"completion\":0.0},\"glm-3-turbo\":{\"prompt\":0.0007,\"completion\":0.0007},\"glm-4\":{\"prompt\":0.014,\"completion\":0.014},\"glm-4-flash\":{\"prompt\":0.0,\"completion\":0.0},\"glm-4-plus\":{\"prompt\":0.007,\"completion\":0.007},\"gemini-1.5-flash\":{\"prompt\":0.000075,\"completion\":0.0003},\"gemini-1.5-pro\":{\"prompt\":0.0035,\"completion\":0.0105},\"gemini-1.0-pro\":{\"prompt\":0.0005,\"completion\":0.0015},\"moonshot-v1-8k\":{\"prompt\":0.012,\"completion\":0.012},\"moonshot-v1-32k\":{\"prompt\":0.024,\"completion\":0.024},\"moonshot-v1-128k\":{\"prompt\":0.06,\"completion\":0.06},\"open-mistral-7b\":{\"prompt\":0.00025,\"completion\":0.00025},\"open-mixtral-8x7b\":{\"prompt\":0.0007,\"completion\":0.0007},\"mistral-small-latest\":{\"prompt\":0.002,\"completion\":0.006},\"mistral-medium-latest\":{\"prompt\":0.0027,\"completion\":0.0081},\"mistral-large-latest\":{\"prompt\":0.008,\"completion\":0.024},\"claude-instant-1.2\":{\"prompt\":0.0008,\"completion\":0.0024},\"claude-2.0\":{\"prompt\":0.008,\"completion\":0.024},\"claude-2.1\":{\"prompt\":0.008,\"completion\":0.024},\"claude-3-sonnet-20240229\":{\"prompt\":0.003,\"completion\":0.015},\"claude-3-5-sonnet\":{\"prompt\":0.003,\"completion\":0.015},\"claude-3-5-sonnet-v2\":{\"prompt\":0.003,\"completion\":0.015},\"claude-3-5-sonnet-20240620\":{\"prompt\":0.003,\"completion\":0.015},\"claude-3-opus-20240229\":{\"prompt\":0.015,\"completion\":0.075},\"claude-3-haiku-20240307\":{\"prompt\":0.00025,\"completion\":0.00125},\"yi-34b-chat-0205\":{\"prompt\":0.0003,\"completion\":0.0003},\"yi-34b-chat-200k\":{\"prompt\":0.0017,\"completion\":0.0017},\"yi-large\":{\"prompt\":0.0028,\"completion\":0.0028},\"microsoft/wizardlm-2-8x22b\":{\"prompt\":0.00108,\"completion\":0.00108},\"meta-llama/llama-3-70b-instruct\":{\"prompt\":0.008,\"completion\":0.008},\"llama3-70b-8192\":{\"prompt\":0.0059,\"completion\":0.0079},\"openai/gpt-3.5-turbo-0125\":{\"prompt\":0.0005,\"completion\":0.0015},\"openai/gpt-4-turbo-preview\":{\"prompt\":0.01,\"completion\":0.03},\"openai/o1-preview\":{\"prompt\":0.015,\"completion\":0.06},\"openai/o1-mini\":{\"prompt\":0.003,\"completion\":0.012},\"anthropic/claude-3-opus\":{\"prompt\":0.015,\"completion\":0.075},\"anthropic/claude-3.5-sonnet\":{\"prompt\":0.003,\"completion\":0.015},\"google/gemini-pro-1.5\":{\"prompt\":0.0025,\"completion\":0.0075},\"deepseek-chat\":{\"prompt\":0.00014,\"completion\":0.00028},\"deepseek-coder\":{\"prompt\":0.00014,\"completion\":0.00028},\"doubao-lite-4k-240515\":{\"prompt\":0.000043,\"completion\":0.000086},\"doubao-lite-32k-240515\":{\"prompt\":0.000043,\"completion\":0.000086},\"doubao-lite-128k-240515\":{\"prompt\":0.00011,\"completion\":0.00014},\"doubao-pro-4k-240515\":{\"prompt\":0.00011,\"completion\":0.00029},\"doubao-pro-32k-240515\":{\"prompt\":0.00011,\"completion\":0.00029},\"doubao-pro-128k-240515\":{\"prompt\":0.0007,\"completion\":0.0013},\"llama3-70b-llama3-70b-instruct\":{\"prompt\":0.0,\"completion\":0.0},\"llama3-8b-llama3-8b-instruct\":{\"prompt\":0.0,\"completion\":0.0}}}"
+    }
+}
