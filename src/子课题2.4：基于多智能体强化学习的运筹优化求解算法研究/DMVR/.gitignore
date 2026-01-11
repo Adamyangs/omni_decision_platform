@@ -1,0 +1,10 @@
+* .pyc
+__pycache__/
+**/*.pyc
+marl_runs_422/
+runs/
+.git/
+git-repo-clean
+/logs/
+outputs/
+results/
